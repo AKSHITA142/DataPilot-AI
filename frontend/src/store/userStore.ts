@@ -1,2 +1,0 @@
-// userStore.ts
-export {};
