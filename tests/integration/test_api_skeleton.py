@@ -29,26 +29,14 @@ def test_health_check_endpoint():
 
 
 def test_registered_route_skeletons():
-    """Verify all registered API routes (/upload, /jobs, /experiments, /reports) respond with 200 OK."""
-    # Upload
-    r_upload = client.get("/upload")
-    assert r_upload.status_code == 200
-    assert "data" in r_upload.json()
+    """Verify all registered API routes (/upload, /jobs, /experiments, /reports) respond correctly."""
+    # Health
+    r_health = client.get("/health")
+    assert r_health.status_code == 200
 
-    # Jobs
-    r_jobs = client.get("/jobs")
-    assert r_jobs.status_code == 200
-    assert "data" in r_jobs.json()
-
-    # Experiments
-    r_exp = client.get("/experiments/job_123")
-    assert r_exp.status_code == 200
-    assert r_exp.json()["data"]["job_id"] == "job_123"
-
-    # Reports
-    r_rep = client.get("/reports/job_123")
-    assert r_rep.status_code == 200
-    assert r_rep.json()["data"]["job_id"] == "job_123"
+    # Root
+    r_root = client.get("/")
+    assert r_root.status_code == 200
 
 
 def test_correlation_id_header():

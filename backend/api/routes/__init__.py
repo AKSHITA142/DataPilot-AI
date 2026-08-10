@@ -4,6 +4,7 @@ from backend.api.routes.upload import router as upload_router
 from backend.api.routes.jobs import router as jobs_router
 from backend.api.routes.experiments import router as experiments_router
 from backend.api.routes.reports import router as reports_router
+from backend.api.routes.websocket import router as websocket_router
 
 __all__ = [
     "health_router",
@@ -11,4 +12,5 @@ __all__ = [
     "jobs_router",
     "experiments_router",
     "reports_router",
+    "websocket_router",
 ]
