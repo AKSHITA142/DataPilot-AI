@@ -124,7 +124,7 @@ function ExperimentRow({
         </td>
         {/* Status */}
         <td className="px-4 py-3">
-          <Badge variant={exp.status === "pending" ? "queued" : exp.status as any} label={exp.status} />
+          <Badge variant={exp.status === "pending" ? "queued" : (exp.status as "running" | "completed" | "failed")} label={exp.status} />
         </td>
         {/* Expand */}
         <td className="px-3 py-3 text-slate-600">

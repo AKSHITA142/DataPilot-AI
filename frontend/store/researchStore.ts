@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { JobStatus, PipelineStage } from "@/types/api";
+import type { PipelineStage } from "@/types/api";
 
 interface ResearchState {
   activeJobId: string | null;

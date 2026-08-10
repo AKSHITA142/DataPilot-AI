@@ -36,6 +36,16 @@ const tooltipStyle = {
   fontSize: "12px",
 };
 
+type TooltipValue = number | string | ReadonlyArray<number | string> | undefined;
+type TooltipName = number | string | undefined;
+
+function formatVal(v: TooltipValue): string {
+  if (typeof v === "number") return v.toFixed(4);
+  if (typeof v === "string") return v;
+  if (Array.isArray(v)) return v.join(", ");
+  return "";
+}
+
 // ── Vertical Bar Chart ────────────────────────
 interface BarItem {
   name: string;
@@ -73,7 +83,7 @@ export function AppBarChart({
         <Tooltip
           contentStyle={tooltipStyle}
           cursor={{ fill: "rgba(99,102,241,0.08)" }}
-          formatter={(v: any) => [typeof v === 'number' ? v.toFixed(4) : v, label]}
+          formatter={(v: TooltipValue) => [formatVal(v), label]}
         />
         <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
       </BarChart>
@@ -112,7 +122,7 @@ export function HorizontalBarChart({
         <Tooltip
           contentStyle={tooltipStyle}
           cursor={{ fill: "rgba(99,102,241,0.08)" }}
-          formatter={(v: any) => [typeof v === 'number' ? v.toFixed(4) : v, label]}
+          formatter={(v: TooltipValue) => [formatVal(v), label]}
         />
         <Bar dataKey="value" fill="#6366f1" radius={[0, 4, 4, 0]} />
       </BarChart>
@@ -155,7 +165,7 @@ export function AppPieChart({
         </Pie>
         <Tooltip
           contentStyle={tooltipStyle}
-          formatter={(v: any) => [typeof v === 'number' ? v.toFixed(4) : v, '']}
+          formatter={(v: TooltipValue) => [formatVal(v), ""]}
         />
         <Legend
           iconType="circle"
@@ -213,7 +223,10 @@ export function AppScatterChart({
         <Tooltip
           contentStyle={tooltipStyle}
           cursor={{ strokeDasharray: "3 3", stroke: "rgba(99,102,241,0.4)" }}
-          formatter={(v: any, name: any) => [typeof v === 'number' ? v.toFixed(4) : v, name]}
+          formatter={(v: TooltipValue, name: TooltipName) => [
+            formatVal(v),
+            name ?? "",
+          ]}
         />
         <Scatter data={data} fill="#6366f1" opacity={0.8} />
       </ScatterChart>

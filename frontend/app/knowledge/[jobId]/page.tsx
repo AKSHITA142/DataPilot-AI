@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import {
   Brain,
   CheckCircle2,
-  XCircle,
   Lightbulb,
   ChevronRight,
 } from "lucide-react";
