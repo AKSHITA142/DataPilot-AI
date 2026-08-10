@@ -1,23 +1,25 @@
 import os
-import uuid
 from typing import Dict, Any, List, Optional
 import pandas as pd
 
-from backend.schemas.enums import (
-    JobStatus, DecisionType, TaskType, ColumnType
-)
+from backend.schemas.enums import JobStatus, DecisionType
 from backend.schemas.semantic_profile import SemanticProfile
-from backend.schemas.mission_brief import MissionBrief, MissionConstraints, DatasetCharacteristics
-from backend.schemas.experiment import (
-    ExperimentPlan, ExperimentSpec, ExperimentOperation, ExperimentResult, PipelineDefinition
-)
-from backend.schemas.evaluation import (
-    EvaluationReport, KnowledgeFinding, ResearchDirectorDecision, RankingItem
-)
+from backend.schemas.mission_brief import MissionBrief, MissionConstraints
+from backend.schemas.experiment import ExperimentPlan, ExperimentResult
+from backend.schemas.evaluation import EvaluationReport, ResearchDirectorDecision
 from backend.schemas.report import FinalRecommendation
+
 from backend.profiling import ProfilingEngine
 from backend.ml_execution.executor import MLExecutionEngine
 from backend.evaluation.evaluator import EvaluationEngine
+
+from backend.agents import (
+    DatasetUnderstandingAgent,
+    ConstraintGoalAnalyzer,
+    StrategyPlannerAgent,
+    ResearchDirectorAgent,
+    ReportGeneratorAgent,
+)
 from backend.graph.state import WorkflowStateDict
 
 
@@ -41,85 +43,63 @@ def profiling_node(state: WorkflowStateDict) -> WorkflowStateDict:
 
 
 def understanding_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Generates MissionBrief based on SemanticProfile and optional user goal."""
+    """Invokes Phase 7 DatasetUnderstandingAgent to build MissionBrief."""
     if state.get("job_status") == JobStatus.FAILED.value:
         return state
 
-    profile_dict = state.get("semantic_profile") or {}
-    user_goal = state.get("user_goal") or "Optimize machine learning model performance and data quality."
-    dataset_summary = profile_dict.get("dataset_summary", {})
-    target_info = dataset_summary.get("target", {})
-    task_type = target_info.get("task_type") or "classification"
+    try:
+        profile_dict = state.get("semantic_profile") or {}
+        profile = SemanticProfile(**profile_dict)
+        user_goal = state.get("user_goal") or "Optimize machine learning model performance"
 
-    mission_brief = MissionBrief(
-        objective=user_goal,
-        constraints=MissionConstraints(
-            max_row_loss=0.05,
-            training_time_limit_minutes=30,
-        ),
-        dataset_characteristics=DatasetCharacteristics(
-            domain="Tabular ML",
-            complexity="Medium",
-        ),
-        success_metrics=["accuracy", "f1_score" if task_type == "classification" else "rmse"],
-    )
+        agent = DatasetUnderstandingAgent()
+        mission_brief = agent.run({
+            "semantic_profile": profile,
+            "user_goal": user_goal,
+        })
 
-    state["mission_brief"] = mission_brief.model_dump()
-    state["job_status"] = JobStatus.PLANNING.value
+        state["mission_brief"] = mission_brief.model_dump()
+        state["job_status"] = JobStatus.PLANNING.value
+    except Exception as e:
+        state["job_status"] = JobStatus.FAILED.value
+        state["error_message"] = f"Dataset Understanding Agent failed: {str(e)}"
+
     return state
 
 
 def planning_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Generates ExperimentPlan proposing candidate ML pipeline specs."""
+    """Invokes Phase 7 StrategyPlannerAgent to generate candidate ExperimentPlan."""
     if state.get("job_status") == JobStatus.FAILED.value:
         return state
 
     iteration = state.get("iteration_count", 0) + 1
     state["iteration_count"] = iteration
 
-    profile_dict = state.get("semantic_profile") or {}
-    dataset_summary = profile_dict.get("dataset_summary", {})
-    target_info = dataset_summary.get("target", {})
-    task_type = target_info.get("task_type") or "classification"
+    try:
+        profile_dict = state.get("semantic_profile") or {}
+        mission_dict = state.get("mission_brief") or {}
 
-    # Select model based on iteration and task_type
-    if task_type == "classification":
-        model_1 = "logistic_regression" if iteration == 1 else "random_forest"
-        model_2 = "xgboost"
-    else:
-        model_1 = "linear_regression" if iteration == 1 else "random_forest"
-        model_2 = "xgboost"
+        profile = SemanticProfile(**profile_dict)
+        mission = MissionBrief(**mission_dict)
 
-    op_1a = ExperimentOperation(type="imputation", method="median", params={"strategy": "median"})
-    op_1b = ExperimentOperation(type="scaling", method="standard", params={"strategy": "standard"})
-    
-    spec_1 = ExperimentSpec(
-        experiment_id=f"spec_{iteration}_1",
-        priority=1,
-        reason="Baseline preprocessing with simple model",
-        operations=[op_1a, op_1b],
-        model_name=model_1,
-    )
+        dataset_summary = profile_dict.get("dataset_summary", {})
+        target_info = dataset_summary.get("target", {})
+        task_type = target_info.get("task_type") or "classification"
 
-    op_2a = ExperimentOperation(type="imputation", method="mean", params={"strategy": "mean"})
-    op_2b = ExperimentOperation(type="scaling", method="robust", params={"strategy": "robust"})
+        planner = StrategyPlannerAgent()
+        plan = planner.run({
+            "semantic_profile": profile,
+            "mission_brief": mission,
+            "experiment_budget": 2,
+            "task_type": task_type,
+        })
 
-    spec_2 = ExperimentSpec(
-        experiment_id=f"spec_{iteration}_2",
-        priority=2,
-        reason="Robust scaling with gradient boosting model",
-        operations=[op_2a, op_2b],
-        model_name=model_2,
-    )
+        state["experiment_plan"] = plan.model_dump()
+        state["job_status"] = JobStatus.EXECUTING.value
+    except Exception as e:
+        state["job_status"] = JobStatus.FAILED.value
+        state["error_message"] = f"Strategy Planner failed: {str(e)}"
 
-    plan = ExperimentPlan(
-        mission=state.get("user_goal") or "Optimize ML models",
-        experiment_budget=5,
-        experiments=[spec_1, spec_2],
-    )
-
-    state["experiment_plan"] = plan.model_dump()
-    state["job_status"] = JobStatus.EXECUTING.value
     return state
 
 
@@ -153,7 +133,6 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
             task_type=task_type,
         )
 
-        # Append to existing accumulated experiment_results
         existing_results = state.get("experiment_results") or []
         existing_results.extend([r.model_dump() for r in batch_results])
         state["experiment_results"] = existing_results
@@ -200,76 +179,63 @@ def evaluation_node(state: WorkflowStateDict) -> WorkflowStateDict:
 
 
 def decision_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Evaluates stopping criteria and budget limits to set decision."""
+    """Invokes Phase 7 ResearchDirectorAgent and budget manager to set decision."""
     if state.get("job_status") == JobStatus.FAILED.value:
         return state
 
     iteration = state.get("iteration_count", 1)
     max_iter = state.get("max_iterations", 5)
 
-    eval_report_dict = state.get("evaluation_report") or {}
-    winning_exp_id = eval_report_dict.get("winner") or "exp_1"
+    eval_report_dict = state.get("evaluation_report")
+    if not eval_report_dict:
+        state["decision"] = ResearchDirectorDecision(
+            decision=DecisionType.STOP,
+            confidence=1.0,
+            knowledge=["No evaluation report available."],
+        ).model_dump()
+        return state
 
-    if iteration >= max_iter or iteration >= 2:
-        dec_type = DecisionType.STOP
-        reason = f"Completed research loop after {iteration} iterations. Stopping criteria met."
-    else:
-        dec_type = DecisionType.CONTINUE
-        reason = f"Iteration {iteration}/{max_iter} complete. Exploring further optimizations."
+    try:
+        eval_report = EvaluationReport(**eval_report_dict)
+        director = ResearchDirectorAgent()
+        decision = director.run({"evaluation_report": eval_report})
 
-    decision = ResearchDirectorDecision(
-        decision=dec_type,
-        confidence=0.92,
-        knowledge=[f"Winner experiment: {winning_exp_id}"],
-        remaining_questions=[],
-        next_experiments=[],
-    )
+        # Override decision if budget limit reached
+        if iteration >= max_iter:
+            decision = ResearchDirectorDecision(
+                decision=DecisionType.STOP,
+                confidence=0.95,
+                knowledge=decision.knowledge + [f"Budget limit reached ({max_iter} iterations)."],
+            )
 
-    state["decision"] = decision.model_dump()
+        state["decision"] = decision.model_dump()
+    except Exception as e:
+        state["job_status"] = JobStatus.FAILED.value
+        state["error_message"] = f"Research Director Agent failed: {str(e)}"
+
     return state
 
 
 def reporting_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Generates final recommendation report and completes research job."""
+    """Invokes Phase 7 ReportGeneratorAgent to create final recommendation."""
     if state.get("job_status") == JobStatus.FAILED.value:
         return state
 
-    eval_dict = state.get("evaluation_report") or {}
-    winning_id = eval_dict.get("winner") or "exp_1"
-    
-    # Extract winning experiment details from accumulated results
-    exp_results = state.get("experiment_results") or []
-    winning_result = next((r for r in exp_results if r.get("experiment_id") == winning_id), None)
-    if not winning_result and exp_results:
-        winning_result = exp_results[0]
+    eval_report_dict = state.get("evaluation_report")
+    if not eval_report_dict:
+        state["job_status"] = JobStatus.FAILED.value
+        state["error_message"] = "Reporting failed: Missing evaluation report."
+        return state
 
-    if winning_result:
-        pipe_def = PipelineDefinition(**winning_result.get("pipeline", {}))
-        model_name = winning_result.get("model", "xgboost")
-        metrics_dict = winning_result.get("metrics", {}).get("metrics", {})
-    else:
-        pipe_def = PipelineDefinition(
-            operations=[
-                ExperimentOperation(type="imputation", method="median"),
-                ExperimentOperation(type="scaling", method="standard"),
-            ],
-            model_name="xgboost",
-        )
-        model_name = "xgboost"
-        metrics_dict = {"accuracy": 0.85}
+    try:
+        eval_report = EvaluationReport(**eval_report_dict)
+        reporter = ReportGeneratorAgent()
+        final_rec = reporter.run({"evaluation_report": eval_report})
 
-    final_rec = FinalRecommendation(
-        winning_experiment_id=winning_id,
-        pipeline=pipe_def,
-        model=model_name,
-        final_metrics=metrics_dict,
-        summary=f"DataPilot-AI completed automated preprocessing and model benchmarking. Winning experiment: {winning_id}.",
-        key_findings=[
-            "Data imputation and scaling significantly improved model stability.",
-            f"Winning model '{model_name}' achieved top performance on held-out validation data.",
-        ],
-    )
+        state["final_report"] = final_rec.model_dump()
+        state["job_status"] = JobStatus.COMPLETED.value
+    except Exception as e:
+        state["job_status"] = JobStatus.FAILED.value
+        state["error_message"] = f"Report Generator Agent failed: {str(e)}"
 
-    state["final_report"] = final_rec.model_dump()
-    state["job_status"] = JobStatus.COMPLETED.value
     return state
