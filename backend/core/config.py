@@ -1,6 +1,6 @@
 import os
 from functools import lru_cache
-from typing import List, Union
+from typing import List, Optional, Union
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     
     # CORS
     cors_origins: Union[List[str], str] = Field(default=["*"], alias="CORS_ORIGINS")
+
+    # LLM Settings (Dynamically loaded from environment, never hardcoded)
+    gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
+    openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
+    llm_model_name: str = Field(default="gemini-2.5-flash", alias="LLM_MODEL_NAME")
 
     model_config = SettingsConfigDict(
         env_file=".env",
