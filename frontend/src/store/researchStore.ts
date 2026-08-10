@@ -1,0 +1,2 @@
+// researchStore.ts
+export {};
