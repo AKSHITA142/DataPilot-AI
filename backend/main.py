@@ -14,6 +14,7 @@ from backend.api.routes import (
     jobs_router,
     experiments_router,
     reports_router,
+    websocket_router,
 )
 
 settings = get_settings()
@@ -73,12 +74,19 @@ async def custom_logging_middleware(request: Request, call_next):
 # 3. Exception Handlers
 register_exception_handlers(app)
 
-# 4. Include API Routers
+# 4. Include API Routers (both un-prefixed and /api/v1 prefixed for compatibility)
 app.include_router(health_router)
 app.include_router(upload_router)
 app.include_router(jobs_router)
 app.include_router(experiments_router)
 app.include_router(reports_router)
+
+api_prefix = "/api/v1"
+app.include_router(upload_router, prefix=api_prefix)
+app.include_router(jobs_router, prefix=api_prefix)
+app.include_router(experiments_router, prefix=api_prefix)
+app.include_router(reports_router, prefix=api_prefix)
+app.include_router(websocket_router, prefix=api_prefix)
 
 
 @app.get("/", tags=["Root"])

@@ -25,7 +25,7 @@ def get_engine():
 def init_db(target_engine=None):
     """Initializes the database by creating all tables."""
     eng = target_engine or engine
-    Base.metadata.create_query_all(bind=eng)
+    Base.metadata.create_all(bind=eng)
 
 
 def get_db() -> Generator[Session, None, None]:
