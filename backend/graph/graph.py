@@ -23,7 +23,7 @@ def build_research_graph() -> StateGraph:
     workflow.add_node("planning", planning_node)
     workflow.add_node("execution", execution_node)
     workflow.add_node("evaluation", evaluation_node)
-    workflow.add_node("decision", decision_node)
+    workflow.add_node("directing", decision_node)
     workflow.add_node("reporting", reporting_node)
 
     # Wire Edges
@@ -32,11 +32,11 @@ def build_research_graph() -> StateGraph:
     workflow.add_edge("understanding", "planning")
     workflow.add_edge("planning", "execution")
     workflow.add_edge("execution", "evaluation")
-    workflow.add_edge("evaluation", "decision")
+    workflow.add_edge("evaluation", "directing")
 
-    # Conditional Routing Edge from decision node
+    # Conditional Routing Edge from directing node
     workflow.add_conditional_edges(
-        "decision",
+        "directing",
         route_next,
         {
             "planning": "planning",
