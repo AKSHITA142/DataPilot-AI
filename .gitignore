@@ -42,6 +42,8 @@ build/
 *.csv
 *.parquet
 *.sqlite3
+*.db
+
 storage/data/
 storage/models/
 storage/reports/
