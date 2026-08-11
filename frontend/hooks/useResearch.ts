@@ -2,7 +2,8 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { getJob, getExperiments, getReport, getDashboard, listDatasets } from "@/services/apiClient";
+import { getJob, getExperiments, getReport, getDashboard, listDatasets, getDataset } from "@/services/apiClient";
+
 import { wsClient } from "@/services/websocketClient";
 import { useResearchStore } from "@/store/researchStore";
 import type { WSEvent } from "@/types/api";
@@ -126,3 +127,15 @@ export function useDatasets() {
     staleTime: 60_000,
   });
 }
+
+// ── useDataset — fetch single dataset details ─────────────────────────
+export function useDataset(datasetId: string | null) {
+  return useQuery({
+    queryKey: ["dataset", datasetId],
+    queryFn: () => getDataset(datasetId!),
+    enabled: !!datasetId,
+    staleTime: 60_000,
+  });
+}
+
+
