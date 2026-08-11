@@ -17,15 +17,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500/50 shadow-[0_0_20px_rgba(99,102,241,0.25)]",
+    "bg-brand-500 hover:bg-brand-400 text-[#052620] font-semibold border border-brand-400/60 shadow-sm",
   secondary:
-    "bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700",
+    "bg-surface-3 hover:bg-surface-4 text-text border border-border",
   ghost:
-    "bg-transparent hover:bg-slate-800/60 text-slate-300 border border-slate-700/50",
+    "bg-transparent hover:bg-surface-3 text-text-secondary border border-border-subtle",
   danger:
-    "bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40",
+    "bg-error-500/12 hover:bg-error-500/20 text-error-400 border border-error-500/30",
   success:
-    "bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40",
+    "bg-success-500/12 hover:bg-success-500/20 text-success-400 border border-success-500/30",
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -46,12 +46,12 @@ export function Button({
 }: ButtonProps) {
   return (
     <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      whileHover={{ scale: 1.015 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 420, damping: 24 }}
       className={cn(
-        "inline-flex items-center justify-center rounded-lg font-medium",
-        "transition-all duration-150 cursor-pointer select-none",
+        "inline-flex items-center justify-center rounded-md font-medium",
+        "transition-colors duration-150 cursor-pointer select-none",
         "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
         variantStyles[variant],
         sizeStyles[size],

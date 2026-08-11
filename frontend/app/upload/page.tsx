@@ -289,7 +289,7 @@ export default function UploadPage() {
                     ? "Starting research job…"
                     : "Uploading dataset…"
                 }
-                color="indigo"
+                color="brand"
               />
             </motion.div>
           )}

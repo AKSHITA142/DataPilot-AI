@@ -192,10 +192,10 @@ export default function TimelinePage({
                   }
                   color={
                     job.status === "completed"
-                      ? "emerald"
+                      ? "success"
                       : job.status === "failed"
-                      ? "amber"
-                      : "indigo"
+                      ? "error"
+                      : "brand"
                   }
                 />
 

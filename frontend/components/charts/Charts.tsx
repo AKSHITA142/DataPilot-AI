@@ -17,24 +17,32 @@ import {
 } from "recharts";
 
 // ── Shared chart colours ──────────────────────
+// Coherent analytical palette anchored on the brand teal, not a rainbow.
+// Use CHART_COLORS for neutral categorical series (e.g. pie/donut segments
+// with no inherent severity meaning). For severity-coded data, use the
+// semantic tokens directly (success/warning/error) instead of this array.
 export const CHART_COLORS = [
-  "#6366f1", // indigo-500
-  "#8b5cf6", // violet-500
-  "#22d3ee", // cyan-400
-  "#10b981", // emerald-500
-  "#f59e0b", // amber-500
-  "#ef4444", // red-500
-  "#3b82f6", // blue-500
-  "#a78bfa", // violet-400
+  "#12b3a3", // brand-500
+  "#6bdbcd", // brand-300
+  "#0a6e65", // brand-700
+  "#7c8ba1", // info / neutral steel
+  "#f59e0b", // warning-500 (attention)
+  "#a6a6a2", // text-secondary (other/neutral)
+  "#33c7b6", // brand-400
+  "#4ade80", // success-400 (only if a "healthy" segment applies)
 ];
 
 const tooltipStyle = {
-  backgroundColor: "#1e293b",
-  border: "1px solid rgba(148,163,184,0.15)",
+  backgroundColor: "var(--surface-3)",
+  border: "1px solid var(--border)",
   borderRadius: "10px",
-  color: "#f1f5f9",
+  color: "var(--text)",
   fontSize: "12px",
 };
+
+const axisTick = { fontSize: 11, fill: "#a6a6a2" };
+const gridStroke = "rgba(255,255,255,0.05)";
+const brandCursor = { fill: "rgba(18,179,163,0.08)" };
 
 type TooltipValue = number | string | ReadonlyArray<number | string> | undefined;
 type TooltipName = number | string | undefined;
@@ -62,27 +70,27 @@ interface AppBarChartProps {
 export function AppBarChart({
   data,
   label = "Value",
-  color = "#6366f1",
+  color = "#12b3a3",
   height = 240,
 }: AppBarChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
         <XAxis
           dataKey="name"
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          cursor={{ fill: "rgba(99,102,241,0.08)" }}
+          cursor={brandCursor}
           formatter={(v: TooltipValue) => [formatVal(v), label]}
         />
         <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
@@ -104,27 +112,27 @@ export function HorizontalBarChart({
         layout="vertical"
         margin={{ top: 4, right: 20, left: 4, bottom: 0 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" horizontal={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} horizontal={false} />
         <XAxis
           type="number"
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
           dataKey="name"
           type="category"
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
           width={100}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          cursor={{ fill: "rgba(99,102,241,0.08)" }}
+          cursor={brandCursor}
           formatter={(v: TooltipValue) => [formatVal(v), label]}
         />
-        <Bar dataKey="value" fill="#6366f1" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="value" fill="#12b3a3" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -171,7 +179,7 @@ export function AppPieChart({
           iconType="circle"
           iconSize={8}
           formatter={(value: string) => (
-            <span style={{ color: "#94a3b8", fontSize: 11 }}>{value}</span>
+            <span style={{ color: "#a6a6a2", fontSize: 11 }}>{value}</span>
           )}
         />
       </PieChart>
@@ -202,33 +210,33 @@ export function AppScatterChart({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <ScatterChart margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" />
+        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
         <XAxis
           type="number"
           dataKey="x"
           name={xLabel}
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
-          label={{ value: xLabel, position: "insideBottom", offset: -4, fill: "#475569", fontSize: 11 }}
+          label={{ value: xLabel, position: "insideBottom", offset: -4, fill: "#6e6e6b", fontSize: 11 }}
         />
         <YAxis
           type="number"
           dataKey="y"
           name={yLabel}
-          tick={{ fontSize: 11, fill: "#94a3b8" }}
+          tick={axisTick}
           axisLine={false}
           tickLine={false}
         />
         <Tooltip
           contentStyle={tooltipStyle}
-          cursor={{ strokeDasharray: "3 3", stroke: "rgba(99,102,241,0.4)" }}
+          cursor={{ strokeDasharray: "3 3", stroke: "rgba(18,179,163,0.4)" }}
           formatter={(v: TooltipValue, name: TooltipName) => [
             formatVal(v),
             name ?? "",
           ]}
         />
-        <Scatter data={data} fill="#6366f1" opacity={0.8} />
+        <Scatter data={data} fill="#12b3a3" opacity={0.85} />
       </ScatterChart>
     </ResponsiveContainer>
   );

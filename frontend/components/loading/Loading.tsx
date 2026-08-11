@@ -13,7 +13,7 @@ const spinnerSizes = { sm: "w-4 h-4", md: "w-6 h-6", lg: "w-10 h-10" };
 export function Spinner({ size = "md", className }: SpinnerProps) {
   return (
     <svg
-      className={cn("animate-spin text-indigo-400", spinnerSizes[size], className)}
+      className={cn("animate-spin text-brand-400", spinnerSizes[size], className)}
       viewBox="0 0 24 24"
       fill="none"
     >
@@ -41,14 +41,21 @@ interface ProgressBarProps {
   className?: string;
   label?: string;
   showPercent?: boolean;
-  color?: "indigo" | "emerald" | "amber" | "cyan";
+  color?: "brand" | "success" | "warning" | "error";
 }
 
-const progressColors = {
-  indigo: "from-indigo-600 to-violet-500",
-  emerald: "from-emerald-600 to-teal-400",
-  amber: "from-amber-500 to-orange-400",
-  cyan: "from-cyan-500 to-blue-400",
+const progressColors: Record<NonNullable<ProgressBarProps["color"]>, string> = {
+  brand: "bg-brand-500",
+  success: "bg-success-500",
+  warning: "bg-warning-500",
+  error: "bg-error-500",
+};
+
+const progressTextColors: Record<NonNullable<ProgressBarProps["color"]>, string> = {
+  brand: "text-brand-400",
+  success: "text-success-400",
+  warning: "text-warning-400",
+  error: "text-error-400",
 };
 
 export function ProgressBar({
@@ -56,7 +63,7 @@ export function ProgressBar({
   className,
   label,
   showPercent = true,
-  color = "indigo",
+  color = "brand",
 }: ProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value));
   return (
@@ -64,20 +71,19 @@ export function ProgressBar({
       {(label || showPercent) && (
         <div className="flex justify-between mb-1.5">
           {label && (
-            <span className="text-xs text-slate-400 font-medium">{label}</span>
+            <span className="text-xs text-text-secondary font-medium">{label}</span>
           )}
           {showPercent && (
-            <span className="text-xs text-indigo-400 font-semibold ml-auto">
+            <span className={cn("text-xs font-semibold ml-auto", progressTextColors[color])}>
               {clamped.toFixed(0)}%
             </span>
           )}
         </div>
       )}
-      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+      <div className="w-full h-1.5 bg-surface-3 rounded-full overflow-hidden">
         <div
           className={cn(
-            "h-full rounded-full bg-gradient-to-r transition-all duration-700 ease-out",
-            "shadow-[0_0_8px_rgba(99,102,241,0.6)]",
+            "h-full rounded-full transition-all duration-700 ease-out",
             progressColors[color]
           )}
           style={{ width: `${clamped}%` }}
@@ -98,7 +104,7 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function SkeletonCard() {
   return (
-    <div className="glass-card p-5 space-y-3">
+    <div className="card p-5 space-y-3">
       <Skeleton className="h-4 w-1/3 rounded" />
       <Skeleton className="h-8 w-2/3 rounded" />
       <Skeleton className="h-3 w-full rounded" />

@@ -179,19 +179,19 @@ export default function RecommendationPage({
                 label={rec.primary_metric_name}
                 value={formatMetric(rec.primary_metric_value)}
                 icon={<Trophy className="w-5 h-5" />}
-                accent="amber"
+                accent="success"
               />
               <MetricCard
                 label="Composite Score"
                 value={formatMetric(rec.composite_score)}
                 icon={<CheckCircle2 className="w-5 h-5" />}
-                accent="indigo"
+                accent="brand"
               />
               <MetricCard
                 label="Total Experiments"
                 value={report?.experiment_count ?? "—"}
                 icon={<Lightbulb className="w-5 h-5" />}
-                accent="violet"
+                accent="neutral"
               />
             </div>
 
