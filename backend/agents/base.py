@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 from backend.core.config import get_settings
 
+import time
+import threading
+
 logger = logging.getLogger("datapilot.agents.base")
 T = TypeVar("T", bound=BaseModel)
 
@@ -13,12 +16,57 @@ T = TypeVar("T", bound=BaseModel)
 _LLM_TIMEOUT_SECONDS = 30
 
 
+class GeminiRateLimiter:
+    """
+    Enforces maximum 15 Requests Per Minute (RPM) for Google Gemini API calls.
+    Maintains a minimum spacing of ~4.2 seconds between consecutive API calls to strictly abide by rate limits.
+    """
+    def __init__(self, max_rpm: int = 14):
+        self.interval = 60.0 / max_rpm  # ~4.28s per call
+        self.last_call_timestamp = 0.0
+        self._lock = threading.Lock()
+
+    def acquire(self):
+        with self._lock:
+            now = time.time()
+            elapsed = now - self.last_call_timestamp
+            if elapsed < self.interval:
+                sleep_duration = self.interval - elapsed
+                logger.info(f"Gemini Rate Limiter: Pausing {sleep_duration:.2f}s to enforce <15 RPM quota...")
+                time.sleep(sleep_duration)
+            self.last_call_timestamp = time.time()
+
+
+_gemini_rate_limiter = GeminiRateLimiter(max_rpm=14)
+
+
+def _clean_json_schema(schema: Any) -> Any:
+    """Strips Google API unsupported keys from Pydantic JSON schema dicts for Gemini API compatibility."""
+    FORBIDDEN_KEYS = {
+        "additionalProperties",
+        "$schema",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "minimum",
+        "maximum",
+    }
+    if isinstance(schema, dict):
+        return {
+            k: _clean_json_schema(v)
+            for k, v in schema.items()
+            if k not in FORBIDDEN_KEYS
+        }
+    elif isinstance(schema, list):
+        return [_clean_json_schema(item) for item in schema]
+    return schema
+
+
 class LLMClient:
     """Unified LLM client interface for reasoning agents supporting dynamic model choices."""
 
     def __init__(self, model_name: Optional[str] = None):
         settings = get_settings()
-        self.model_name = model_name or settings.llm_model_name
+        self.model_name = model_name or settings.llm_model_name or "gemini-3.6-flash"
         self.gemini_key = settings.gemini_api_key
         self.openai_key = settings.openai_api_key
         self.timeout = _LLM_TIMEOUT_SECONDS
@@ -66,10 +114,11 @@ class LLMClient:
                         genai_mod = importlib.import_module("google.genai")
                         types_mod = importlib.import_module("google.genai.types")
 
+                        # Enforce 15 RPM rate limiting before calling API
+                        _gemini_rate_limiter.acquire()
+
                         # Create client with explicit HTTP timeout to prevent worker hangs
                         try:
-                            httpx_mod = importlib.import_module("httpx")
-                            http_client = httpx_mod.Client(timeout=self.timeout)
                             client = genai_mod.Client(
                                 api_key=self.gemini_key,
                                 http_options={"timeout": self.timeout * 1000},  # ms
@@ -78,6 +127,9 @@ class LLMClient:
                             # Fallback: create client without explicit timeout config
                             client = genai_mod.Client(api_key=self.gemini_key)
 
+                        # Clean JSON schema for Developer API compatibility
+                        cleaned_schema = _clean_json_schema(response_model.model_json_schema())
+
                         logger.info(f"Calling Gemini model '{self.model_name}' (timeout={self.timeout}s)")
                         resp = client.models.generate_content(
                             model=self.model_name,
@@ -85,7 +137,7 @@ class LLMClient:
                             config=types_mod.GenerateContentConfig(
                                 system_instruction=system_instruction or "You are an expert AI Data Science assistant.",
                                 response_mime_type="application/json",
-                                response_schema=response_model,
+                                response_schema=cleaned_schema,
                             ),
                         )
                         return response_model.model_validate_json(resp.text)

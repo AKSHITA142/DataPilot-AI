@@ -27,7 +27,7 @@ import type { ExperimentResult } from "@/types/api";
 import { useRouter } from "next/navigation";
 
 
-function ExperimentRow({
+function ExperimentTableRow({
   exp,
   rank,
   selected,
@@ -52,7 +52,7 @@ function ExperimentRow({
       {/* ── Desktop Table Row ── */}
       <tr
         className={`
-          hidden md:table-row border-b border-border-subtle
+          border-b border-border-subtle
           hover:bg-surface-3 transition-colors cursor-pointer select-none
           ${selected ? "bg-brand-500/10 border-l-2 border-l-brand-500" : ""}
         `}
@@ -155,7 +155,7 @@ function ExperimentRow({
       {/* ── Desktop Expanded Details Drawer ── */}
       <AnimatePresence>
         {expanded && (
-          <tr className="hidden md:table-row">
+          <tr>
             <td colSpan={9} className="bg-surface-1 border-b border-border-subtle">
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -208,126 +208,148 @@ function ExperimentRow({
           </tr>
         )}
       </AnimatePresence>
+    </>
+  );
+}
 
-      {/* ── Mobile Card Item ── */}
-      <div
-        className={`
-          md:hidden p-4 border-b border-border-subtle last:border-0 flex flex-col gap-3
-          ${selected ? "bg-brand-500/5 border-l-2 border-l-brand-500" : ""}
-        `}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={onToggleSelect}
-              className="w-4 h-4 accent-brand-500 rounded cursor-pointer shrink-0"
-            />
-            {rank === 1 ? (
-              <Trophy className="w-4 h-4 text-warning-400 shrink-0" />
-            ) : (
-              <span className="text-xs font-mono text-text-muted w-5">#{rank}</span>
-            )}
-            <div>
-              <p className="text-sm font-semibold text-text">{exp.model_name}</p>
-              <p className="text-xs text-text-muted">{snakeToTitle(exp.model_type)}</p>
+function ExperimentCardItem({
+  exp,
+  rank,
+  selected,
+  onToggleSelect,
+}: {
+  exp: ExperimentResult;
+  rank: number;
+  selected: boolean;
+  onToggleSelect: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const featureData = exp.feature_importance
+    ? Object.entries(exp.feature_importance)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 8)
+        .map(([name, value]) => ({ name, value }))
+    : [];
+
+  return (
+    <div
+      className={`
+        p-4 border-b border-border-subtle last:border-0 flex flex-col gap-3
+        ${selected ? "bg-brand-500/5 border-l-2 border-l-brand-500" : ""}
+      `}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={onToggleSelect}
+            className="w-4 h-4 accent-brand-500 rounded cursor-pointer shrink-0"
+          />
+          {rank === 1 ? (
+            <Trophy className="w-4 h-4 text-warning-400 shrink-0" />
+          ) : (
+            <span className="text-xs font-mono text-text-muted w-5">#{rank}</span>
+          )}
+          <div>
+            <p className="text-sm font-semibold text-text">{exp.model_name}</p>
+            <p className="text-xs text-text-muted">{snakeToTitle(exp.model_type)}</p>
+          </div>
+        </div>
+        <Badge
+          variant={exp.status === "pending" ? "queued" : (exp.status as "running" | "completed" | "failed")}
+          label={exp.status}
+        />
+      </div>
+
+      {/* Metrics summary card */}
+      <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-md bg-surface-3 text-xs border border-border-subtle">
+        <div>
+          <span className="text-[10px] text-text-muted block uppercase">Score</span>
+          <span className="font-bold text-text tabular-nums font-mono">
+            {exp.composite_score !== undefined ? formatMetric(exp.composite_score) : "—"}
+          </span>
+        </div>
+        <div>
+          <span className="text-[10px] text-text-muted block uppercase">Primary</span>
+          <span className="font-semibold text-brand-400 tabular-nums font-mono">
+            {exp.primary_metric_value !== undefined ? formatMetric(exp.primary_metric_value) : "—"}
+          </span>
+        </div>
+        <div>
+          <span className="text-[10px] text-text-muted block uppercase">Runtime</span>
+          <span className="text-text-secondary tabular-nums font-mono">
+            {exp.runtime_seconds ? formatDuration(exp.runtime_seconds) : "—"}
+          </span>
+        </div>
+      </div>
+
+      {/* Pipeline steps & expand button */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-1">
+          {exp.pipeline_steps?.slice(0, 3).map((step) => (
+            <span
+              key={step}
+              className="text-[10px] px-1.5 py-0.5 rounded bg-surface-4 text-text-secondary font-mono border border-border-subtle"
+            >
+              {step}
+            </span>
+          ))}
+        </div>
+        <button
+          onClick={() => setExpanded((p) => !p)}
+          className="text-xs text-brand-400 hover:text-brand-300 font-medium flex items-center gap-1 ml-auto"
+        >
+          {expanded ? "Hide details" : "Details"}
+          {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </button>
+      </div>
+
+      {/* Mobile Expanded Section */}
+      {expanded && (
+        <div className="pt-3 border-t border-border-subtle flex flex-col gap-4">
+          <div>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
+              Metrics Breakdown
+            </p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                ["Accuracy", exp.accuracy],
+                ["F1 Score", exp.f1_score],
+                ["Precision", exp.precision],
+                ["Recall", exp.recall],
+                ["ROC-AUC", exp.roc_auc],
+                ["RMSE", exp.rmse],
+                ["MAE", exp.mae],
+                ["R²", exp.r2],
+              ]
+                .filter(([, v]) => v !== undefined)
+                .map(([label, value]) => (
+                  <div
+                    key={label as string}
+                    className="flex justify-between items-center px-2.5 py-1.5 rounded bg-surface-3 border border-border-subtle text-xs"
+                  >
+                    <span className="text-text-muted">{label as string}</span>
+                    <span className="font-semibold text-text font-mono">
+                      {formatMetric(value as number)}
+                    </span>
+                  </div>
+                ))}
             </div>
           </div>
-          <Badge
-            variant={exp.status === "pending" ? "queued" : (exp.status as "running" | "completed" | "failed")}
-            label={exp.status}
-          />
-        </div>
 
-        {/* Metrics summary card */}
-        <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-md bg-surface-3 text-xs border border-border-subtle">
-          <div>
-            <span className="text-[10px] text-text-muted block uppercase">Score</span>
-            <span className="font-bold text-text tabular-nums font-mono">
-              {exp.composite_score !== undefined ? formatMetric(exp.composite_score) : "—"}
-            </span>
-          </div>
-          <div>
-            <span className="text-[10px] text-text-muted block uppercase">Primary</span>
-            <span className="font-semibold text-brand-400 tabular-nums font-mono">
-              {exp.primary_metric_value !== undefined ? formatMetric(exp.primary_metric_value) : "—"}
-            </span>
-          </div>
-          <div>
-            <span className="text-[10px] text-text-muted block uppercase">Runtime</span>
-            <span className="text-text-secondary tabular-nums font-mono">
-              {exp.runtime_seconds ? formatDuration(exp.runtime_seconds) : "—"}
-            </span>
-          </div>
-        </div>
-
-        {/* Pipeline steps & expand button */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-1">
-            {exp.pipeline_steps?.slice(0, 3).map((step) => (
-              <span
-                key={step}
-                className="text-[10px] px-1.5 py-0.5 rounded bg-surface-4 text-text-secondary font-mono border border-border-subtle"
-              >
-                {step}
-              </span>
-            ))}
-          </div>
-          <button
-            onClick={() => setExpanded((p) => !p)}
-            className="text-xs text-brand-400 hover:text-brand-300 font-medium flex items-center gap-1 ml-auto"
-          >
-            {expanded ? "Hide details" : "Details"}
-            {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
-        </div>
-
-        {/* Mobile Expanded Section */}
-        {expanded && (
-          <div className="pt-3 border-t border-border-subtle flex flex-col gap-4">
+          {featureData.length > 0 && (
             <div>
               <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
-                Metrics Breakdown
+                Feature Importance
               </p>
-              <div className="grid grid-cols-2 gap-1.5">
-                {[
-                  ["Accuracy", exp.accuracy],
-                  ["F1 Score", exp.f1_score],
-                  ["Precision", exp.precision],
-                  ["Recall", exp.recall],
-                  ["ROC-AUC", exp.roc_auc],
-                  ["RMSE", exp.rmse],
-                  ["MAE", exp.mae],
-                  ["R²", exp.r2],
-                ]
-                  .filter(([, v]) => v !== undefined)
-                  .map(([label, value]) => (
-                    <div
-                      key={label as string}
-                      className="flex justify-between items-center px-2.5 py-1.5 rounded bg-surface-3 border border-border-subtle text-xs"
-                    >
-                      <span className="text-text-muted">{label as string}</span>
-                      <span className="font-semibold text-text font-mono">
-                        {formatMetric(value as number)}
-                      </span>
-                    </div>
-                  ))}
-              </div>
+              <HorizontalBarChart data={featureData} height={180} />
             </div>
-
-            {featureData.length > 0 && (
-              <div>
-                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
-                  Feature Importance
-                </p>
-                <HorizontalBarChart data={featureData} height={180} />
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -549,7 +571,7 @@ export default function ExperimentsPage({
               </thead>
               <tbody>
                 {filtered.map((exp, i) => (
-                  <ExperimentRow
+                  <ExperimentTableRow
                     key={exp.experiment_id}
                     exp={exp}
                     rank={i + 1}
@@ -563,7 +585,7 @@ export default function ExperimentsPage({
             {/* Mobile Card List View */}
             <div className="md:hidden divide-y divide-border-subtle">
               {filtered.map((exp, i) => (
-                <ExperimentRow
+                <ExperimentCardItem
                   key={exp.experiment_id}
                   exp={exp}
                   rank={i + 1}

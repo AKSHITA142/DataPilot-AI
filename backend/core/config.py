@@ -22,13 +22,18 @@ class Settings(BaseSettings):
     storage_dir: str = Field(default="./storage", alias="STORAGE_DIR")
     max_upload_size_mb: int = Field(default=500, alias="MAX_UPLOAD_SIZE_MB")
     
+    # Server Parameters
+    server_host: str = Field(default="127.0.0.1", alias="SERVER_HOST")
+    server_port: int = Field(default=8000, alias="SERVER_PORT")
+    frontend_url: str = Field(default="http://localhost:3000", alias="FRONTEND_URL")
+
     # CORS
     cors_origins: Union[List[str], str] = Field(default=["*"], alias="CORS_ORIGINS")
 
     # LLM Settings (Dynamically loaded from environment, never hardcoded)
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
-    llm_model_name: str = Field(default="gemini-2.5-flash", alias="LLM_MODEL_NAME")
+    llm_model_name: str = Field(default="gemini-3.5-flash", alias="LLM_MODEL_NAME")
 
     model_config = SettingsConfigDict(
         env_file=".env",

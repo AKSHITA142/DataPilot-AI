@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -33,6 +34,25 @@ def health_check(
             "status": "healthy" if db_status == "connected" else "degraded",
             "database": db_status,
             "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+    )
+
+
+@router.get("/logs", response_model=SuccessResponse)
+def get_system_logs(lines: int = 100):
+    """
+    Returns the latest log lines from backend/logs/datapilot.log for debugging.
+    """
+    log_file_path = "backend/logs/datapilot.log"
+    log_lines = []
+    if os.path.exists(log_file_path):
+        with open(log_file_path, "r", encoding="utf-8") as f:
+            log_lines = f.readlines()[-lines:]
+    return SuccessResponse(
+        data={
+            "log_file": log_file_path,
+            "total_retrieved": len(log_lines),
+            "logs": [l.strip() for l in log_lines],
         }
     )
 

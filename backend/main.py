@@ -19,13 +19,29 @@ from backend.api.routes import (
     datasets_router,
 )
 
+import os
+from logging.handlers import RotatingFileHandler
+
 settings = get_settings()
 
-# Setup logging configuration
-logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+# Setup logging configuration (Console + Rotating File Log)
+os.makedirs("backend/logs", exist_ok=True)
+log_file_path = "backend/logs/datapilot.log"
+
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+file_handler = RotatingFileHandler(
+    log_file_path, maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
 )
+file_handler.setFormatter(formatter)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+root_logger = logging.getLogger()
+root_logger.setLevel(getattr(logging, settings.log_level.upper(), logging.INFO))
+root_logger.handlers = [console_handler, file_handler]
+
 logger = logging.getLogger("datapilot.main")
 
 
@@ -85,6 +101,7 @@ app.include_router(reports_router)
 app.include_router(dashboard_router)
 
 api_prefix = "/api/v1"
+app.include_router(health_router, prefix=api_prefix)
 app.include_router(upload_router, prefix=api_prefix)
 app.include_router(jobs_router, prefix=api_prefix)
 app.include_router(experiments_router, prefix=api_prefix)

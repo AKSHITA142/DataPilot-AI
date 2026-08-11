@@ -55,6 +55,17 @@ class MLExecutionEngine:
             X = df_copy.drop(columns=[target_column])
             y = df_copy[target_column]
 
+            # For classification, clean NaNs in y and encode string targets
+            if task_type == "classification":
+                from sklearn.preprocessing import LabelEncoder
+                valid_mask = y.notna()
+                X = X[valid_mask]
+                y = y[valid_mask]
+
+                if y.dtype == object or isinstance(y.iloc[0], str) or str(y.dtype) in ("category", "string"):
+                    le = LabelEncoder()
+                    y = pd.Series(le.fit_transform(y.astype(str)), index=y.index)
+
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(
                 spec=spec,

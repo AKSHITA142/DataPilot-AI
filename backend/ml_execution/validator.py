@@ -10,11 +10,11 @@ class ExperimentValidator:
     """Validates experiment plans and specs against target dataset schema and mission constraints."""
 
     ALLOWED_OPERATION_TYPES = {
-        "imputation",
-        "encoding",
-        "scaling",
-        "feature_engineering",
-        "feature_selection",
+        "imputation", "impute",
+        "encoding", "encode",
+        "scaling", "scale",
+        "feature_engineering", "engineer",
+        "feature_selection", "select",
     }
 
     ALLOWED_IMPUTATION_METHODS = {"mean", "median", "mode", "constant", "knn"}
