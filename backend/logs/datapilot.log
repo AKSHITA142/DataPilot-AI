@@ -1,0 +1,735 @@
+2026-08-11 19:05:36,734 - datapilot.services.dataset_service - INFO - Dataset 'test_full.csv' saved (107 bytes, SHA256=88a80f539f50...)
+2026-08-11 19:05:36,740 - datapilot.api - INFO - [0f81df21-adcd-41eb-bfc3-6285a1cdedeb] POST /api/v1/upload - Status: 201 (12.85ms)
+2026-08-11 19:05:36,741 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/upload "HTTP/1.1 201 Created"
+2026-08-11 19:05:36,746 - datapilot.api - INFO - [c9d44adb-8807-4412-b8cb-d64a1dc18ea5] POST /api/v1/jobs/start - Status: 202 (4.76ms)
+2026-08-11 19:05:36,747 - datapilot.services.job_service - WARNING - No running event loop found for job job_bc9fdd43; creating new loop
+2026-08-11 19:05:36,766 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:05:36,767 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,767 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,767 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:36,767 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,767 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,768 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:36,768 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:36,769 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0014s | Metrics: {}
+2026-08-11 19:05:36,770 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0015s | Metrics: {}
+2026-08-11 19:05:36,770 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:05:36,770 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:05:36,775 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_bc9fdd43
+2026-08-11 19:05:36,775 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:36,776 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,776 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,776 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:05:36,776 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,776 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,782 - datapilot.services.job_manager - INFO - Research job job_bc9fdd43 completed successfully!
+2026-08-11 19:05:36,782 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/jobs/start "HTTP/1.1 202 Accepted"
+2026-08-11 19:05:36,792 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:05:36,792 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,792 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,792 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:36,792 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,792 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,793 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:36,793 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:36,793 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0006s | Metrics: {}
+2026-08-11 19:05:36,794 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.001s | Metrics: {}
+2026-08-11 19:05:36,794 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:05:36,794 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:05:36,797 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_bc9fdd43
+2026-08-11 19:05:36,798 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:36,798 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,798 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,798 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:05:36,798 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,798 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,800 - datapilot.services.job_manager - INFO - Research job job_bc9fdd43 completed successfully!
+2026-08-11 19:05:36,802 - datapilot.api - INFO - [607482d2-5fdb-4583-9048-c996c97107df] GET /api/v1/jobs/job_bc9fdd43 - Status: 200 (0.84ms)
+2026-08-11 19:05:36,802 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/jobs/job_bc9fdd43 "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,804 - datapilot.api - INFO - [3de9e95a-c2c4-46f5-85b8-d2d8122a47da] GET /api/v1/experiments/job_bc9fdd43 - Status: 200 (1.83ms)
+2026-08-11 19:05:36,805 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/experiments/job_bc9fdd43 "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,808 - datapilot.api - INFO - [f1226d22-7a20-4252-ade2-2f56de06ac56] GET /api/v1/reports/job_bc9fdd43 - Status: 200 (2.88ms)
+2026-08-11 19:05:36,808 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/reports/job_bc9fdd43 "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,813 - datapilot.api - INFO - [7c4539e5-1929-4392-9eb4-c153a0d13e31] GET / - Status: 200 (1.39ms)
+2026-08-11 19:05:36,813 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,815 - datapilot.api - INFO - [959364c3-e929-41ee-8a23-71093dec21e2] GET /health - Status: 200 (0.89ms)
+2026-08-11 19:05:36,816 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,817 - datapilot.api - INFO - [43acbaa5-868e-43b9-921b-1432a43ae26d] GET /health - Status: 200 (0.62ms)
+2026-08-11 19:05:36,817 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,818 - datapilot.api - INFO - [92012847-8385-4bda-a0a2-c7448ffcc352] GET / - Status: 200 (0.31ms)
+2026-08-11 19:05:36,818 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,820 - datapilot.api - INFO - [7c649629-a4bd-4142-b26d-f88451af3ac0] GET /health - Status: 200 (0.57ms)
+2026-08-11 19:05:36,820 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:05:36,821 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-11 19:05:36,821 - datapilot.api - INFO - [ed55ab8f-0b45-4f3c-9c7e-deedfc96d7b6] GET /health/error-test - Status: 404 (0.42ms)
+2026-08-11 19:05:36,821 - httpx - INFO - HTTP Request: GET http://testserver/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-11 19:05:36,822 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:05:36,822 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,822 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,822 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionConstraints
+2026-08-11 19:05:36,823 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionConstraints (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:36,823 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:36,823 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:05:36,823 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,823 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,850 - datapilot.evaluation.evaluator - INFO - Evaluating 0 experiments for job J1
+2026-08-11 19:05:36,850 - datapilot.evaluation.evaluator - INFO - Evaluating 3 experiments for job JOB_TEST_100
+2026-08-11 19:05:36,857 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:05:36,857 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,857 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,857 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:36,857 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:36,857 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:36,858 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:36,858 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:36,899 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0417s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:05:37,101 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2433s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:05:37,101 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_test
+2026-08-11 19:05:37,101 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:37,102 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,102 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,102 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:05:37,102 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,102 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,114 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:05:37,114 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,114 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,114 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:37,114 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,115 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,115 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:37,115 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:37,144 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0286s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:05:37,342 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2266s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:05:37,342 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_graph_test
+2026-08-11 19:05:37,343 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:37,343 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,343 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,343 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:05:37,344 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,344 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,344 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:37,345 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:37,373 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0277s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:05:37,577 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.233s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:05:37,578 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_ds_graph_test
+2026-08-11 19:05:37,578 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:05:37,579 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,579 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,579 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:05:37,579 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:05:37,579 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:05:37,631 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:05:37,631 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:05:37,659 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0284s | Metrics: {'accuracy': 0.56, 'precision': 0.5539, 'recall': 0.56, 'f1': 0.5379, 'f1_score': 0.5379, 'balanced_accuracy': 0.5427, 'roc_auc': 0.5934}
+2026-08-11 19:05:37,797 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.1669s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:05:37,798 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_REG_001
+2026-08-11 19:05:37,809 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_REG_001 | Status: completed | Runtime: 0.0108s | Metrics: {'mae': 8.3344, 'rmse': 10.5896, 'r2': 0.0365, 'explained_variance': 0.0365}
+2026-08-11 19:05:37,829 - datapilot.reports.service - INFO - Generating reports for job JOB_TEST_99 (Winner: EXP_WINNER_001)
+2026-08-11 19:05:37,832 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
+2026-08-11 19:05:37,833 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
+2026-08-11 19:05:37,835 - datapilot.services.job_service - WARNING - No running event loop found for job job_cf9422be; creating new loop
+2026-08-11 19:14:24,093 - datapilot.services.dataset_service - INFO - Dataset 'test_full.csv' saved (107 bytes, SHA256=88a80f539f50...)
+2026-08-11 19:14:24,101 - datapilot.api - INFO - [37095447-ace6-46a8-bfa4-14c91a8db6bb] POST /api/v1/upload - Status: 201 (14.51ms)
+2026-08-11 19:14:24,101 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/upload "HTTP/1.1 201 Created"
+2026-08-11 19:14:24,107 - datapilot.api - INFO - [c798b6d7-170b-41af-bb91-efda15fc1d37] POST /api/v1/jobs/start - Status: 202 (5.20ms)
+2026-08-11 19:14:24,107 - datapilot.services.job_service - WARNING - No running event loop found for job job_44d35ebe; creating new loop
+2026-08-11 19:14:24,122 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:14:24,123 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,123 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,123 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,123 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,123 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,124 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:24,124 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:24,125 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0008s | Metrics: {}
+2026-08-11 19:14:24,125 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:14:24,126 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0014s | Metrics: {}
+2026-08-11 19:14:24,129 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:14:24,131 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_44d35ebe
+2026-08-11 19:14:24,131 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:24,131 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,131 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,132 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:14:24,132 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,132 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,137 - datapilot.services.job_manager - INFO - Research job job_44d35ebe completed successfully!
+2026-08-11 19:14:24,138 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/jobs/start "HTTP/1.1 202 Accepted"
+2026-08-11 19:14:24,148 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:14:24,149 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,149 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,149 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,149 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,149 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,150 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:24,150 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:24,150 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0006s | Metrics: {}
+2026-08-11 19:14:24,151 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:14:24,151 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0012s | Metrics: {}
+2026-08-11 19:14:24,152 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:14:24,154 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_44d35ebe
+2026-08-11 19:14:24,154 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:24,155 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,155 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,155 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:14:24,155 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,155 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,157 - datapilot.services.job_manager - INFO - Research job job_44d35ebe completed successfully!
+2026-08-11 19:14:24,159 - datapilot.api - INFO - [e2766e65-409e-4d1c-92d4-fe3a71796bc2] GET /api/v1/jobs/job_44d35ebe - Status: 200 (0.91ms)
+2026-08-11 19:14:24,159 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/jobs/job_44d35ebe "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,162 - datapilot.api - INFO - [c6a8e777-6169-4341-87b5-a8c22dbc3d05] GET /api/v1/experiments/job_44d35ebe - Status: 200 (2.05ms)
+2026-08-11 19:14:24,162 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/experiments/job_44d35ebe "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,166 - datapilot.api - INFO - [4e68133e-92e7-4f47-a8e9-e7fde7cf4d32] GET /api/v1/reports/job_44d35ebe - Status: 200 (3.03ms)
+2026-08-11 19:14:24,166 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/reports/job_44d35ebe "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,171 - datapilot.api - INFO - [b26fa3f6-474b-445b-b458-0f55aac5e7ae] GET / - Status: 200 (1.54ms)
+2026-08-11 19:14:24,172 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,174 - datapilot.api - INFO - [6e841408-9c23-42e2-bb01-cd5151618ed5] GET /health - Status: 200 (1.11ms)
+2026-08-11 19:14:24,174 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,176 - datapilot.api - INFO - [d5179fa4-3213-4ed3-8219-a54348eb8b2a] GET /health - Status: 200 (0.62ms)
+2026-08-11 19:14:24,176 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,177 - datapilot.api - INFO - [8af78d30-d9ac-4dc5-90a7-04102a3ab03f] GET / - Status: 200 (0.38ms)
+2026-08-11 19:14:24,177 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,179 - datapilot.api - INFO - [6de99934-833b-4983-a9a2-0dca36fa8eb9] GET /health - Status: 200 (0.66ms)
+2026-08-11 19:14:24,179 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:14:24,180 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-11 19:14:24,180 - datapilot.api - INFO - [f811a2e8-9054-4044-9358-daef47b643ae] GET /health/error-test - Status: 404 (0.65ms)
+2026-08-11 19:14:24,181 - httpx - INFO - HTTP Request: GET http://testserver/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-11 19:14:24,182 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:14:24,182 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,182 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,183 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionConstraints
+2026-08-11 19:14:24,183 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,183 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionConstraints (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,183 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,183 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,183 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,183 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:24,183 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,184 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,184 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:14:24,184 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,184 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,210 - datapilot.evaluation.evaluator - INFO - Evaluating 0 experiments for job J1
+2026-08-11 19:14:24,211 - datapilot.evaluation.evaluator - INFO - Evaluating 3 experiments for job JOB_TEST_100
+2026-08-11 19:14:24,216 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:14:24,216 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,216 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,216 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,216 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,216 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,216 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:24,216 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:24,250 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0334s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:14:24,503 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2869s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:14:24,504 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_test
+2026-08-11 19:14:24,504 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:24,504 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,504 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,504 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:14:24,504 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,504 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,515 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:14:24,515 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,516 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,516 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,516 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,516 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,517 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:24,517 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:24,555 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0383s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:14:24,791 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2746s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:14:24,792 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_graph_test
+2026-08-11 19:14:24,792 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:24,793 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,793 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,793 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:14:24,793 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:24,793 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:14:24,794 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:24,794 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:24,824 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0301s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:14:25,045 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2511s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:14:25,046 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_ds_graph_test
+2026-08-11 19:14:25,046 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:14:25,046 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:25,046 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:14:25,046 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:14:25,047 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:14:25,047 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:14:25,096 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:14:25,096 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:14:25,124 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0282s | Metrics: {'accuracy': 0.56, 'precision': 0.5539, 'recall': 0.56, 'f1': 0.5379, 'f1_score': 0.5379, 'balanced_accuracy': 0.5427, 'roc_auc': 0.5934}
+2026-08-11 19:14:25,295 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.1992s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:14:25,295 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_REG_001
+2026-08-11 19:14:25,307 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_REG_001 | Status: completed | Runtime: 0.0118s | Metrics: {'mae': 8.3344, 'rmse': 10.5896, 'r2': 0.0365, 'explained_variance': 0.0365}
+2026-08-11 19:14:25,327 - datapilot.reports.service - INFO - Generating reports for job JOB_TEST_99 (Winner: EXP_WINNER_001)
+2026-08-11 19:14:25,332 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
+2026-08-11 19:14:25,334 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
+2026-08-11 19:14:25,335 - datapilot.services.job_service - WARNING - No running event loop found for job job_7b10c3fe; creating new loop
+2026-08-11 19:17:04,128 - datapilot.services.dataset_service - INFO - Dataset 'test_full.csv' saved (107 bytes, SHA256=88a80f539f50...)
+2026-08-11 19:17:04,136 - datapilot.api - INFO - [883ebd83-4518-41d7-be99-4d97694fcf9c] POST /api/v1/upload - Status: 201 (13.86ms)
+2026-08-11 19:17:04,137 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/upload "HTTP/1.1 201 Created"
+2026-08-11 19:17:04,143 - datapilot.api - INFO - [52deace7-1b64-4d01-b488-be10893c0e6f] POST /api/v1/jobs/start - Status: 202 (5.78ms)
+2026-08-11 19:17:04,144 - datapilot.services.job_service - WARNING - No running event loop found for job job_742712b4; creating new loop
+2026-08-11 19:17:04,159 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:17:04,159 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,159 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,159 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,160 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,160 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,160 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:04,160 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:04,161 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0011s | Metrics: {}
+2026-08-11 19:17:04,162 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0013s | Metrics: {}
+2026-08-11 19:17:04,162 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:17:04,162 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:17:04,167 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_742712b4
+2026-08-11 19:17:04,167 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:04,168 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,168 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,168 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:17:04,168 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,168 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,174 - datapilot.services.job_manager - INFO - Research job job_742712b4 completed successfully!
+2026-08-11 19:17:04,174 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/jobs/start "HTTP/1.1 202 Accepted"
+2026-08-11 19:17:04,184 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:17:04,184 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,184 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,184 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,184 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,184 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,185 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:04,185 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:04,186 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0006s | Metrics: {}
+2026-08-11 19:17:04,186 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:17:04,186 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0011s | Metrics: {}
+2026-08-11 19:17:04,188 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/manan/Desktop/temp/agentic data scientist/dataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 19:17:04,190 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_742712b4
+2026-08-11 19:17:04,190 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:04,190 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,190 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,190 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:17:04,190 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,190 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,192 - datapilot.services.job_manager - INFO - Research job job_742712b4 completed successfully!
+2026-08-11 19:17:04,194 - datapilot.api - INFO - [72cf036f-ba3b-4a2e-a4f0-df7b74e72e05] GET /api/v1/jobs/job_742712b4 - Status: 200 (0.80ms)
+2026-08-11 19:17:04,194 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/jobs/job_742712b4 "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,196 - datapilot.api - INFO - [3775b074-15f1-422c-bf4f-e424af86240e] GET /api/v1/experiments/job_742712b4 - Status: 200 (1.92ms)
+2026-08-11 19:17:04,197 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/experiments/job_742712b4 "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,200 - datapilot.api - INFO - [8235c97f-a834-4f5b-b3a1-14b69cfa252d] GET /api/v1/reports/job_742712b4 - Status: 200 (2.78ms)
+2026-08-11 19:17:04,200 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/reports/job_742712b4 "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,206 - datapilot.api - INFO - [157272a1-4da7-4fa4-9ac2-ae5811f3ac0a] GET / - Status: 200 (1.49ms)
+2026-08-11 19:17:04,206 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,208 - datapilot.api - INFO - [6ce3b656-3d1b-494c-802b-358856612c99] GET /health - Status: 200 (1.14ms)
+2026-08-11 19:17:04,208 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,210 - datapilot.api - INFO - [480754e7-9974-458b-8f44-fdd98c129d13] GET /health - Status: 200 (0.76ms)
+2026-08-11 19:17:04,211 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,211 - datapilot.api - INFO - [728b0f43-9f3b-4383-9f50-2e669268f3f0] GET / - Status: 200 (0.34ms)
+2026-08-11 19:17:04,212 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,213 - datapilot.api - INFO - [c4ca5c88-dccb-44df-bd36-e2a4cabe42c7] GET /health - Status: 200 (0.59ms)
+2026-08-11 19:17:04,213 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 19:17:04,215 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-11 19:17:04,215 - datapilot.api - INFO - [bac04a5a-fe7b-4aaa-ac96-4fa1d3ea49f2] GET /health/error-test - Status: 404 (0.53ms)
+2026-08-11 19:17:04,215 - httpx - INFO - HTTP Request: GET http://testserver/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-11 19:17:04,216 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:17:04,216 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,216 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,216 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionConstraints
+2026-08-11 19:17:04,216 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,216 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionConstraints (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,217 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:04,217 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:17:04,217 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,217 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,244 - datapilot.evaluation.evaluator - INFO - Evaluating 0 experiments for job J1
+2026-08-11 19:17:04,244 - datapilot.evaluation.evaluator - INFO - Evaluating 3 experiments for job JOB_TEST_100
+2026-08-11 19:17:04,249 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:17:04,250 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,250 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,250 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,250 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,250 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,250 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:04,250 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:04,297 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0465s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:17:04,541 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2914s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:17:04,542 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_test
+2026-08-11 19:17:04,542 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:04,543 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,543 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,543 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:17:04,543 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,543 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,553 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output MissionBrief
+2026-08-11 19:17:04,553 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,553 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,553 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,553 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,553 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,554 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:04,554 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:04,574 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0195s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:17:04,804 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.25s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:17:04,805 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_graph_test
+2026-08-11 19:17:04,805 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:04,806 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,806 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,806 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ExperimentPlan
+2026-08-11 19:17:04,806 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:04,806 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: gemini-3.5-flash)
+2026-08-11 19:17:04,807 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:04,807 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:04,832 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0247s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 19:17:05,077 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2705s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:17:05,078 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_ds_graph_test
+2026-08-11 19:17:05,078 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output ResearchDirectorDecision
+2026-08-11 19:17:05,079 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:05,079 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: gemini-3.5-flash)
+2026-08-11 19:17:05,079 - datapilot.agents.base - INFO - Invoking LLM model 'gemini-3.5-flash' for structured output FinalRecommendation
+2026-08-11 19:17:05,079 - datapilot.agents.base - ERROR - google-genai package not installed. Run: pip install google-genai
+2026-08-11 19:17:05,079 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: gemini-3.5-flash)
+2026-08-11 19:17:05,124 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 19:17:05,124 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 19:17:05,150 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0267s | Metrics: {'accuracy': 0.56, 'precision': 0.5539, 'recall': 0.56, 'f1': 0.5379, 'f1_score': 0.5379, 'balanced_accuracy': 0.5427, 'roc_auc': 0.5934}
+2026-08-11 19:17:05,322 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.1989s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 19:17:05,323 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_REG_001
+2026-08-11 19:17:05,334 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_REG_001 | Status: completed | Runtime: 0.0108s | Metrics: {'mae': 8.3344, 'rmse': 10.5896, 'r2': 0.0365, 'explained_variance': 0.0365}
+2026-08-11 19:17:05,351 - datapilot.reports.service - INFO - Generating reports for job JOB_TEST_99 (Winner: EXP_WINNER_001)
+2026-08-11 19:17:05,354 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
+2026-08-11 19:17:05,356 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
+2026-08-11 19:17:05,358 - datapilot.services.job_service - WARNING - No running event loop found for job job_c39dc517; creating new loop
