@@ -20,9 +20,16 @@ import { Badge } from "@/components/badges/Badge";
 import { Button } from "@/components/buttons/Button";
 import { Skeleton } from "@/components/loading/Loading";
 import { AppPieChart } from "@/components/charts/Charts";
+import dynamic from "next/dynamic";
 import { useDashboard, useDatasets } from "@/hooks/useResearch";
 import { formatDate, formatBytes, formatNumber } from "@/utils/formatters";
 import type { Job, JobStatus } from "@/types/api";
+
+const DataFlowCanvas = dynamic(
+  () => import("@/components/visuals/DataFlowCanvas"),
+  { ssr: false }
+);
+
 
 /* ── Stagger container ───────────────────────────────────── */
 const stagger = {
@@ -164,14 +171,16 @@ export default function DashboardPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-8">
 
-      {/* Page header */}
+      {/* Page header banner with canvas data flow background */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8"
+        className="relative card p-6 mb-8 overflow-hidden bg-surface-2 border border-border flex flex-col sm:flex-row sm:items-end justify-between gap-4"
       >
-        <div>
+        <DataFlowCanvas />
+
+        <div className="relative z-10">
           <h1 className="text-xl font-bold text-text tracking-tight">
             Research Overview
           </h1>
@@ -180,10 +189,10 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="relative z-10 flex items-center gap-2 shrink-0">
           <button
             onClick={() => refetch()}
-            className="p-2 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors"
+            className="p-2 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
             title="Refresh"
             aria-label="Refresh dashboard"
           >
@@ -196,6 +205,7 @@ export default function DashboardPage() {
           </Link>
         </div>
       </motion.div>
+
 
       {/* Error banner */}
       {dashError && (
