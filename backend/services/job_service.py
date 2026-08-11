@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import uuid
 from typing import Optional, Dict, Any, List
 from fastapi import BackgroundTasks
@@ -10,6 +11,39 @@ from backend.repositories.dataset_repository import DatasetRepository
 from backend.models.job import JobModel
 from backend.schemas.enums import JobStatus
 from backend.services.job_manager import JobManager
+
+logger = logging.getLogger("datapilot.services.job_service")
+
+
+def _run_job_in_background(job_id: str, dataset_id: str, file_path: str, user_goal: Optional[str] = None):
+    """
+    Sync wrapper that safely schedules the async JobManager coroutine
+    onto the already-running FastAPI event loop.
+
+    CRITICAL FIX: asyncio.run() cannot be called from within a running event loop
+    (which FastAPI always has). Using loop.create_task() instead.
+    """
+    try:
+        loop = asyncio.get_running_loop()
+        loop.create_task(
+            JobManager.run_job_async(
+                job_id=job_id,
+                dataset_id=dataset_id,
+                file_path=file_path,
+                user_goal=user_goal,
+            )
+        )
+    except RuntimeError:
+        # No running loop (shouldn't happen in FastAPI, but handle gracefully)
+        logger.warning(f"No running event loop found for job {job_id}; creating new loop")
+        asyncio.run(
+            JobManager.run_job_async(
+                job_id=job_id,
+                dataset_id=dataset_id,
+                file_path=file_path,
+                user_goal=user_goal,
+            )
+        )
 
 
 class JobService:
@@ -46,31 +80,23 @@ class JobService:
             )
         )
 
-        # Dispatch background worker
+        # Dispatch background worker using safe async scheduling
         if background_tasks:
             background_tasks.add_task(
-                asyncio.run,
-                JobManager.run_job_async(
-                    job_id=job_id,
-                    dataset_id=dataset_id,
-                    file_path=dataset.file_path,
-                    user_goal=user_goal,
-                )
+                _run_job_in_background,
+                job_id=job_id,
+                dataset_id=dataset_id,
+                file_path=dataset.file_path,
+                user_goal=user_goal,
             )
         else:
-            # Safely attempt event loop task dispatch
-            try:
-                loop = asyncio.get_running_loop()
-                loop.create_task(
-                    JobManager.run_job_async(
-                        job_id=job_id,
-                        dataset_id=dataset_id,
-                        file_path=dataset.file_path,
-                        user_goal=user_goal,
-                    )
-                )
-            except RuntimeError:
-                pass
+            # Direct dispatch on running event loop
+            _run_job_in_background(
+                job_id=job_id,
+                dataset_id=dataset_id,
+                file_path=dataset.file_path,
+                user_goal=user_goal,
+            )
 
         return job_record
 

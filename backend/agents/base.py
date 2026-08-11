@@ -9,6 +9,9 @@ from backend.core.config import get_settings
 logger = logging.getLogger("datapilot.agents.base")
 T = TypeVar("T", bound=BaseModel)
 
+# Default timeout for LLM API calls (seconds)
+_LLM_TIMEOUT_SECONDS = 30
+
 
 class LLMClient:
     """Unified LLM client interface for reasoning agents supporting dynamic model choices."""
@@ -18,6 +21,7 @@ class LLMClient:
         self.model_name = model_name or settings.llm_model_name
         self.gemini_key = settings.gemini_api_key
         self.openai_key = settings.openai_api_key
+        self.timeout = _LLM_TIMEOUT_SECONDS
 
     def is_api_configured(self) -> bool:
         """Checks if a valid live API key is configured."""
@@ -61,7 +65,20 @@ class LLMClient:
                     try:
                         genai_mod = importlib.import_module("google.genai")
                         types_mod = importlib.import_module("google.genai.types")
-                        client = genai_mod.Client(api_key=self.gemini_key)
+
+                        # Create client with explicit HTTP timeout to prevent worker hangs
+                        try:
+                            httpx_mod = importlib.import_module("httpx")
+                            http_client = httpx_mod.Client(timeout=self.timeout)
+                            client = genai_mod.Client(
+                                api_key=self.gemini_key,
+                                http_options={"timeout": self.timeout * 1000},  # ms
+                            )
+                        except Exception:
+                            # Fallback: create client without explicit timeout config
+                            client = genai_mod.Client(api_key=self.gemini_key)
+
+                        logger.info(f"Calling Gemini model '{self.model_name}' (timeout={self.timeout}s)")
                         resp = client.models.generate_content(
                             model=self.model_name,
                             contents=prompt,
@@ -72,8 +89,12 @@ class LLMClient:
                             ),
                         )
                         return response_model.model_validate_json(resp.text)
+                    except ImportError:
+                        logger.error("google-genai package not installed. Run: pip install google-genai")
+                    except TimeoutError:
+                        logger.warning(f"Gemini API call timed out after {self.timeout}s; using fallback")
                     except Exception as ge:
-                        logger.warning(f"Google GenAI SDK call failed ({ge}); using fallback response")
+                        logger.warning(f"Google GenAI SDK call failed ({type(ge).__name__}: {ge}); using fallback response")
 
             except Exception as exc:
                 logger.warning(f"LLM API call failed ({exc}); using fallback response")

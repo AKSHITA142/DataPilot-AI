@@ -1,13 +1,12 @@
-from typing import Optional, List
-from fastapi import APIRouter, Depends, UploadFile, File, Form, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from backend.database.connection import get_db
-from backend.services.dataset_service import DatasetService
 from backend.repositories.dataset_repository import DatasetRepository
+from backend.services.dataset_service import DatasetService
 from backend.schemas.response import SuccessResponse
 
-router = APIRouter(prefix="/upload", tags=["Dataset Upload"])
+router = APIRouter(prefix="/datasets", tags=["Datasets"])
 
 
 def _dataset_to_frontend(ds) -> dict:
@@ -21,36 +20,16 @@ def _dataset_to_frontend(ds) -> dict:
         "upload_timestamp": ds.created_at.isoformat() if ds.created_at else None,
         "status": "profiled" if ds.semantic_profile else "uploaded",
         "profile": ds.semantic_profile,
-        # Keep original fields
         "file_path": ds.file_path,
         "checksum": ds.checksum,
     }
 
 
-@router.post("", response_model=SuccessResponse, status_code=status.HTTP_201_CREATED)
-async def upload_dataset(
-    file: UploadFile = File(...),
-    target_column: Optional[str] = Form(None),
-    mission: Optional[str] = Form(None),
-    db: Session = Depends(get_db),
-):
-    """
-    Uploads a raw CSV/Parquet dataset file, runs automated profiling, and registers dataset.
-    """
-    service = DatasetService(db)
-    dataset_record = service.upload_dataset(file=file, target_column=target_column)
-
-    return SuccessResponse(
-        data=_dataset_to_frontend(dataset_record),
-        message="Dataset uploaded and profiled successfully.",
-    )
-
-
 @router.get("", response_model=SuccessResponse)
-def list_all_datasets(db: Session = Depends(get_db)):
+def list_datasets(db: Session = Depends(get_db)):
     """
-    Lists all uploaded datasets (GET /api/v1/upload).
-    Frontend also calls this via GET /api/v1/datasets (registered separately).
+    Lists all uploaded datasets.
+    Frontend calls GET /api/v1/datasets.
     """
     repo = DatasetRepository(db)
     datasets = repo.list(skip=0, limit=200)
@@ -61,15 +40,14 @@ def list_all_datasets(db: Session = Depends(get_db)):
 
 
 @router.get("/{dataset_id}", response_model=SuccessResponse)
-def get_dataset_details(dataset_id: str, db: Session = Depends(get_db)):
+def get_dataset(dataset_id: str, db: Session = Depends(get_db)):
     """
     Retrieves metadata and semantic profile for an uploaded dataset.
+    Frontend calls GET /api/v1/datasets/{dataset_id}.
     """
     service = DatasetService(db)
     dataset_record = service.get_dataset(dataset_id)
-
     return SuccessResponse(
         data=_dataset_to_frontend(dataset_record),
         message="Dataset details retrieved successfully.",
     )
-

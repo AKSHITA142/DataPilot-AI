@@ -1,29 +1,158 @@
-from fastapi import APIRouter, Depends
+import os
+from typing import Optional
+from fastapi import APIRouter, Depends, Query
+from fastapi.responses import FileResponse, PlainTextResponse
 from sqlalchemy.orm import Session
 
 from backend.database.connection import get_db
 from backend.services.report_service import ReportService
+from backend.services.experiment_service import ExperimentService
 from backend.schemas.response import SuccessResponse
+from backend.core.exceptions import NotFoundException
 
 router = APIRouter(prefix="/reports", tags=["Final Reports"])
+
+
+def _build_recommendation(report_record, db: Session) -> Optional[dict]:
+    """
+    Builds the nested FinalRecommendation object the frontend expects,
+    combining report metadata with the winning experiment's metrics.
+    """
+    if not report_record.winning_experiment_id:
+        return None
+
+    # Try to load the winning experiment for detailed metrics
+    exp_service = ExperimentService(db)
+    winning_exp = None
+    try:
+        winning_exp = exp_service.get_experiment_by_code(
+            report_record.job_id, report_record.winning_experiment_id
+        )
+    except Exception:
+        pass
+
+    metrics = {}
+    model_name = "Unknown"
+    pipeline_steps = []
+    if winning_exp:
+        metrics = winning_exp.metrics or {}
+        inner_metrics = metrics.get("metrics", metrics)
+        model_name = winning_exp.model_name or "Unknown"
+        pipeline_ops = (winning_exp.pipeline or {}).get("operations", [])
+        pipeline_steps = [op.get("method", op.get("type", "step")) for op in pipeline_ops]
+    else:
+        inner_metrics = {}
+
+    # Compute composite score
+    available_scores = []
+    for key in ("accuracy", "f1_score", "roc_auc", "precision", "recall"):
+        val = inner_metrics.get(key)
+        if isinstance(val, (int, float)):
+            available_scores.append(val)
+    composite_score = (sum(available_scores) / len(available_scores)) if available_scores else 0.0
+
+    # Determine primary metric
+    primary_metric_value = metrics.get("primary_metric") or (available_scores[0] if available_scores else 0.0)
+    primary_metric_name = "Accuracy" if inner_metrics.get("accuracy") is not None else "RMSE"
+
+    # Extract summary data
+    summary = report_record.summary
+    summary_text = ""
+    key_findings = []
+    reasoning = ""
+    if isinstance(summary, dict):
+        summary_text = summary.get("summary", "")
+        key_findings = summary.get("key_findings", [])
+        reasoning = summary.get("reasoning", summary_text)
+    elif isinstance(summary, str):
+        summary_text = summary
+        reasoning = summary
+
+    return {
+        "recommended_model": model_name,
+        "recommended_pipeline": pipeline_steps,
+        "confidence_score": composite_score,
+        "composite_score": composite_score,
+        "primary_metric_name": primary_metric_name,
+        "primary_metric_value": primary_metric_value,
+        "reasoning": reasoning,
+        "key_findings": key_findings if key_findings else [summary_text] if summary_text else [],
+        "implementation_tips": [],
+        "experiment_id": report_record.winning_experiment_id,
+    }
 
 
 @router.get("/{job_id}", response_model=SuccessResponse)
 def get_final_report(job_id: str, db: Session = Depends(get_db)):
     """
     Retrieves the final recommendation report for a completed research job.
+    Returns the full Report object with nested FinalRecommendation.
     """
     service = ReportService(db)
     report_record = service.get_report_by_job(job_id)
+
+    recommendation = _build_recommendation(report_record, db)
 
     return SuccessResponse(
         data={
             "report_id": report_record.id,
             "job_id": report_record.job_id,
+            "dataset_id": report_record.job.dataset_id if report_record.job else None,
+            "status": "completed",
+            "recommendation": recommendation,
+            "experiment_count": len(report_record.job.experiments) if report_record.job else 0,
+            "knowledge_findings_count": len(report_record.job.knowledge_entries) if report_record.job else 0,
+            "markdown_report": None,  # Populated on download
+            "created_at": report_record.created_at.isoformat() if report_record.created_at else None,
+            "completed_at": report_record.created_at.isoformat() if report_record.created_at else None,
+            # Keep original fields for backwards-compat
             "winning_experiment_id": report_record.winning_experiment_id,
             "report_file_path": report_record.report_file_path,
             "summary": report_record.summary,
-            "created_at": report_record.created_at.isoformat() if report_record.created_at else None,
         },
         message="Final research report retrieved successfully.",
     )
+
+
+@router.get("/{report_id}/download")
+def download_report(
+    report_id: str,
+    format: str = Query(default="markdown", pattern="^(markdown|html)$"),
+    db: Session = Depends(get_db),
+):
+    """
+    Downloads the generated report file as a Markdown or HTML blob.
+    Falls back to a plain-text summary if the file does not exist on disk.
+    """
+    from backend.repositories.report_repository import ReportRepository
+    repo = ReportRepository(db)
+    report_record = repo.get_by_id(report_id)
+
+    # Also try by job_id in case the frontend passes job_id instead of report_id
+    if not report_record:
+        report_record = repo.get_by_job(report_id)
+
+    if not report_record:
+        raise NotFoundException(f"Report '{report_id}' not found.")
+
+    file_path = report_record.report_file_path
+
+    if file_path and os.path.isfile(file_path):
+        media_type = "text/html" if format == "html" else "text/markdown"
+        return FileResponse(
+            path=file_path,
+            media_type=media_type,
+            filename=os.path.basename(file_path),
+        )
+
+    # File doesn't exist yet — return the summary as plain text
+    summary = report_record.summary
+    content = ""
+    if isinstance(summary, dict):
+        content = summary.get("summary", str(summary))
+    elif isinstance(summary, str):
+        content = summary
+    else:
+        content = "Report file not yet generated."
+
+    return PlainTextResponse(content=content, media_type="text/markdown")

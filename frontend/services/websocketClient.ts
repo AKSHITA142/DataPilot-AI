@@ -37,7 +37,28 @@ class WebSocketClient {
 
       this.socket.onmessage = (ev: MessageEvent) => {
         try {
-          const event = JSON.parse(ev.data as string) as WSEvent;
+          const raw = JSON.parse(ev.data as string);
+
+          // Normalize the incoming payload into the WSEvent shape the frontend expects.
+          // Backend now sends: { event, job_id, timestamp, data: { status, stage, ... } }
+          // But older payloads may have fields at top level without a nested `data` object.
+          const event: WSEvent = {
+            event: raw.event,
+            job_id: raw.job_id ?? this.jobId ?? "",
+            timestamp: raw.timestamp ?? new Date().toISOString(),
+            data: {
+              // Prefer nested data, fall back to top-level fields
+              status: raw.data?.status ?? raw.status,
+              stage: raw.data?.stage ?? raw.stage,
+              progress_percent: raw.data?.progress_percent ?? raw.progress_percent ?? raw.progress,
+              message: raw.data?.message ?? raw.message,
+              level: raw.data?.level ?? raw.level,
+              experiment_id: raw.data?.experiment_id ?? raw.experiment_id,
+              finding: raw.data?.finding,
+              report: raw.data?.report,
+            },
+          };
+
           this._dispatch(event);
         } catch {
           // ignore malformed messages

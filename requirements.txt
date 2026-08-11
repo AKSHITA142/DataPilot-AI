@@ -15,6 +15,14 @@ pandas>=2.1.0
 numpy>=1.26.0
 scipy>=1.12.0
 
+# ML Execution Dependencies
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+
 # LangGraph & Orchestration Dependencies
 langgraph>=0.0.30
 langchain-core>=0.1.0
+
+# AI / LLM SDK Dependencies (Gemini 2.5 Flash)
+google-genai>=1.0.0
+
