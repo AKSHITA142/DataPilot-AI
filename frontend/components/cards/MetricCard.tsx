@@ -63,11 +63,12 @@ export function MetricCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      whileHover={{ y: -2, boxShadow: "var(--shadow-md)" }}
-      className={cn("card p-5 flex items-start gap-4", className)}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      whileHover={{ y: -2 }}
+      className={cn("card p-5 flex items-start gap-4 depth-hover", className)}
+
     >
       {icon && (
         <div

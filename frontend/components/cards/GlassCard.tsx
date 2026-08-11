@@ -45,12 +45,13 @@ export function GlassCard({
       }
       onClick={onClick}
       className={cn(
-        "card",
+        "card depth-hover",
         paddingStyles[padding],
         emphasis && "ring-brand-emphasis",
         onClick && "cursor-pointer",
         className
       )}
+
     >
       {children}
     </motion.div>
