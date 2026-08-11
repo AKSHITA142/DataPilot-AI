@@ -8,10 +8,13 @@ import {
   Upload,
   FileSpreadsheet,
   X,
-  CheckCircle2,
   AlertCircle,
   Sparkles,
+  Zap,
+  Target,
+  ArrowRight,
 } from "lucide-react";
+
 import { Button } from "@/components/buttons/Button";
 import { ProgressBar } from "@/components/loading/Loading";
 import { uploadDataset, startJob } from "@/services/apiClient";
@@ -19,6 +22,12 @@ import { formatBytes } from "@/utils/formatters";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
 const MISSION_MAX = 500;
+
+const PRESET_MISSIONS = [
+  "Predict customer churn with high recall and explain top risk drivers.",
+  "Build a regression model to estimate target value with minimum RMSE.",
+  "Classify high-risk financial transactions while maintaining 95%+ precision.",
+];
 
 export default function UploadPage() {
   const router = useRouter();
@@ -83,6 +92,9 @@ export default function UploadPage() {
     mission.trim().length >= 10 &&
     status === "idle";
 
+  const step1Done = file !== null;
+  const step2Done = mission.trim().length >= 10;
+
   return (
     <div className="relative min-h-full">
       {/* Background radial highlight */}
@@ -95,31 +107,62 @@ export default function UploadPage() {
       />
 
       {/* Page content */}
-      <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 pt-8 pb-16 max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/25 text-brand-400 text-xs font-medium mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            Start a New Research Run
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text tracking-tight mb-2">
-            Upload Your Dataset
-          </h1>
-          <p className="text-text-muted text-sm leading-relaxed max-w-md mx-auto">
-            Upload a CSV file and describe your research goal. DataPilot-AI
-            will autonomously run the entire data science pipeline.
-          </p>
-        </motion.div>
-
-        {/* Drop Zone */}
+      <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 pt-6 pb-16 max-w-2xl mx-auto">
+        
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
+          transition={{ duration: 0.4 }}
+          className="text-center mb-6"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/25 text-brand-400 text-xs font-semibold mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            Autonomous AI Research Launcher
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-text tracking-tight mb-2">
+            Upload Dataset & Launch Mission
+          </h1>
+          <p className="text-text-muted text-sm leading-relaxed max-w-md mx-auto">
+            Provide your raw CSV and research objective. DataPilot-AI handles profiling, preprocessing, pipeline execution, and model optimization.
+          </p>
+        </motion.div>
+
+        {/* ── Visual Stepper Header ── */}
+        <div className="w-full card p-3.5 mb-6 flex items-center justify-between text-xs bg-surface-2 border border-border">
+          <div className={`flex items-center gap-2 ${step1Done ? "text-success-400 font-semibold" : "text-text font-medium"}`}>
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono ${
+              step1Done ? "bg-success-500/20 text-success-400" : "bg-brand-500/20 text-brand-400"
+            }`}>
+              {step1Done ? "✓" : "1"}
+            </span>
+            <span>Dataset</span>
+          </div>
+          <ArrowRight className="w-3.5 h-3.5 text-text-muted" />
+          <div className={`flex items-center gap-2 ${step2Done ? "text-success-400 font-semibold" : step1Done ? "text-text font-medium" : "text-text-muted"}`}>
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono ${
+              step2Done ? "bg-success-500/20 text-success-400" : step1Done ? "bg-brand-500/20 text-brand-400" : "bg-surface-4 text-text-muted"
+            }`}>
+              {step2Done ? "✓" : "2"}
+            </span>
+            <span>Mission</span>
+          </div>
+          <ArrowRight className="w-3.5 h-3.5 text-text-muted" />
+          <div className={`flex items-center gap-2 ${isSubmittable ? "text-brand-400 font-semibold" : "text-text-muted"}`}>
+            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono ${
+              isSubmittable ? "bg-brand-500/20 text-brand-400 animate-pulse-soft" : "bg-surface-4 text-text-muted"
+            }`}>
+              3
+            </span>
+            <span>Launch</span>
+          </div>
+        </div>
+
+        {/* Drop Zone Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
           className="w-full mb-6"
         >
           <div
@@ -142,7 +185,7 @@ export default function UploadPage() {
               {file ? (
                 <motion.div
                   key="file-selected"
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center gap-3"
@@ -155,7 +198,7 @@ export default function UploadPage() {
                       {file.name}
                     </p>
                     <p className="text-xs text-text-muted mt-0.5 font-mono">
-                      {formatBytes(file.size)} · CSV
+                      {formatBytes(file.size)} · CSV Dataset Ready
                     </p>
                   </div>
                   <button
@@ -166,7 +209,7 @@ export default function UploadPage() {
                     className="flex items-center gap-1.5 text-xs text-text-muted hover:text-error-400 transition-colors"
                   >
                     <X className="w-3.5 h-3.5" />
-                    Remove file
+                    Change dataset
                   </button>
                 </motion.div>
               ) : (
@@ -191,13 +234,13 @@ export default function UploadPage() {
                     />
                   </div>
                   <div>
-                    <p className="text-text font-medium text-sm">
+                    <p className="text-text font-semibold text-sm">
                       {isDragActive
-                        ? "Drop your CSV here"
-                        : "Drag & drop your CSV file"}
+                        ? "Drop your CSV file here"
+                        : "Click to browse or drag & drop CSV file"}
                     </p>
                     <p className="text-text-muted text-xs mt-1">
-                      or click to browse · max 100 MB
+                      Supports tabular CSV datasets up to 100 MB
                     </p>
                   </div>
                 </motion.div>
@@ -206,17 +249,24 @@ export default function UploadPage() {
           </div>
         </motion.div>
 
-        {/* Mission input */}
+        {/* Mission Input Form */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.5 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
           className="w-full mb-6"
         >
-          <label className="block text-sm font-medium text-text mb-2">
-            Research Mission / Goal{" "}
-            <span className="text-brand-400">*</span>
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-semibold text-text flex items-center gap-1.5">
+              <Target className="w-4 h-4 text-brand-400" />
+              Research Goal & Mission
+              <span className="text-brand-400">*</span>
+            </label>
+            <span className="text-xs text-text-muted font-mono">
+              {mission.length}/{MISSION_MAX}
+            </span>
+          </div>
+
           <textarea
             value={mission}
             onChange={(e) => setMission(e.target.value.slice(0, MISSION_MAX))}
@@ -232,19 +282,35 @@ export default function UploadPage() {
               disabled:opacity-50
             "
           />
-          <div className="flex justify-between mt-1.5">
-            <p className="text-xs text-text-muted">
-              {mission.trim().length < 10 && mission.length > 0
-                ? "At least 10 characters required"
-                : "Be specific about your goal for best results"}
+
+          {/* Preset Mission Pills */}
+          <div className="mt-3">
+            <p className="text-[11px] text-text-muted font-medium mb-2 uppercase tracking-wider">
+              Quick Mission Presets:
             </p>
-            <p className="text-xs text-text-muted font-mono">
-              {mission.length}/{MISSION_MAX}
-            </p>
+            <div className="flex flex-col gap-1.5">
+              {PRESET_MISSIONS.map((preset, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setMission(preset)}
+                  className="
+                    text-left text-xs px-3 py-2 rounded-md
+                    bg-surface-2 hover:bg-surface-3 border border-border-subtle hover:border-brand-500/30
+                    text-text-secondary hover:text-text transition-colors flex items-center justify-between group
+                  "
+                >
+                  <span className="truncate">{preset}</span>
+                  <span className="text-[10px] text-brand-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
+                    Use Preset →
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </motion.div>
 
-        {/* Error message */}
+        {/* Error Notification Banner */}
         <AnimatePresence>
           {errorMsg && (
             <motion.div
@@ -259,7 +325,7 @@ export default function UploadPage() {
           )}
         </AnimatePresence>
 
-        {/* Progress during upload */}
+        {/* Upload / Start Progress Bar */}
         <AnimatePresence>
           {(status === "uploading" || status === "starting") && (
             <motion.div
@@ -272,8 +338,8 @@ export default function UploadPage() {
                 value={uploadProgress}
                 label={
                   status === "starting"
-                    ? "Starting research job…"
-                    : "Uploading dataset…"
+                    ? "Initializing research engine job…"
+                    : "Uploading CSV dataset…"
                 }
                 color="brand"
               />
@@ -281,34 +347,35 @@ export default function UploadPage() {
           )}
         </AnimatePresence>
 
-        {/* Submit */}
+        {/* Launch Button */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.5 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
           className="w-full"
         >
           <Button
             variant="primary"
             size="lg"
-            className="w-full text-base"
+            className="w-full text-base py-3"
             loading={status === "uploading" || status === "starting"}
             disabled={!isSubmittable}
             onClick={handleSubmit}
-            icon={<CheckCircle2 className="w-4 h-4" />}
+            icon={<Zap className="w-4 h-4" />}
           >
             {status === "uploading"
               ? "Uploading Dataset…"
               : status === "starting"
-              ? "Starting Research…"
-              : "Launch Research Run"}
+              ? "Starting Research Job…"
+              : "Launch Research Engine"}
           </Button>
           {!file && (
             <p className="text-xs text-text-muted text-center mt-3">
-              Upload a CSV file and enter your mission to get started
+              Upload a CSV file and enter your goal to enable research execution
             </p>
           )}
         </motion.div>
+
       </div>
     </div>
   );
