@@ -156,3 +156,53 @@ def download_report(
         content = "Report file not yet generated."
 
     return PlainTextResponse(content=content, media_type="text/markdown")
+
+
+@router.get("/{job_id}/download-dataset")
+def download_preprocessed_dataset(
+    job_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Downloads the preprocessed/cleaned CSV dataset artifact generated for the research job.
+    """
+    from backend.repositories.job_repository import JobRepository
+    from backend.repositories.dataset_repository import DatasetRepository
+    from backend.repositories.report_repository import ReportRepository
+
+    job_repo = JobRepository(db)
+    job = job_repo.get_by_id(job_id)
+
+    cleaned_csv_path = None
+
+    report_repo = ReportRepository(db)
+    report = report_repo.get_by_job(job_id) if job else None
+
+    if report and report.winning_experiment_id:
+        candidate = f"storage/artifacts/{report.winning_experiment_id}_cleaned.csv"
+        if os.path.isfile(candidate):
+            cleaned_csv_path = candidate
+
+    if not cleaned_csv_path and os.path.isdir("storage/artifacts"):
+        for fname in os.listdir("storage/artifacts"):
+            if fname.endswith("_cleaned.csv"):
+                cleaned_csv_path = os.path.join("storage/artifacts", fname)
+                break
+
+    if not cleaned_csv_path and job:
+        ds_repo = DatasetRepository(db)
+        dataset = ds_repo.get_by_id(job.dataset_id)
+        if dataset and os.path.isfile(dataset.file_path):
+            cleaned_csv_path = dataset.file_path
+
+    if not cleaned_csv_path or not os.path.isfile(cleaned_csv_path):
+        raise NotFoundException(f"No preprocessed dataset CSV artifact found for job '{job_id}'.")
+
+    filename = f"preprocessed_dataset_{job_id}.csv"
+    return FileResponse(
+        path=cleaned_csv_path,
+        media_type="text/csv",
+        filename=filename,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
