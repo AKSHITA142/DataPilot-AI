@@ -271,9 +271,10 @@ export default function RecommendationPage({
                 <Brain className="w-4 h-4" />
                 AI Scientist Reasoning & Strategy
               </p>
-              <p className="text-sm text-text leading-relaxed text-slate-200">
+              <p className="text-sm text-text-secondary leading-relaxed font-normal">
                 {rec.reasoning}
               </p>
+
             </div>
           </motion.div>
 
