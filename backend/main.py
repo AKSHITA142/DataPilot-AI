@@ -15,6 +15,8 @@ from backend.api.routes import (
     experiments_router,
     reports_router,
     websocket_router,
+    dashboard_router,
+    datasets_router,
 )
 
 settings = get_settings()
@@ -80,13 +82,19 @@ app.include_router(upload_router)
 app.include_router(jobs_router)
 app.include_router(experiments_router)
 app.include_router(reports_router)
+app.include_router(dashboard_router)
 
 api_prefix = "/api/v1"
 app.include_router(upload_router, prefix=api_prefix)
 app.include_router(jobs_router, prefix=api_prefix)
 app.include_router(experiments_router, prefix=api_prefix)
 app.include_router(reports_router, prefix=api_prefix)
+app.include_router(dashboard_router, prefix=api_prefix)
 app.include_router(websocket_router, prefix=api_prefix)
+
+# Register /api/v1/datasets as a standalone router
+# so the frontend's GET /api/v1/datasets and GET /api/v1/datasets/{id} work
+app.include_router(datasets_router, prefix=api_prefix)
 
 
 @app.get("/", tags=["Root"])
@@ -98,3 +106,4 @@ def root():
         "docs_url": "/docs",
         "health_url": "/health",
     }
+

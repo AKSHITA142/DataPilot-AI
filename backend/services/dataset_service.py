@@ -1,15 +1,22 @@
 import os
 import hashlib
 import uuid
+import logging
 from typing import Optional, Dict, Any, Tuple
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
+from backend.core.config import get_settings
 from backend.core.exceptions import ValidationException, NotFoundException
 from backend.repositories.dataset_repository import DatasetRepository
 from backend.models.dataset import DatasetModel
 from backend.profiling import ProfilingEngine
 from backend.schemas.semantic_profile import SemanticProfile
+
+logger = logging.getLogger("datapilot.services.dataset_service")
+
+# Chunk size for reading uploaded files (64 KB) — prevents OOM on large uploads
+_READ_CHUNK_SIZE = 64 * 1024
 
 
 class DatasetService:
@@ -31,6 +38,9 @@ class DatasetService:
         Validates, saves binary file to disk, computes checksum, runs ProfilingEngine,
         and registers dataset in database.
         """
+        settings = get_settings()
+        max_bytes = settings.max_upload_size_mb * 1024 * 1024
+
         filename = file.filename or "uploaded_dataset.csv"
         ext = os.path.splitext(filename)[1].lower()
 
@@ -43,20 +53,38 @@ class DatasetService:
 
         file_path = os.path.join(dest_dir, filename)
 
-        # Read file contents and calculate SHA-256 checksum
+        # Stream file to disk in chunks and compute SHA-256 checksum simultaneously
+        # This avoids loading 100MB+ files into memory all at once
         hasher = hashlib.sha256()
-        file_bytes = file.file.read()
-        file_size = len(file_bytes)
-        hasher.update(file_bytes)
-        checksum = hasher.hexdigest()
+        file_size = 0
 
-        # Save to disk
         with open(file_path, "wb") as f:
-            f.write(file_bytes)
+            while True:
+                chunk = file.file.read(_READ_CHUNK_SIZE)
+                if not chunk:
+                    break
+                file_size += len(chunk)
+
+                # Enforce upload size limit during streaming
+                if file_size > max_bytes:
+                    f.close()
+                    os.remove(file_path)
+                    raise ValidationException(
+                        f"File exceeds maximum upload size of {settings.max_upload_size_mb} MB."
+                    )
+
+                hasher.update(chunk)
+                f.write(chunk)
+
+        checksum = hasher.hexdigest()
+        logger.info(f"Dataset '{filename}' saved ({file_size} bytes, SHA256={checksum[:12]}...)")
 
         # Check if checksum already exists (deduplication check)
         existing = self.repository.get_by_checksum(checksum)
         if existing:
+            # Clean up duplicate file
+            os.remove(file_path)
+            os.rmdir(dest_dir)
             return existing
 
         # Execute ProfilingEngine to generate SemanticProfile
@@ -68,6 +96,7 @@ class DatasetService:
             rows = summary.get("rows", 0)
             cols = summary.get("columns", 0)
         except Exception as e:
+            logger.warning(f"Profiling failed for {filename}: {e}")
             profile_dict = {"error": f"Profiling failed: {str(e)}"}
 
         # Create Database Record
@@ -92,3 +121,4 @@ class DatasetService:
         if not dataset:
             raise NotFoundException(f"Dataset with ID '{dataset_id}' not found.")
         return dataset
+
