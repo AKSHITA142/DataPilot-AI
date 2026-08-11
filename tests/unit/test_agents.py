@@ -6,7 +6,9 @@ from backend.schemas.experiment import ExperimentPlan
 from backend.schemas.evaluation import EvaluationReport, ResearchDirectorDecision, RankingItem
 from backend.schemas.report import FinalRecommendation
 from backend.schemas.enums import DecisionType
+from backend.core.config import get_settings
 from backend.agents import (
+
     DatasetUnderstandingAgent,
     ConstraintGoalAnalyzer,
     StrategyPlannerAgent,
@@ -18,7 +20,8 @@ from backend.agents import (
 
 def test_llm_client_dynamic_model():
     client = LLMClient()
-    assert client.model_name == "gemini-2.5-flash"  # Loaded dynamically from environment config
+    assert client.model_name == get_settings().llm_model_name  # Loaded dynamically from environment config
+
 
     custom_client = LLMClient(model_name="custom-model-v1")
     assert custom_client.model_name == "custom-model-v1"
