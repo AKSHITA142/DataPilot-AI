@@ -3,12 +3,10 @@
 import { use } from "react";
 import { motion } from "framer-motion";
 import {
-  Brain,
   CheckCircle2,
   Lightbulb,
   ChevronRight,
 } from "lucide-react";
-import Link from "next/link";
 import { GlassCard } from "@/components/cards/GlassCard";
 import { Skeleton } from "@/components/loading/Loading";
 import { useReport } from "@/hooks/useResearch";
@@ -27,44 +25,36 @@ export default function KnowledgePage({
   const findings = report?.recommendation?.key_findings ?? [];
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/60">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-            <Brain className="w-4 h-4 text-white" />
+    <div className="max-w-3xl mx-auto px-6 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-violet-300 text-xs font-medium mb-3">
+              <Lightbulb className="w-3.5 h-3.5" />
+              Knowledge Base
+            </div>
+            <h1 className="text-2xl font-black text-slate-100">
+              Research Knowledge Evolution
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Key findings and insights accumulated by the AI research engine
+              across all experiments.
+            </p>
           </div>
-          <span className="font-bold text-sm tracking-tight">
-            DataPilot<span className="text-indigo-400">-AI</span>
-          </span>
-        </Link>
-        <Button
-          variant="primary"
-          size="sm"
-          icon={<ChevronRight className="w-3.5 h-3.5" />}
-          onClick={() => router.push(`/recommendation/${jobId}`)}
-        >
-          Final Report
-        </Button>
-      </nav>
-
-      <div className="max-w-3xl mx-auto px-6 py-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/25 text-violet-300 text-xs font-medium mb-4">
-            <Lightbulb className="w-3.5 h-3.5" />
-            Knowledge Base
-          </div>
-          <h1 className="text-2xl font-black text-slate-100">
-            Research Knowledge Evolution
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Key findings and insights accumulated by the AI research engine
-            across all experiments.
-          </p>
-        </motion.div>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<ChevronRight className="w-3.5 h-3.5" />}
+            onClick={() => router.push(`/recommendation/${jobId}`)}
+          >
+            Final Report
+          </Button>
+        </div>
+      </motion.div>
 
         {isLoading ? (
           <div className="space-y-4">
@@ -106,7 +96,6 @@ export default function KnowledgePage({
             ))}
           </div>
         )}
-      </div>
-    </main>
+    </div>
   );
 }

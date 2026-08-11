@@ -86,30 +86,18 @@ export default function UploadPage() {
     status === "idle";
 
   return (
-    <main className="min-h-screen animated-gradient relative">
+    <div className="relative min-h-full">
       {/* Glow orb */}
       <div
-        className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] pointer-events-none -z-0"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%)",
         }}
       />
 
-      {/* Nav */}
-      <nav className="relative z-10 flex items-center px-8 py-5 border-b border-slate-800/60">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-            <Brain className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-bold text-lg tracking-tight text-slate-100">
-            DataPilot<span className="text-indigo-400">-AI</span>
-          </span>
-        </Link>
-      </nav>
-
       {/* Page content */}
-      <div className="relative z-10 flex flex-col items-center px-6 pt-12 pb-24 max-w-2xl mx-auto">
+      <div className="relative z-10 flex flex-col items-center px-6 pt-10 pb-16 max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -324,6 +312,7 @@ export default function UploadPage() {
           )}
         </motion.div>
       </div>
-    </main>
+    </div>
+
   );
 }

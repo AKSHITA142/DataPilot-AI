@@ -11,7 +11,6 @@ import {
   Wrench,
   ChevronLeft,
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/buttons/Button";
 import { GlassCard } from "@/components/cards/GlassCard";
 import { MetricCard } from "@/components/cards/MetricCard";
@@ -61,39 +60,26 @@ export default function RecommendationPage({
   };
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      {/* Nav */}
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/60">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-            <Brain className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-sm tracking-tight">
-            DataPilot<span className="text-indigo-400">-AI</span>
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<ChevronLeft className="w-3.5 h-3.5" />}
-            onClick={() => router.push(`/experiments/${jobId}`)}
-          >
-            Experiments
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            icon={<Download className="w-3.5 h-3.5" />}
-            onClick={() => handleDownload("markdown")}
-          >
-            Download Report
-          </Button>
-        </div>
-      </nav>
-
-      <div className="max-w-4xl mx-auto px-6 py-10">
+    <div className="max-w-4xl mx-auto px-6 py-8">
+      {/* ── Page-level action bar ── */}
+      <div className="flex items-center justify-between gap-3 mb-8">
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<ChevronLeft className="w-3.5 h-3.5" />}
+          onClick={() => router.push(`/experiments/${jobId}`)}
+        >
+          Experiments
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<Download className="w-3.5 h-3.5" />}
+          onClick={() => handleDownload("markdown")}
+        >
+          Download Report
+        </Button>
+      </div>
         {isLoading ? (
           <div className="space-y-6">
             <SkeletonCard />
@@ -308,7 +294,6 @@ export default function RecommendationPage({
             </motion.div>
           </>
         )}
-      </div>
-    </main>
+    </div>
   );
 }

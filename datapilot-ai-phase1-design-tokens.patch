@@ -1,0 +1,1005 @@
+diff --git a/frontend/app/globals.css b/frontend/app/globals.css
+index faca090..cb29e07 100644
+--- a/frontend/app/globals.css
++++ b/frontend/app/globals.css
+@@ -1,61 +1,112 @@
+ @import "tailwindcss";
+ 
+-/* ──────────────────────────────────────────
+-   DataPilot-AI Design System
+-   Dark-mode first, glassmorphism, premium UI
+-   ────────────────────────────────────────── */
++/* ──────────────────────────────────────────────────────────
++   DataPilot-AI Design System — v2
++   Tonal graphite/neutral foundation, single distinctive brand
++   accent (teal), restrained shadows. No blue/purple gradient
++   default, no default glow-everything.
++   ────────────────────────────────────────────────────────── */
++
++/* ── Tailwind v4 theme tokens (generates utilities automatically:
++   bg-surface-1, text-text-secondary, rounded-md, shadow-md, etc.) ── */
++@theme {
++  /* Surfaces — tonal graphite scale (neutral, not blue-tinted) */
++  --color-bg: #0a0a0b;           /* deepest app background */
++  --color-surface-1: #111113;    /* primary workspace surface */
++  --color-surface-2: #18181b;    /* secondary surface (cards) */
++  --color-surface-3: #212124;    /* elevated surface (modals, popovers) */
++  --color-surface-4: #29292d;    /* interactive/hover surface */
++  --color-input: #1a1a1d;        /* form control surface */
+ 
+-/* ── CSS Custom Properties ── */
+-:root {
+-  /* Background layers */
+-  --bg-base: #020617;        /* slate-950 */
+-  --bg-surface: #0f172a;     /* slate-900 */
+-  --bg-elevated: #1e293b;    /* slate-800 */
+-  --bg-overlay: #334155;     /* slate-700 */
+-
+-  /* Accent palette — indigo/violet */
+-  --accent-primary: #6366f1;   /* indigo-500 */
+-  --accent-secondary: #8b5cf6; /* violet-500 */
+-  --accent-glow: #4f46e5;      /* indigo-600 */
+-  --accent-cyan: #22d3ee;      /* cyan-400 */
+-
+-  /* Semantic colours */
+-  --color-success: #10b981;    /* emerald-500 */
+-  --color-warning: #f59e0b;    /* amber-500 */
+-  --color-error: #ef4444;      /* red-500 */
+-  --color-info: #3b82f6;       /* blue-500 */
++  /* Borders */
++  --color-border-subtle: rgba(255, 255, 255, 0.06);
++  --color-border: rgba(255, 255, 255, 0.10);
++  --color-border-strong: rgba(255, 255, 255, 0.18);
+ 
+   /* Text */
+-  --text-primary: #f1f5f9;    /* slate-100 */
+-  --text-secondary: #94a3b8;  /* slate-400 */
+-  --text-muted: #475569;      /* slate-600 */
++  --color-text: #f2f2f0;
++  --color-text-secondary: #a6a6a2;
++  --color-text-muted: #6e6e6b;
++
++  /* Brand — signal teal (distinct from success-green, warning-amber, error-red) */
++  --color-brand-100: #c9f5ef;
++  --color-brand-300: #6bdbcd;
++  --color-brand-400: #33c7b6;
++  --color-brand-500: #12b3a3;   /* primary */
++  --color-brand-600: #0d8f83;
++  --color-brand-700: #0a6e65;
++
++  /* Semantic */
++  --color-success-400: #4ade80;
++  --color-success-500: #22c55e;
++  --color-success-600: #16a34a;
++
++  --color-warning-400: #fbbf24;
++  --color-warning-500: #f59e0b;
++  --color-warning-600: #d97706;
++
++  --color-error-400: #f87171;
++  --color-error-500: #ef4444;
++  --color-error-600: #dc2626;
++
++  --color-info-400: #94a3b8;
++  --color-info-500: #7c8ba1;
++
++  /* Radius — sophisticated, not toy-like */
++  --radius-xs: 4px;
++  --radius-sm: 6px;
++  --radius-md: 10px;
++  --radius-lg: 14px;
++  --radius-xl: 18px;
++
++  /* Fonts (kept from layout.tsx font vars) */
++  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
++  --font-mono: var(--font-mono), ui-monospace, monospace;
++}
++
++/* ── Plain CSS custom properties (for non-Tailwind consumers:
++   Recharts inline styles, canvas/3D materials, etc.) ── */
++:root {
++  --bg: #0a0a0b;
++  --surface-1: #111113;
++  --surface-2: #18181b;
++  --surface-3: #212124;
++  --surface-4: #29292d;
++
++  --border-subtle: rgba(255, 255, 255, 0.06);
++  --border: rgba(255, 255, 255, 0.10);
++  --border-strong: rgba(255, 255, 255, 0.18);
++
++  --text: #f2f2f0;
++  --text-secondary: #a6a6a2;
++  --text-muted: #6e6e6b;
++
++  --brand: #12b3a3;
++  --brand-light: #33c7b6;
++  --brand-dark: #0d8f83;
++
++  --success: #22c55e;
++  --warning: #f59e0b;
++  --error: #ef4444;
++  --info: #7c8ba1;
+ 
+-  /* Borders */
+-  --border-subtle: rgba(148, 163, 184, 0.08);
+-  --border-default: rgba(148, 163, 184, 0.12);
+-  --border-strong: rgba(148, 163, 184, 0.20);
+-
+-  /* Glass surfaces */
+-  --glass-bg: rgba(15, 23, 42, 0.60);
+-  --glass-bg-strong: rgba(15, 23, 42, 0.85);
+-  --glass-border: rgba(99, 102, 241, 0.20);
+-
+-  /* Shadows */
+-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+-  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.5);
+-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+-  --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
+-
+-  /* Radius */
+   --radius-sm: 6px;
+   --radius-md: 10px;
+-  --radius-lg: 16px;
+-  --radius-xl: 24px;
++  --radius-lg: 14px;
++  --radius-xl: 18px;
++
++  /* Shadows — subtle elevation, not glow */
++  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
++  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
++  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
++  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
++
++  /* Reserved for rare, deliberate emphasis only (not default state) */
++  --ring-brand: 0 0 0 1px var(--brand), 0 0 16px rgba(18, 179, 163, 0.18);
+ 
+-  /* Transitions */
+   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+-  --transition-default: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+-  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
++  --transition-default: 220ms cubic-bezier(0.4, 0, 0.2, 1);
++  --transition-slow: 380ms cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ 
+ /* ── Global Reset & Base ── */
+@@ -70,10 +121,21 @@ html {
+ }
+ 
+ body {
+-  background-color: var(--bg-base);
+-  color: var(--text-primary);
++  background-color: var(--bg);
++  color: var(--text);
+   min-height: 100vh;
+-  line-height: 1.6;
++  line-height: 1.55;
++}
++
++@media (prefers-reduced-motion: reduce) {
++  html {
++    scroll-behavior: auto;
++  }
++  *, *::before, *::after {
++    animation-duration: 0.01ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.01ms !important;
++  }
+ }
+ 
+ /* ── Custom Scrollbar ── */
+@@ -82,79 +144,46 @@ body {
+   height: 6px;
+ }
+ ::-webkit-scrollbar-track {
+-  background: var(--bg-surface);
++  background: var(--surface-1);
+ }
+ ::-webkit-scrollbar-thumb {
+-  background: var(--bg-overlay);
++  background: var(--surface-4);
+   border-radius: 3px;
+ }
+ ::-webkit-scrollbar-thumb:hover {
+-  background: var(--accent-primary);
+-}
+-
+-/* ── Glassmorphism Utilities ── */
+-.glass {
+-  background: var(--glass-bg);
+-  backdrop-filter: blur(12px);
+-  -webkit-backdrop-filter: blur(12px);
+-  border: 1px solid var(--border-default);
++  background: var(--text-muted);
+ }
+ 
+-.glass-strong {
+-  background: var(--glass-bg-strong);
+-  backdrop-filter: blur(20px);
+-  -webkit-backdrop-filter: blur(20px);
+-  border: 1px solid var(--glass-border);
+-}
++/* ── Surface utilities (tonal layering, not glass/blur by default) ── */
++.surface-1 { background: var(--surface-1); }
++.surface-2 { background: var(--surface-2); }
++.surface-3 { background: var(--surface-3); }
+ 
+-.glass-card {
+-  background: var(--glass-bg);
+-  backdrop-filter: blur(12px);
+-  -webkit-backdrop-filter: blur(12px);
+-  border: 1px solid var(--border-default);
++.card {
++  background: var(--surface-2);
++  border: 1px solid var(--border-subtle);
+   border-radius: var(--radius-lg);
+-  box-shadow: var(--shadow-md);
+-  transition: border-color var(--transition-default), box-shadow var(--transition-default);
+-}
+-
+-.glass-card:hover {
+-  border-color: var(--glass-border);
+-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+-}
+-
+-/* ── Gradient Text ── */
+-.gradient-text {
+-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-cyan));
+-  -webkit-background-clip: text;
+-  -webkit-text-fill-color: transparent;
+-  background-clip: text;
+-}
+-
+-.gradient-text-subtle {
+-  background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+-  -webkit-background-clip: text;
+-  -webkit-text-fill-color: transparent;
+-  background-clip: text;
++  box-shadow: var(--shadow-xs);
++  transition: border-color var(--transition-default), box-shadow var(--transition-default), background-color var(--transition-default);
+ }
+ 
+-/* ── Gradient Backgrounds ── */
+-.gradient-bg {
+-  background: linear-gradient(135deg, var(--accent-glow) 0%, var(--accent-secondary) 100%);
++.card:hover {
++  border-color: var(--border);
++  background: var(--surface-3);
++  box-shadow: var(--shadow-sm);
+ }
+ 
+-.gradient-border {
+-  position: relative;
+-  border: 1px solid transparent;
+-  background-clip: padding-box;
++.card-elevated {
++  background: var(--surface-3);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-lg);
++  box-shadow: var(--shadow-md);
+ }
+ 
+-.gradient-border::before {
+-  content: "";
+-  position: absolute;
+-  inset: -1px;
+-  border-radius: inherit;
+-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+-  z-index: -1;
++/* Use sparingly — only for genuinely important, selected, or active elements */
++.ring-brand-emphasis {
++  box-shadow: var(--ring-brand);
++  border-color: var(--brand) !important;
+ }
+ 
+ /* ── Shimmer Skeleton ── */
+@@ -166,68 +195,25 @@ body {
+ .skeleton {
+   background: linear-gradient(
+     90deg,
+-    var(--bg-elevated) 25%,
+-    var(--bg-overlay) 50%,
+-    var(--bg-elevated) 75%
++    var(--surface-2) 25%,
++    var(--surface-4) 50%,
++    var(--surface-2) 75%
+   );
+   background-size: 1000px 100%;
+   animation: shimmer 2s infinite linear;
+   border-radius: var(--radius-sm);
+ }
+ 
+-/* ── Glow Effects ── */
+-.glow-primary {
+-  box-shadow: var(--shadow-glow);
+-}
+-
+-.glow-success {
+-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.30);
+-}
+-
+-.glow-error {
+-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.30);
+-}
+-
+-/* ── Animated Gradient Mesh (hero background) ── */
+-@keyframes gradient-shift {
+-  0% { background-position: 0% 50%; }
+-  50% { background-position: 100% 50%; }
+-  100% { background-position: 0% 50%; }
+-}
+-
+-.animated-gradient {
+-  background: linear-gradient(
+-    -45deg,
+-    #020617,
+-    #0f0a1e,
+-    #0a0f2e,
+-    #0f172a,
+-    #1a0533
+-  );
+-  background-size: 400% 400%;
+-  animation: gradient-shift 15s ease infinite;
+-}
+-
+-/* ── Noise texture overlay ── */
+-.noise-overlay::before {
+-  content: "";
+-  position: absolute;
+-  inset: 0;
+-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+-  pointer-events: none;
+-  border-radius: inherit;
+-}
+-
+-/* ── Status Badge colours ── */
+-.status-queued    { color: var(--text-secondary); background: rgba(148, 163, 184, 0.12); }
+-.status-running   { color: #60a5fa; background: rgba(59, 130, 246, 0.12); }
+-.status-completed { color: var(--color-success); background: rgba(16, 185, 129, 0.12); }
+-.status-failed    { color: var(--color-error); background: rgba(239, 68, 68, 0.12); }
+-.status-cancelled { color: var(--color-warning); background: rgba(245, 158, 11, 0.12); }
++/* ── Status Badge colours (semantic, muted-on-dark) ── */
++.status-queued    { color: var(--text-secondary); background: rgba(166, 166, 162, 0.12); }
++.status-running   { color: var(--brand-light);     background: rgba(18, 179, 163, 0.14); }
++.status-completed { color: var(--success);         background: rgba(34, 197, 94, 0.14); }
++.status-failed    { color: var(--error);           background: rgba(239, 68, 68, 0.14); }
++.status-cancelled { color: var(--warning);         background: rgba(245, 158, 11, 0.14); }
+ 
+ /* ── Focus ring ── */
+ *:focus-visible {
+-  outline: 2px solid var(--accent-primary);
++  outline: 2px solid var(--brand);
+   outline-offset: 2px;
+   border-radius: var(--radius-sm);
+ }
+@@ -238,7 +224,7 @@ hr, .divider {
+   border-top: 1px solid var(--border-subtle);
+ }
+ 
+-/* ── Pulse animation ── */
++/* ── Pulse animation (used for "live"/running indicators only) ── */
+ @keyframes pulse-soft {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0.5; }
+@@ -258,7 +244,7 @@ hr, .divider {
+ .dot-2 { animation: dot-blink 1.4s ease-in-out 0.2s infinite; }
+ .dot-3 { animation: dot-blink 1.4s ease-in-out 0.4s infinite; }
+ 
+-/* ── Recharts overrides (dark mode) ── */
++/* ── Recharts overrides (dark mode, tonal) ── */
+ .recharts-cartesian-grid-horizontal line,
+ .recharts-cartesian-grid-vertical line {
+   stroke: var(--border-subtle) !important;
+@@ -268,8 +254,22 @@ hr, .divider {
+   font-size: 11px !important;
+ }
+ .recharts-tooltip-wrapper .recharts-default-tooltip {
+-  background: var(--bg-elevated) !important;
+-  border: 1px solid var(--border-default) !important;
++  background: var(--surface-3) !important;
++  border: 1px solid var(--border) !important;
+   border-radius: var(--radius-md) !important;
+-  box-shadow: var(--shadow-lg) !important;
++  box-shadow: var(--shadow-md) !important;
++}
++
++/* ── Subtle depth utilities (for "3D-inspired" 2D UI) ── */
++.tilt-surface {
++  transform-style: preserve-3d;
++  perspective: 900px;
++}
++
++.depth-hover {
++  transition: transform var(--transition-default), box-shadow var(--transition-default);
++}
++.depth-hover:hover {
++  transform: translateY(-2px);
++  box-shadow: var(--shadow-lg);
+ }
+diff --git a/frontend/app/layout.tsx b/frontend/app/layout.tsx
+index d53e2a1..abd82a3 100644
+--- a/frontend/app/layout.tsx
++++ b/frontend/app/layout.tsx
+@@ -40,7 +40,7 @@ export const metadata: Metadata = {
+ };
+ 
+ export const viewport: Viewport = {
+-  themeColor: "#020617",
++  themeColor: "#0a0a0b",
+ };
+ 
+ export default function RootLayout({
+@@ -50,7 +50,7 @@ export default function RootLayout({
+ }) {
+   return (
+     <html lang="en" className={`dark ${inter.variable} ${jetbrainsMono.variable}`}>
+-      <body className={`${inter.className} antialiased bg-slate-950 text-slate-100 min-h-screen`}>
++      <body className={`${inter.className} antialiased bg-bg text-text min-h-screen`}>
+         <Providers>{children}</Providers>
+       </body>
+     </html>
+diff --git a/frontend/app/recommendation/[jobId]/page.tsx b/frontend/app/recommendation/[jobId]/page.tsx
+index d9ec8b3..6aaf882 100644
+--- a/frontend/app/recommendation/[jobId]/page.tsx
++++ b/frontend/app/recommendation/[jobId]/page.tsx
+@@ -179,19 +179,19 @@ export default function RecommendationPage({
+                 label={rec.primary_metric_name}
+                 value={formatMetric(rec.primary_metric_value)}
+                 icon={<Trophy className="w-5 h-5" />}
+-                accent="amber"
++                accent="success"
+               />
+               <MetricCard
+                 label="Composite Score"
+                 value={formatMetric(rec.composite_score)}
+                 icon={<CheckCircle2 className="w-5 h-5" />}
+-                accent="indigo"
++                accent="brand"
+               />
+               <MetricCard
+                 label="Total Experiments"
+                 value={report?.experiment_count ?? "—"}
+                 icon={<Lightbulb className="w-5 h-5" />}
+-                accent="violet"
++                accent="neutral"
+               />
+             </div>
+ 
+diff --git a/frontend/app/timeline/[jobId]/page.tsx b/frontend/app/timeline/[jobId]/page.tsx
+index b38ff02..e5e6510 100644
+--- a/frontend/app/timeline/[jobId]/page.tsx
++++ b/frontend/app/timeline/[jobId]/page.tsx
+@@ -192,10 +192,10 @@ export default function TimelinePage({
+                   }
+                   color={
+                     job.status === "completed"
+-                      ? "emerald"
++                      ? "success"
+                       : job.status === "failed"
+-                      ? "amber"
+-                      : "indigo"
++                      ? "error"
++                      : "brand"
+                   }
+                 />
+ 
+diff --git a/frontend/app/upload/page.tsx b/frontend/app/upload/page.tsx
+index 007d835..56f1892 100644
+--- a/frontend/app/upload/page.tsx
++++ b/frontend/app/upload/page.tsx
+@@ -289,7 +289,7 @@ export default function UploadPage() {
+                     ? "Starting research job…"
+                     : "Uploading dataset…"
+                 }
+-                color="indigo"
++                color="brand"
+               />
+             </motion.div>
+           )}
+diff --git a/frontend/components/badges/Badge.tsx b/frontend/components/badges/Badge.tsx
+index 36146f7..3b7cdd1 100644
+--- a/frontend/components/badges/Badge.tsx
++++ b/frontend/components/badges/Badge.tsx
+@@ -13,14 +13,14 @@ interface BadgeProps {
+ }
+ 
+ const variantMap: Record<BadgeVariant, { cls: string; dotColor: string }> = {
+-  queued:    { cls: "status-queued",    dotColor: "bg-slate-400" },
+-  running:   { cls: "status-running",   dotColor: "bg-blue-400 animate-pulse" },
+-  completed: { cls: "status-completed", dotColor: "bg-emerald-400" },
+-  failed:    { cls: "status-failed",    dotColor: "bg-red-400" },
+-  cancelled: { cls: "status-cancelled", dotColor: "bg-amber-400" },
+-  info:      { cls: "status-running",   dotColor: "bg-blue-400" },
+-  neutral:   { cls: "status-queued",    dotColor: "bg-slate-400" },
+-  warning:   { cls: "status-cancelled", dotColor: "bg-amber-400" },
++  queued:    { cls: "status-queued",    dotColor: "bg-text-muted" },
++  running:   { cls: "status-running",   dotColor: "bg-brand-400 animate-pulse-soft" },
++  completed: { cls: "status-completed", dotColor: "bg-success-400" },
++  failed:    { cls: "status-failed",    dotColor: "bg-error-400" },
++  cancelled: { cls: "status-cancelled", dotColor: "bg-warning-400" },
++  info:      { cls: "status-running",   dotColor: "bg-brand-400" },
++  neutral:   { cls: "status-queued",    dotColor: "bg-text-muted" },
++  warning:   { cls: "status-cancelled", dotColor: "bg-warning-400" },
+ };
+ 
+ export function Badge({ variant = "neutral", label, dot = true, className }: BadgeProps) {
+diff --git a/frontend/components/buttons/Button.tsx b/frontend/components/buttons/Button.tsx
+index 9db3780..be2451d 100644
+--- a/frontend/components/buttons/Button.tsx
++++ b/frontend/components/buttons/Button.tsx
+@@ -17,15 +17,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+ 
+ const variantStyles: Record<Variant, string> = {
+   primary:
+-    "bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500/50 shadow-[0_0_20px_rgba(99,102,241,0.25)]",
++    "bg-brand-500 hover:bg-brand-400 text-[#052620] font-semibold border border-brand-400/60 shadow-sm",
+   secondary:
+-    "bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700",
++    "bg-surface-3 hover:bg-surface-4 text-text border border-border",
+   ghost:
+-    "bg-transparent hover:bg-slate-800/60 text-slate-300 border border-slate-700/50",
++    "bg-transparent hover:bg-surface-3 text-text-secondary border border-border-subtle",
+   danger:
+-    "bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/40",
++    "bg-error-500/12 hover:bg-error-500/20 text-error-400 border border-error-500/30",
+   success:
+-    "bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40",
++    "bg-success-500/12 hover:bg-success-500/20 text-success-400 border border-success-500/30",
+ };
+ 
+ const sizeStyles: Record<Size, string> = {
+@@ -46,12 +46,12 @@ export function Button({
+ }: ButtonProps) {
+   return (
+     <motion.button
+-      whileHover={{ scale: 1.02 }}
+-      whileTap={{ scale: 0.97 }}
+-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
++      whileHover={{ scale: 1.015 }}
++      whileTap={{ scale: 0.98 }}
++      transition={{ type: "spring", stiffness: 420, damping: 24 }}
+       className={cn(
+-        "inline-flex items-center justify-center rounded-lg font-medium",
+-        "transition-all duration-150 cursor-pointer select-none",
++        "inline-flex items-center justify-center rounded-md font-medium",
++        "transition-colors duration-150 cursor-pointer select-none",
+         "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+         variantStyles[variant],
+         sizeStyles[size],
+diff --git a/frontend/components/cards/GlassCard.tsx b/frontend/components/cards/GlassCard.tsx
+index a61530d..f01ce03 100644
+--- a/frontend/components/cards/GlassCard.tsx
++++ b/frontend/components/cards/GlassCard.tsx
+@@ -8,7 +8,8 @@ interface GlassCardProps {
+   children: ReactNode;
+   className?: string;
+   hover?: boolean;
+-  glow?: boolean;
++  /** Reserve for genuinely important/selected cards only — not default state */
++  emphasis?: boolean;
+   padding?: "none" | "sm" | "md" | "lg";
+   onClick?: () => void;
+ }
+@@ -24,7 +25,7 @@ export function GlassCard({
+   children,
+   className,
+   hover = true,
+-  glow = false,
++  emphasis = false,
+   padding = "md",
+   onClick,
+ }: GlassCardProps) {
+@@ -36,17 +37,17 @@ export function GlassCard({
+       whileHover={
+         hover
+           ? {
+-              borderColor: "rgba(99,102,241,0.35)",
+-              boxShadow:
+-                "0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(99,102,241,0.2)",
++              y: -2,
++              borderColor: "var(--border)",
++              boxShadow: "var(--shadow-md)",
+             }
+           : undefined
+       }
+       onClick={onClick}
+       className={cn(
+-        "glass-card",
++        "card",
+         paddingStyles[padding],
+-        glow && "glow-primary",
++        emphasis && "ring-brand-emphasis",
+         onClick && "cursor-pointer",
+         className
+       )}
+@@ -65,9 +66,8 @@ export function Card({
+   return (
+     <div
+       className={cn(
+-        "rounded-xl border",
+-        "bg-slate-900/60",
+-        "border-slate-700/50",
++        "rounded-lg border",
++        "bg-surface-2 border-border-subtle",
+         paddingStyles[padding],
+         className
+       )}
+diff --git a/frontend/components/cards/MetricCard.tsx b/frontend/components/cards/MetricCard.tsx
+index bfaeb8a..58e5ded 100644
+--- a/frontend/components/cards/MetricCard.tsx
++++ b/frontend/components/cards/MetricCard.tsx
+@@ -12,39 +12,40 @@ interface MetricCardProps {
+   trend?: "up" | "down" | "neutral";
+   trendValue?: string;
+   className?: string;
+-  accent?: "indigo" | "emerald" | "amber" | "cyan" | "violet";
++  /** Semantic, not decorative — pick the one that matches what the metric means */
++  accent?: "brand" | "success" | "warning" | "error" | "neutral";
+ }
+ 
+ const accentMap = {
+-  indigo: {
+-    icon: "text-indigo-400",
+-    bg: "bg-indigo-500/10",
+-    border: "border-indigo-500/20",
+-    value: "text-indigo-300",
++  brand: {
++    icon: "text-brand-400",
++    bg: "bg-brand-500/10",
++    border: "border-brand-500/25",
++    value: "text-text",
+   },
+-  emerald: {
+-    icon: "text-emerald-400",
+-    bg: "bg-emerald-500/10",
+-    border: "border-emerald-500/20",
+-    value: "text-emerald-300",
++  success: {
++    icon: "text-success-400",
++    bg: "bg-success-500/10",
++    border: "border-success-500/25",
++    value: "text-text",
+   },
+-  amber: {
+-    icon: "text-amber-400",
+-    bg: "bg-amber-500/10",
+-    border: "border-amber-500/20",
+-    value: "text-amber-300",
++  warning: {
++    icon: "text-warning-400",
++    bg: "bg-warning-500/10",
++    border: "border-warning-500/25",
++    value: "text-text",
+   },
+-  cyan: {
+-    icon: "text-cyan-400",
+-    bg: "bg-cyan-500/10",
+-    border: "border-cyan-500/20",
+-    value: "text-cyan-300",
++  error: {
++    icon: "text-error-400",
++    bg: "bg-error-500/10",
++    border: "border-error-500/25",
++    value: "text-text",
+   },
+-  violet: {
+-    icon: "text-violet-400",
+-    bg: "bg-violet-500/10",
+-    border: "border-violet-500/20",
+-    value: "text-violet-300",
++  neutral: {
++    icon: "text-text-secondary",
++    bg: "bg-surface-3",
++    border: "border-border",
++    value: "text-text",
+   },
+ };
+ 
+@@ -56,7 +57,7 @@ export function MetricCard({
+   trend,
+   trendValue,
+   className,
+-  accent = "indigo",
++  accent = "neutral",
+ }: MetricCardProps) {
+   const colors = accentMap[accent];
+ 
+@@ -65,40 +66,37 @@ export function MetricCard({
+       initial={{ opacity: 0, y: 12 }}
+       animate={{ opacity: 1, y: 0 }}
+       transition={{ duration: 0.35, ease: "easeOut" }}
+-      whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}
+-      className={cn(
+-        "glass-card p-5 flex items-start gap-4",
+-        className
+-      )}
++      whileHover={{ y: -2, boxShadow: "var(--shadow-md)" }}
++      className={cn("card p-5 flex items-start gap-4", className)}
+     >
+       {icon && (
+         <div
+           className={cn(
+-            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
++            "w-10 h-10 rounded-md flex items-center justify-center shrink-0 border",
+             colors.bg,
+-            `border ${colors.border}`
++            colors.border
+           )}
+         >
+           <span className={cn("w-5 h-5", colors.icon)}>{icon}</span>
+         </div>
+       )}
+       <div className="min-w-0 flex-1">
+-        <p className="text-xs text-slate-400 font-medium mb-1 uppercase tracking-wider">
++        <p className="text-xs text-text-secondary font-medium mb-1 uppercase tracking-wider">
+           {label}
+         </p>
+-        <p className={cn("text-2xl font-bold leading-none", colors.value)}>
++        <p className={cn("text-2xl font-bold leading-none tabular-nums", colors.value)}>
+           {value}
+         </p>
+         {subtext && (
+-          <p className="text-xs text-slate-500 mt-1.5 truncate">{subtext}</p>
++          <p className="text-xs text-text-muted mt-1.5 truncate">{subtext}</p>
+         )}
+         {trend && trendValue && (
+           <p
+             className={cn(
+               "text-xs font-medium mt-1.5",
+-              trend === "up" && "text-emerald-400",
+-              trend === "down" && "text-red-400",
+-              trend === "neutral" && "text-slate-400"
++              trend === "up" && "text-success-400",
++              trend === "down" && "text-error-400",
++              trend === "neutral" && "text-text-secondary"
+             )}
+           >
+             {trend === "up" ? "↑" : trend === "down" ? "↓" : "→"} {trendValue}
+diff --git a/frontend/components/charts/Charts.tsx b/frontend/components/charts/Charts.tsx
+index 295a047..cd40d34 100644
+--- a/frontend/components/charts/Charts.tsx
++++ b/frontend/components/charts/Charts.tsx
+@@ -17,25 +17,33 @@ import {
+ } from "recharts";
+ 
+ // ── Shared chart colours ──────────────────────
++// Coherent analytical palette anchored on the brand teal, not a rainbow.
++// Use CHART_COLORS for neutral categorical series (e.g. pie/donut segments
++// with no inherent severity meaning). For severity-coded data, use the
++// semantic tokens directly (success/warning/error) instead of this array.
+ export const CHART_COLORS = [
+-  "#6366f1", // indigo-500
+-  "#8b5cf6", // violet-500
+-  "#22d3ee", // cyan-400
+-  "#10b981", // emerald-500
+-  "#f59e0b", // amber-500
+-  "#ef4444", // red-500
+-  "#3b82f6", // blue-500
+-  "#a78bfa", // violet-400
++  "#12b3a3", // brand-500
++  "#6bdbcd", // brand-300
++  "#0a6e65", // brand-700
++  "#7c8ba1", // info / neutral steel
++  "#f59e0b", // warning-500 (attention)
++  "#a6a6a2", // text-secondary (other/neutral)
++  "#33c7b6", // brand-400
++  "#4ade80", // success-400 (only if a "healthy" segment applies)
+ ];
+ 
+ const tooltipStyle = {
+-  backgroundColor: "#1e293b",
+-  border: "1px solid rgba(148,163,184,0.15)",
++  backgroundColor: "var(--surface-3)",
++  border: "1px solid var(--border)",
+   borderRadius: "10px",
+-  color: "#f1f5f9",
++  color: "var(--text)",
+   fontSize: "12px",
+ };
+ 
++const axisTick = { fontSize: 11, fill: "#a6a6a2" };
++const gridStroke = "rgba(255,255,255,0.05)";
++const brandCursor = { fill: "rgba(18,179,163,0.08)" };
++
+ type TooltipValue = number | string | ReadonlyArray<number | string> | undefined;
+ type TooltipName = number | string | undefined;
+ 
+@@ -62,27 +70,27 @@ interface AppBarChartProps {
+ export function AppBarChart({
+   data,
+   label = "Value",
+-  color = "#6366f1",
++  color = "#12b3a3",
+   height = 240,
+ }: AppBarChartProps) {
+   return (
+     <ResponsiveContainer width="100%" height={height}>
+       <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" />
++        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+         <XAxis
+           dataKey="name"
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+         />
+         <YAxis
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+         />
+         <Tooltip
+           contentStyle={tooltipStyle}
+-          cursor={{ fill: "rgba(99,102,241,0.08)" }}
++          cursor={brandCursor}
+           formatter={(v: TooltipValue) => [formatVal(v), label]}
+         />
+         <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
+@@ -104,27 +112,27 @@ export function HorizontalBarChart({
+         layout="vertical"
+         margin={{ top: 4, right: 20, left: 4, bottom: 0 }}
+       >
+-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" horizontal={false} />
++        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} horizontal={false} />
+         <XAxis
+           type="number"
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+         />
+         <YAxis
+           dataKey="name"
+           type="category"
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+           width={100}
+         />
+         <Tooltip
+           contentStyle={tooltipStyle}
+-          cursor={{ fill: "rgba(99,102,241,0.08)" }}
++          cursor={brandCursor}
+           formatter={(v: TooltipValue) => [formatVal(v), label]}
+         />
+-        <Bar dataKey="value" fill="#6366f1" radius={[0, 4, 4, 0]} />
++        <Bar dataKey="value" fill="#12b3a3" radius={[0, 4, 4, 0]} />
+       </BarChart>
+     </ResponsiveContainer>
+   );
+@@ -171,7 +179,7 @@ export function AppPieChart({
+           iconType="circle"
+           iconSize={8}
+           formatter={(value: string) => (
+-            <span style={{ color: "#94a3b8", fontSize: 11 }}>{value}</span>
++            <span style={{ color: "#a6a6a2", fontSize: 11 }}>{value}</span>
+           )}
+         />
+       </PieChart>
+@@ -202,33 +210,33 @@ export function AppScatterChart({
+   return (
+     <ResponsiveContainer width="100%" height={height}>
+       <ScatterChart margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+-        <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.06)" />
++        <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+         <XAxis
+           type="number"
+           dataKey="x"
+           name={xLabel}
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+-          label={{ value: xLabel, position: "insideBottom", offset: -4, fill: "#475569", fontSize: 11 }}
++          label={{ value: xLabel, position: "insideBottom", offset: -4, fill: "#6e6e6b", fontSize: 11 }}
+         />
+         <YAxis
+           type="number"
+           dataKey="y"
+           name={yLabel}
+-          tick={{ fontSize: 11, fill: "#94a3b8" }}
++          tick={axisTick}
+           axisLine={false}
+           tickLine={false}
+         />
+         <Tooltip
+           contentStyle={tooltipStyle}
+-          cursor={{ strokeDasharray: "3 3", stroke: "rgba(99,102,241,0.4)" }}
++          cursor={{ strokeDasharray: "3 3", stroke: "rgba(18,179,163,0.4)" }}
+           formatter={(v: TooltipValue, name: TooltipName) => [
+             formatVal(v),
+             name ?? "",
+           ]}
+         />
+-        <Scatter data={data} fill="#6366f1" opacity={0.8} />
++        <Scatter data={data} fill="#12b3a3" opacity={0.85} />
+       </ScatterChart>
+     </ResponsiveContainer>
+   );
+diff --git a/frontend/components/loading/Loading.tsx b/frontend/components/loading/Loading.tsx
+index d45b242..6d81651 100644
+--- a/frontend/components/loading/Loading.tsx
++++ b/frontend/components/loading/Loading.tsx
+@@ -13,7 +13,7 @@ const spinnerSizes = { sm: "w-4 h-4", md: "w-6 h-6", lg: "w-10 h-10" };
+ export function Spinner({ size = "md", className }: SpinnerProps) {
+   return (
+     <svg
+-      className={cn("animate-spin text-indigo-400", spinnerSizes[size], className)}
++      className={cn("animate-spin text-brand-400", spinnerSizes[size], className)}
+       viewBox="0 0 24 24"
+       fill="none"
+     >
+@@ -41,14 +41,21 @@ interface ProgressBarProps {
+   className?: string;
+   label?: string;
+   showPercent?: boolean;
+-  color?: "indigo" | "emerald" | "amber" | "cyan";
++  color?: "brand" | "success" | "warning" | "error";
+ }
+ 
+-const progressColors = {
+-  indigo: "from-indigo-600 to-violet-500",
+-  emerald: "from-emerald-600 to-teal-400",
+-  amber: "from-amber-500 to-orange-400",
+-  cyan: "from-cyan-500 to-blue-400",
++const progressColors: Record<NonNullable<ProgressBarProps["color"]>, string> = {
++  brand: "bg-brand-500",
++  success: "bg-success-500",
++  warning: "bg-warning-500",
++  error: "bg-error-500",
++};
++
++const progressTextColors: Record<NonNullable<ProgressBarProps["color"]>, string> = {
++  brand: "text-brand-400",
++  success: "text-success-400",
++  warning: "text-warning-400",
++  error: "text-error-400",
+ };
+ 
+ export function ProgressBar({
+@@ -56,7 +63,7 @@ export function ProgressBar({
+   className,
+   label,
+   showPercent = true,
+-  color = "indigo",
++  color = "brand",
+ }: ProgressBarProps) {
+   const clamped = Math.min(100, Math.max(0, value));
+   return (
+@@ -64,20 +71,19 @@ export function ProgressBar({
+       {(label || showPercent) && (
+         <div className="flex justify-between mb-1.5">
+           {label && (
+-            <span className="text-xs text-slate-400 font-medium">{label}</span>
++            <span className="text-xs text-text-secondary font-medium">{label}</span>
+           )}
+           {showPercent && (
+-            <span className="text-xs text-indigo-400 font-semibold ml-auto">
++            <span className={cn("text-xs font-semibold ml-auto", progressTextColors[color])}>
+               {clamped.toFixed(0)}%
+             </span>
+           )}
+         </div>
+       )}
+-      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
++      <div className="w-full h-1.5 bg-surface-3 rounded-full overflow-hidden">
+         <div
+           className={cn(
+-            "h-full rounded-full bg-gradient-to-r transition-all duration-700 ease-out",
+-            "shadow-[0_0_8px_rgba(99,102,241,0.6)]",
++            "h-full rounded-full transition-all duration-700 ease-out",
+             progressColors[color]
+           )}
+           style={{ width: `${clamped}%` }}
+@@ -98,7 +104,7 @@ export function Skeleton({ className }: SkeletonProps) {
+ 
+ export function SkeletonCard() {
+   return (
+-    <div className="glass-card p-5 space-y-3">
++    <div className="card p-5 space-y-3">
+       <Skeleton className="h-4 w-1/3 rounded" />
+       <Skeleton className="h-8 w-2/3 rounded" />
+       <Skeleton className="h-3 w-full rounded" />

@@ -273,3 +273,42 @@ hr, .divider {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
+
+/* ── Landing-page specific helpers ──────────────── */
+
+/* Animated mesh gradient (landing / upload bg) */
+@keyframes gradient-pan {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient {
+  background: var(--bg);
+  background-size: 200% 200%;
+}
+
+/* Gradient headline text (landing hero) */
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card (used on landing + timeline) */
+.glass-card {
+  background: rgba(24, 24, 27, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
+  transition: border-color var(--transition-default), box-shadow var(--transition-default);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--shadow-lg);
+}
+

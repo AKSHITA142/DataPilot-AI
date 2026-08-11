@@ -3,7 +3,6 @@
 import { use, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Brain,
   Filter,
   GitCompare,
   ChevronDown,
@@ -11,7 +10,8 @@ import {
   Trophy,
   ArrowRight,
 } from "lucide-react";
-import Link from "next/link";
+
+
 import { Button } from "@/components/buttons/Button";
 import { Badge } from "@/components/badges/Badge";
 import { GlassCard } from "@/components/cards/GlassCard";
@@ -240,53 +240,43 @@ export default function ExperimentsPage({
   );
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      {/* Nav */}
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/60">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-            <Brain className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-sm tracking-tight">
-            DataPilot<span className="text-indigo-400">-AI</span>
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-2">
-          {selectedIds.size >= 2 && (
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<GitCompare className="w-3.5 h-3.5" />}
-              onClick={() => setCompareModalOpen(true)}
-            >
-              Compare ({selectedIds.size})
-            </Button>
-          )}
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<ArrowRight className="w-3.5 h-3.5" />}
-            onClick={() => router.push(`/recommendation/${jobId}`)}
-          >
-            Final Report
-          </Button>
-        </div>
-      </nav>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Page header */}
+    <div className="max-w-7xl mx-auto px-6 py-8">
+      {/* Page header with inline action buttons */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-2xl font-black text-slate-100 mb-1">
-            Experiment Leaderboard
-          </h1>
-          <p className="text-sm text-slate-500">
-            {filtered.length} experiments ranked by composite score
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-black text-slate-100 mb-1">
+                Experiment Leaderboard
+              </h1>
+              <p className="text-sm text-slate-500">
+                {filtered.length} experiments ranked by composite score
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {selectedIds.size >= 2 && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<GitCompare className="w-3.5 h-3.5" />}
+                  onClick={() => setCompareModalOpen(true)}
+                >
+                  Compare ({selectedIds.size})
+                </Button>
+              )}
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<ArrowRight className="w-3.5 h-3.5" />}
+                onClick={() => router.push(`/recommendation/${jobId}`)}
+              >
+                Final Report
+              </Button>
+            </div>
+          </div>
         </motion.div>
 
         {/* Scatter chart */}
@@ -385,7 +375,6 @@ export default function ExperimentsPage({
             </div>
           )}
         </GlassCard>
-      </div>
 
       {/* Compare Modal */}
       <Modal
@@ -430,6 +419,6 @@ export default function ExperimentsPage({
           </table>
         </div>
       </Modal>
-    </main>
+    </div>
   );
 }

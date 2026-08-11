@@ -4,14 +4,12 @@ import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Brain,
   Wifi,
   WifiOff,
   AlertTriangle,
   ChevronRight,
   FlaskConical,
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/buttons/Button";
 import { ProgressBar, Spinner, SkeletonCard } from "@/components/loading/Loading";
 import { Badge } from "@/components/badges/Badge";
@@ -103,71 +101,51 @@ export default function TimelinePage({
   }));
 
   return (
-    <main className="min-h-screen bg-slate-950">
-      {/* ── Top nav ── */}
-      <nav className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/60">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-            <Brain className="w-4 h-4 text-white" />
-          </div>
-          <span className="font-bold text-sm tracking-tight text-slate-100">
-            DataPilot<span className="text-indigo-400">-AI</span>
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-3">
-          {/* WS connection indicator */}
-          <div className="flex items-center gap-1.5 text-xs">
-            {wsConnected ? (
-              <><Wifi className="w-3.5 h-3.5 text-emerald-400" /><span className="text-emerald-400">Live</span></>
-            ) : (
-              <><WifiOff className="w-3.5 h-3.5 text-slate-500" /><span className="text-slate-500">Offline</span></>
-            )}
-          </div>
-
-          {job?.status === "running" && (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => setCancelModalOpen(true)}
+    <>
+      <div className="flex h-full overflow-hidden">
+      {/* ── LEFT: Pipeline timeline ── */}
+      <div className="w-full max-w-lg flex-shrink-0 flex flex-col border-r border-border-subtle overflow-y-auto">
+        <div className="p-6">
+          {/* Job header — includes WS indicator + action buttons */}
+          {isLoading ? (
+            <SkeletonCard />
+          ) : job ? (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6"
             >
-              Cancel Job
-            </Button>
-          )}
-
-          {job?.status === "completed" && (
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<ChevronRight className="w-3.5 h-3.5" />}
-              onClick={() => router.push(`/experiments/${jobId}`)}
-            >
-              View Results
-            </Button>
-          )}
-        </div>
-      </nav>
-
-      {/* ── Main layout: left sidebar + right log panel ── */}
-      <div className="flex h-[calc(100vh-65px)]">
-        {/* ── LEFT: Pipeline timeline ── */}
-        <div className="w-full max-w-lg flex-shrink-0 flex flex-col border-r border-slate-800/60 overflow-y-auto">
-          <div className="p-6">
-            {/* Job header */}
-            {isLoading ? (
-              <SkeletonCard />
-            ) : job ? (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
                     <p className="text-xs text-slate-500 mb-1 uppercase tracking-wider">Research Job</p>
                     <p className="text-xs font-mono text-slate-600 truncate">{job.job_id}</p>
                   </div>
-                  <Badge variant={job.status} label={job.status} />
+                  <div className="flex items-center gap-2">
+                    {/* WS indicator — inline */}
+                    <div className="flex items-center gap-1.5 text-xs">
+                      {wsConnected ? (
+                        <><Wifi className="w-3.5 h-3.5 text-emerald-400" /><span className="text-emerald-400">Live</span></>
+                      ) : (
+                        <><WifiOff className="w-3.5 h-3.5 text-slate-500" /><span className="text-slate-500">Offline</span></>
+                      )}
+                    </div>
+                    <Badge variant={job.status} label={job.status} />
+                    {job.status === "running" && (
+                      <Button variant="danger" size="sm" onClick={() => setCancelModalOpen(true)}>
+                        Cancel
+                      </Button>
+                    )}
+                    {job.status === "completed" && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        icon={<ChevronRight className="w-3.5 h-3.5" />}
+                        onClick={() => router.push(`/experiments/${jobId}`)}
+                      >
+                        View Results
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Mission */}
@@ -324,6 +302,6 @@ export default function TimelinePage({
           </Button>
         </div>
       </Modal>
-    </main>
+    </>
   );
 }
