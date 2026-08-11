@@ -26,7 +26,8 @@
   /* Text */
   --color-text: #f2f2f0;
   --color-text-secondary: #a6a6a2;
-  --color-text-muted: #6e6e6b;
+  --color-text-muted: #888884; /* High contrast: 5.8:1 on dark surfaces */
+
 
   /* Brand — signal teal (distinct from success-green, warning-amber, error-red) */
   --color-brand-100: #c9f5ef;
@@ -79,7 +80,7 @@
 
   --text: #f2f2f0;
   --text-secondary: #a6a6a2;
-  --text-muted: #6e6e6b;
+  --text-muted: #888884;
 
   --brand: #12b3a3;
   --brand-light: #33c7b6;
@@ -109,7 +110,14 @@
   --transition-slow: 380ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Global Focus Ring (Accessibility) ── */
+:focus-visible {
+  outline: 2px solid var(--brand-light) !important;
+  outline-offset: 2px !important;
+}
+
 /* ── Global Reset & Base ── */
+
 *, *::before, *::after {
   box-sizing: border-box;
 }

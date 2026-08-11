@@ -257,7 +257,7 @@ export default function UploadPage() {
           className="w-full mb-6"
         >
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-semibold text-text flex items-center gap-1.5">
+            <label htmlFor="mission-goal-input" className="text-sm font-semibold text-text flex items-center gap-1.5 cursor-pointer">
               <Target className="w-4 h-4 text-brand-400" />
               Research Goal & Mission
               <span className="text-brand-400">*</span>
@@ -268,8 +268,10 @@ export default function UploadPage() {
           </div>
 
           <textarea
+            id="mission-goal-input"
             value={mission}
             onChange={(e) => setMission(e.target.value.slice(0, MISSION_MAX))}
+
             placeholder="e.g., Predict customer churn with highest possible accuracy. Focus on recall for the positive class. Explain key factors driving churn."
             rows={4}
             disabled={status === "uploading" || status === "starting"}

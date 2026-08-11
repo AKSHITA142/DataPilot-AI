@@ -35,12 +35,19 @@ export function Topbar() {
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-1.5 focus:bg-brand-500 focus:text-[#052620] focus:font-bold focus:rounded-md focus:shadow-md"
+      >
+        Skip to main content
+      </a>
       <header className="
         sticky top-0 z-10 flex items-center justify-between
         h-14 px-4 md:px-6
         bg-surface-1/80 border-b border-border-subtle
         backdrop-blur-sm shrink-0
       ">
+
         {/* Left: hamburger (mobile) + title */}
         <div className="flex items-center gap-3">
           <HamburgerButton onClick={() => setDrawerOpen(true)} />
