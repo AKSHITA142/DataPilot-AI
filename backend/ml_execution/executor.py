@@ -1,8 +1,11 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional, Union, Dict, Any, Tuple
 import logging
+
 import pandas as pd
 import numpy as np
+from sklearn.pipeline import Pipeline
+
 
 from backend.schemas.experiment import (
     ExperimentPlan,
@@ -32,6 +35,30 @@ class MLExecutionEngine:
         self.pipeline_builder = PipelineBuilder()
         self.cv_runner = CrossValidationRunner(n_splits=self.n_splits, random_state=self.random_state)
 
+    @staticmethod
+    def _extract_meta_and_features(df: pd.DataFrame, target_column: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Separates non-predictive identifier/metadata columns (id, name, uuid, *_id)
+        from ML feature columns X to prevent target memorization and preserve ID columns in export.
+        """
+        meta_cols = []
+        n_rows = len(df)
+        for col in df.columns:
+            if col == target_column:
+                continue
+            col_lower = col.lower().strip()
+            if col_lower in ("id", "name", "uuid", "row_id", "user_id", "customer_id", "index"):
+                meta_cols.append(col)
+            elif col_lower.endswith("_id") or col_lower.startswith("id_"):
+                meta_cols.append(col)
+            elif df[col].dtype == object and df[col].nunique() == n_rows and n_rows > 5:
+                meta_cols.append(col)
+
+        meta_df = df[meta_cols].copy()
+        feature_cols = [c for c in df.columns if c not in meta_cols and c != target_column]
+        features_df = df[feature_cols].copy()
+        return meta_df, features_df
+
     def execute_single_experiment(
         self,
         spec: ExperimentSpec,
@@ -51,14 +78,15 @@ class MLExecutionEngine:
             # 1. Validation
             self.validator.validate_spec(spec, df_copy, target_column, mission_brief)
 
-            # Separate features X and target y
-            X = df_copy.drop(columns=[target_column])
+            # Separate metadata (id, name), features X, and target y
+            meta_df, X = self._extract_meta_and_features(df_copy, target_column)
             y = df_copy[target_column]
 
             # For classification, clean NaNs in y and encode string targets
             if task_type == "classification":
                 from sklearn.preprocessing import LabelEncoder
                 valid_mask = y.notna()
+                meta_df = meta_df[valid_mask]
                 X = X[valid_mask]
                 y = y[valid_mask]
 
@@ -113,8 +141,38 @@ class MLExecutionEngine:
             except Exception:
                 pass
 
-            artifacts = Artifacts(feature_importance=feature_importance)
+            # 7. Generate and save preprocessed dataset CSV artifact
+            processed_csv_path: Optional[str] = None
+            try:
+                import os
+                if len(fitted_pipeline.steps) > 1:
+                    preproc_pipe = Pipeline(fitted_pipeline.steps[:-1])
+                    X_trans = preproc_pipe.transform(X)
+                    if isinstance(X_trans, pd.DataFrame):
+                        clean_features_df = X_trans.copy()
+                    else:
+                        if hasattr(X_trans, "toarray"):
+                            X_trans = X_trans.toarray()
+                        clean_features_df = pd.DataFrame(X_trans, index=X.index)
+                else:
+                    clean_features_df = X.copy()
+
+                # Re-attach metadata columns (id, name, etc.) and target column
+                clean_df = pd.concat([meta_df.reset_index(drop=True), clean_features_df.reset_index(drop=True)], axis=1)
+                clean_df[target_column] = y.values
+
+                os.makedirs("storage/artifacts", exist_ok=True)
+                processed_csv_path = f"storage/artifacts/{spec.experiment_id}_cleaned.csv"
+                clean_df.to_csv(processed_csv_path, index=False)
+            except Exception as pe:
+                logger.warning(f"Could not export preprocessed dataset CSV: {pe}")
+
+            artifacts = Artifacts(
+                processed_dataset_path=processed_csv_path,
+                feature_importance=feature_importance,
+            )
             runtime = logger_inst.finish(status="completed", metrics=metrics_result.metrics)
+
 
             pipeline_def = PipelineDefinition(
                 operations=spec.operations,
