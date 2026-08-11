@@ -8,7 +8,7 @@ import type {
   DashboardData,
 } from "@/types/api";
 
-const BASE_URL = "/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_API_PREFIX || "/api/v1";
 
 // ── Unique client ID for per-browser session isolation ────────────────
 function getClientId(): string {

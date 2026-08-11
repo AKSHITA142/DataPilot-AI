@@ -24,7 +24,7 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
 
     # Compute composite_score as the average of available classification metrics
     available_scores = []
-    for key in ("accuracy", "f1_score", "roc_auc", "precision", "recall"):
+    for key in ("accuracy", "f1", "f1_score", "roc_auc", "precision", "recall"):
         val = inner_metrics.get(key)
         if isinstance(val, (int, float)):
             available_scores.append(val)
@@ -47,6 +47,8 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
     else:
         pipeline_name = exp.model_name or "Unknown Pipeline"
 
+    f1_val = inner_metrics.get("f1_score") if inner_metrics.get("f1_score") is not None else inner_metrics.get("f1")
+
     return {
         "experiment_id": exp.experiment_id_code,
         "job_id": job_id,
@@ -61,7 +63,7 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
         "accuracy": inner_metrics.get("accuracy"),
         "precision": inner_metrics.get("precision"),
         "recall": inner_metrics.get("recall"),
-        "f1_score": inner_metrics.get("f1_score"),
+        "f1_score": f1_val,
         "roc_auc": inner_metrics.get("roc_auc"),
         "rmse": inner_metrics.get("rmse"),
         "mae": inner_metrics.get("mae"),

@@ -40,10 +40,20 @@ class PipelineBuilder:
         # Always decompose datetime columns first if present
         steps.append(("datetime_decomp", DatetimeDecompositionTransformer()))
 
-        # Categorize operations by structural type
+        # Categorize operations by structural type (normalizing aliases)
         ops_by_type: Dict[str, ExperimentOperation] = {}
         for op in spec.operations:
-            ops_by_type[op.type] = op
+            op_type = op.type.lower().strip()
+            if op_type in ("impute", "imputation"):
+                ops_by_type["imputation"] = op
+            elif op_type in ("encode", "encoding"):
+                ops_by_type["encoding"] = op
+            elif op_type in ("scale", "scaling"):
+                ops_by_type["scaling"] = op
+            elif op_type in ("engineer", "feature_engineering"):
+                ops_by_type["feature_engineering"] = op
+            else:
+                ops_by_type[op_type] = op
 
         # 1. Imputation step
         if "imputation" in ops_by_type:

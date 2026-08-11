@@ -25,8 +25,18 @@ class WebSocketClient {
   private _connect(): void {
     if (!this.jobId) return;
 
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const url = `${protocol}//localhost:8000/api/v1/ws/jobs/${this.jobId}`;
+    const apiPrefix = process.env.NEXT_PUBLIC_API_PREFIX || "/api/v1";
+    let wsBase = process.env.NEXT_PUBLIC_WS_URL;
+
+    if (!wsBase) {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+      wsBase = backendUrl.replace(/^http/, "ws");
+    }
+
+    // Replace localhost with 127.0.0.1 to avoid macOS IPv6 resolution collision with Docker
+    wsBase = wsBase.replace("//localhost", "//127.0.0.1");
+
+    const url = `${wsBase}${apiPrefix}/ws/jobs/${this.jobId}`;
 
     try {
       this.socket = new WebSocket(url);

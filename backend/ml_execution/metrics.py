@@ -43,6 +43,7 @@ class MetricEngine:
             metrics["precision"] = round(prec, 4)
             metrics["recall"] = round(rec, 4)
             metrics["f1"] = round(f1, 4)
+            metrics["f1_score"] = round(f1, 4)
             metrics["balanced_accuracy"] = round(bal_acc, 4)
 
             # ROC-AUC if proba available or binary
