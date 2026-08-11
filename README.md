@@ -35,32 +35,32 @@ flowchart TD
     %% Styling
     classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
     classDef gateway fill:#1e1e38,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
-    classDef graph fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
+    classDef stateGraphStyle fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
     classDef agents fill:#2e1065,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
     classDef mlfill fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     classDef storage fill:#451a03,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
 
-    User["👤 User / Next.js Dashboard"] :::client -->|1. Upload Raw CSV/Parquet| API["🔌 FastAPI REST Gateway"] :::gateway
-    API -->|2. Save File & Profile| Profiler["🔬 Profiling Engine"] :::mlfill
-    Profiler -->|3. Generate SemanticProfile| JobMgr["⚙️ JobManager (Async Worker)"] :::gateway
+    User["User / Next.js Dashboard"] :::client -->|1. Upload Raw CSV/Parquet| API["FastAPI REST Gateway"] :::gateway
+    API -->|2. Save File & Profile| Profiler["Profiling Engine"] :::mlfill
+    Profiler -->|3. Generate SemanticProfile| JobMgr["JobManager Async Worker"] :::gateway
 
-    JobMgr -->|4. Launch Async Worker| LangGraph["🎼 LangGraph State Machine"] :::graph
+    JobMgr -->|4. Launch Async Worker| LangGraph["LangGraph State Machine"] :::stateGraphStyle
     
-    subgraph Iterative_Research_Loop ["🔄 Iterative Autonomous Research Loop"]
-        LangGraph -->|5. Dataset Understanding| Agent1["🧠 DatasetUnderstandingAgent"] :::agents
-        Agent1 -->|6. Plan Experiments| Agent2["🧠 StrategyPlannerAgent"] :::agents
-        Agent2 -->|7. Execute ML Pipelines| MLEngine["🔬 ML Execution Engine"] :::mlfill
-        MLEngine -->|8. Evaluate & Rank| EvalEngine["🏆 Evaluation Engine"] :::mlfill
-        EvalEngine -->|9. Director Decision| Agent3["🧠 ResearchDirectorAgent"] :::agents
-        Agent3 -->|10. Check Gain & Budget| Router{"🚦 route_next Router"} :::graph
+    subgraph Iterative_Research_Loop ["Iterative Autonomous Research Loop"]
+        LangGraph -->|5. Dataset Understanding| Agent1["DatasetUnderstandingAgent"] :::agents
+        Agent1 -->|6. Plan Experiments| Agent2["StrategyPlannerAgent"] :::agents
+        Agent2 -->|7. Execute ML Pipelines| MLEngine["ML Execution Engine"] :::mlfill
+        MLEngine -->|8. Evaluate & Rank| EvalEngine["Evaluation Engine"] :::mlfill
+        EvalEngine -->|9. Director Decision| Agent3["ResearchDirectorAgent"] :::agents
+        Agent3 -->|10. Check Gain & Budget| Router{"route_next Router"} :::stateGraphStyle
         Router -- Gain > 0.5% & Budget Left --> Agent2
     end
 
-    Router -- Converged / Stop --> ReportAgent["🧠 ReportGeneratorAgent"] :::agents
-    ReportAgent -->|11. Synthesize Artifacts| Exporter["📦 ArtifactExporter"] :::storage
+    Router -- Converged / Stop --> ReportAgent["ReportGeneratorAgent"] :::agents
+    ReportAgent -->|11. Synthesize Artifacts| Exporter["ArtifactExporter"] :::storage
 
-    Exporter -->|12. Export .csv, .pkl, .md, .html| Storage[("💾 Disk Storage & SQLite DB")] :::storage
-    JobMgr <-->|13. Real-Time Telemetry| WS["📡 WebSocket Broadcaster"] :::gateway
+    Exporter -->|12. Export .csv, .pkl, .md, .html| Storage[("Disk Storage & SQLite DB")] :::storage
+    JobMgr <-->|13. Real-Time Telemetry| WS["WebSocket Broadcaster"] :::gateway
     WS <-->|14. Live Event Console Stream| User
 ```
 
