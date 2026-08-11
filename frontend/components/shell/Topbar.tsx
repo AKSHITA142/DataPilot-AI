@@ -8,12 +8,14 @@ import { HamburgerButton, MobileDrawer } from "./Sidebar";
 
 /* ── Route → human title map ─────────────────────── */
 const ROUTE_TITLES: Record<string, string> = {
+  "/": "Overview",
   "/upload": "New Run",
   "/timeline": "Research Timeline",
   "/experiments": "Experiments",
   "/knowledge": "Knowledge Base",
   "/recommendation": "Recommendation",
 };
+
 
 function getPageTitle(pathname: string): string {
   // Exact match

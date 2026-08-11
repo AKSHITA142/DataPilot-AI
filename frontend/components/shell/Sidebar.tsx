@@ -15,10 +15,12 @@ import {
   ChevronRight,
   Menu,
   X,
+  LayoutDashboard,
 } from "lucide-react";
 
 /* ── Nav items — only real routes ──────────────── */
 const NAV_ITEMS = [
+  { href: "/", icon: LayoutDashboard, label: "Overview" },
   { href: "/upload", icon: Upload, label: "New Run" },
   { href: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
   { href: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
@@ -117,7 +119,7 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 
   return (
     <motion.aside
@@ -271,10 +273,10 @@ export function MobileBottomNav() {
     pathname === href || pathname.startsWith(href + "/");
 
   const BOTTOM_ITEMS = [
+    { href: "/", icon: LayoutDashboard, label: "Overview" },
     { href: "/upload", icon: Upload, label: "New Run" },
     { href: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
     { href: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
-    { href: "/knowledge", icon: BookOpen, label: "Knowledge", dynamic: true },
   ];
 
   return (

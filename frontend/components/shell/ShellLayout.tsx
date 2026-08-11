@@ -5,7 +5,8 @@ import { Sidebar, MobileBottomNav } from "@/components/shell/Sidebar";
 import { Topbar } from "@/components/shell/Topbar";
 
 /* Routes that should NOT get the app shell (e.g., the landing page) */
-const NO_SHELL_ROUTES = ["/"];
+const NO_SHELL_ROUTES: string[] = [];
+
 
 export function ShellLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
