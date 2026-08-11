@@ -16,13 +16,13 @@ By unifying **LLM multi-agent reasoning**, **LangGraph state machine orchestrati
 
 ## 🌟 Key Features
 
-- 🧠 **Autonomous AI Multi-Agent Council**: 5 specialized AI agents (`DatasetUnderstandingAgent`, `ConstraintGoalAnalyzer`, `StrategyPlannerAgent`, `ResearchDirectorAgent`, `ReportGeneratorAgent`) driven by **OpenRouter LLMs** (`nvidia/nemotron-3.5-lightning:free`) with rate limiting and zero-downtime rule-based fallbacks.
-- 🎼 **LangGraph State Machine Engine**: Stateful cyclic workflow controlling iterative research loops, iteration budget enforcement (max 5 iterations), and early convergence detection ($0.5\%$ metric threshold).
-- 🔬 **Deterministic ML Execution Engine**: Automatic imputation, categorical encoding, feature scaling, and adaptive cross-validation (`StratifiedKFold` with fallback to `KFold` for small sample sizes).
-- 🛡️ **Zero Data Leakage Identifier Preservation**: Automatically identifies non-predictive metadata columns (`id`, `name`, `customer_id`) and isolates them during model training to eliminate fake $1.00$ accuracy, while re-attaching them intact in exported CSV artifacts.
-- 🏆 **Multi-Objective Composite Ranking Engine**: Ranks candidate pipelines across 5 composite dimensions: **Normalized Metric ($35\%$)**, **Generalization Gap ($25\%$)**, **Fold Variance ($20\%$)**, **Runtime Efficiency ($10\%$)**, and **Business Constraint Compliance**.
-- 📡 **Real-Time WebSockets Telemetry**: Streams live terminal logs and status events (`job.status_changed`, `experiment.completed`, `knowledge.updated`, `job.completed`) over `/ws/jobs/{job_id}`.
-- 📥 **1-Click Artifact Exports**: Instant downloads for preprocessed cleaned CSV datasets (`.csv`), trained pipeline binaries (`.pkl`), Markdown reports (`.md`), and Glassmorphism HTML web reports (`.html`).
+- 🧠 **Autonomous Agentic Consensus**: 5 LLM-driven agents (`DatasetUnderstanding`, `ConstraintGoal`, `StrategyPlanner`, `ResearchDirector`, `ReportGenerator`) leveraging OpenRouter (`nvidia/nemotron-3.5-lightning:free`) with zero-downtime rule fallbacks.
+- 🎼 **LangGraph State Graph Topology**: Cyclic DAG orchestration enforcing max-iteration budget control and $0.5\%$ convergence detection.
+- 🔬 **Deterministic ML Pipelines**: Auto-imputation, categorical encoding, feature scaling, and adaptive `StratifiedKFold` / `KFold` cross-validation.
+- 🛡️ **Meta-Column Isolation**: Programmatically isolates non-predictive entity identifiers (`id`, `name`, `uuid`) to prevent target memorization while preserving them in exported datasets.
+- 🏆 **5D Multi-Objective Composite Scoring**: Evaluates models via weighted scalarization ($35\%$ metric, $25\%$ generalization gap, $20\%$ variance, $10\%$ runtime cost, constraint screening).
+- 📡 **Asynchronous Telemetry Streaming**: Event-driven WebSockets broadcast channel (`/ws/jobs/{job_id}`) serving live execution telemetry and log streams.
+- 📦 **Polyglot Artifact Export Engine**: 1-click serialization of cleaned CSVs, pickled scikit-learn pipelines (`.pkl`), GitHub Markdown (`.md`), and glassmorphism HTML reports (`.html`).
 
 ---
 
@@ -32,7 +32,29 @@ By unifying **LLM multi-agent reasoning**, **LangGraph state machine orchestrati
 
 ```mermaid
 flowchart TD
-    %% Styling
+    User["User / Next.js Dashboard"] -->|1. Upload Raw CSV| API["FastAPI REST Gateway"]
+    API -->|2. Profile File| Profiler["Profiling Engine"]
+    Profiler -->|3. SemanticProfile| JobMgr["JobManager Async Worker"]
+
+    JobMgr -->|4. Launch Worker| LangGraph["LangGraph State Machine"]
+    
+    subgraph Loop ["Iterative Autonomous Research Loop"]
+        LangGraph -->|5. Understand| Agent1["DatasetUnderstandingAgent"]
+        Agent1 -->|6. Plan| Agent2["StrategyPlannerAgent"]
+        Agent2 -->|7. Execute| MLEngine["ML Execution Engine"]
+        MLEngine -->|8. Evaluate| EvalEngine["Evaluation Engine"]
+        EvalEngine -->|9. Direct| Agent3["ResearchDirectorAgent"]
+        Agent3 -->|10. Check Gain & Budget| Router{"route_next Router"}
+        Router -- Gain > 0.5% & Budget Left --> Agent2
+    end
+
+    Router -- Converged / Stop --> ReportAgent["ReportGeneratorAgent"]
+    ReportAgent -->|11. Synthesize| Exporter["ArtifactExporter"]
+
+    Exporter -->|12. Export Artifacts| Storage[("Disk Storage & SQLite DB")]
+    JobMgr <-->|13. Telemetry Stream| WS["WebSocket Broadcaster"]
+    WS <-->|14. Live Event Stream| User
+
     classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
     classDef gateway fill:#1e1e38,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
     classDef stateGraphStyle fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
@@ -40,28 +62,12 @@ flowchart TD
     classDef mlfill fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#f8fafc;
     classDef storage fill:#451a03,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
 
-    User["User / Next.js Dashboard"] :::client -->|1. Upload Raw CSV/Parquet| API["FastAPI REST Gateway"] :::gateway
-    API -->|2. Save File & Profile| Profiler["Profiling Engine"] :::mlfill
-    Profiler -->|3. Generate SemanticProfile| JobMgr["JobManager Async Worker"] :::gateway
-
-    JobMgr -->|4. Launch Async Worker| LangGraph["LangGraph State Machine"] :::stateGraphStyle
-    
-    subgraph Iterative_Research_Loop ["Iterative Autonomous Research Loop"]
-        LangGraph -->|5. Dataset Understanding| Agent1["DatasetUnderstandingAgent"] :::agents
-        Agent1 -->|6. Plan Experiments| Agent2["StrategyPlannerAgent"] :::agents
-        Agent2 -->|7. Execute ML Pipelines| MLEngine["ML Execution Engine"] :::mlfill
-        MLEngine -->|8. Evaluate & Rank| EvalEngine["Evaluation Engine"] :::mlfill
-        EvalEngine -->|9. Director Decision| Agent3["ResearchDirectorAgent"] :::agents
-        Agent3 -->|10. Check Gain & Budget| Router{"route_next Router"} :::stateGraphStyle
-        Router -- Gain > 0.5% & Budget Left --> Agent2
-    end
-
-    Router -- Converged / Stop --> ReportAgent["ReportGeneratorAgent"] :::agents
-    ReportAgent -->|11. Synthesize Artifacts| Exporter["ArtifactExporter"] :::storage
-
-    Exporter -->|12. Export .csv, .pkl, .md, .html| Storage[("Disk Storage & SQLite DB")] :::storage
-    JobMgr <-->|13. Real-Time Telemetry| WS["WebSocket Broadcaster"] :::gateway
-    WS <-->|14. Live Event Console Stream| User
+    class User client;
+    class API,JobMgr,WS gateway;
+    class LangGraph,Router stateGraphStyle;
+    class Agent1,Agent2,Agent3,ReportAgent agents;
+    class Profiler,MLEngine,EvalEngine mlfill;
+    class Exporter,Storage storage;
 ```
 
 ---
@@ -138,8 +144,8 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-    Agent["🧠 Agent Prompt"] --> Client["LLMClient.generate_structured()"]
-    Client --> Schema["_clean_json_schema()\n(Strips $defs & $schema)"]
+    Agent["Agent Prompt"] --> Client["LLMClient.generate_structured()"]
+    Client --> Schema["_clean_json_schema()"]
     
     Schema --> P1{"1. OpenRouter API Key?"}
     P1 -- Yes --> OpenRouter["OpenRouter API\n(nvidia/nemotron-3.5-lightning:free)"]
@@ -156,6 +162,14 @@ flowchart LR
     Gemini --> Validate
     Fallback --> Validate
     Validate --> Output["Structured Pydantic Model"]
+
+    classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef gateway fill:#1e1e38,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef agents fill:#2e1065,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
+    
+    class Agent,Client,Schema agents;
+    class OpenRouter,OpenAI,Gemini,Fallback gateway;
+    class Validate,Output client;
 ```
 
 ---
