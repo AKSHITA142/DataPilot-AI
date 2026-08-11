@@ -12,13 +12,17 @@ import {
   Layers,
   ArrowRight,
 } from "lucide-react";
-import { GlassCard } from "@/components/cards/GlassCard";
 import { MetricCard } from "@/components/cards/MetricCard";
+
 import { Skeleton } from "@/components/loading/Loading";
 import { useReport } from "@/hooks/useResearch";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/buttons/Button";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { formatPercent } from "@/utils/formatters";
+
+
 
 
 export default function KnowledgePage({
@@ -28,10 +32,27 @@ export default function KnowledgePage({
 }) {
   const { jobId } = use(params);
   const router = useRouter();
-  const { data: report, isLoading } = useReport(jobId);
+  const { data: report, isLoading, isError, refetch } = useReport(jobId);
 
   const findings = report?.recommendation?.key_findings ?? [];
   const rec = report?.recommendation;
+
+  if (isError) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <ErrorState
+          title="Failed to Load Knowledge Base"
+          description={`Unable to fetch knowledge findings for research job "${jobId}". Please check if the backend API is reachable.`}
+          onRetry={() => refetch()}
+          action={
+            <Button variant="primary" size="sm" onClick={() => router.push(`/timeline/${jobId}`)}>
+              View Timeline
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 md:py-8">
@@ -95,14 +116,22 @@ export default function KnowledgePage({
           ))}
         </div>
       ) : findings.length === 0 ? (
-        <GlassCard className="text-center py-16 flex flex-col items-center gap-3">
-          <BookOpen className="w-10 h-10 text-text-muted" />
-          <p className="text-text font-semibold text-base">No Knowledge Base Entries Yet</p>
-          <p className="text-text-muted text-xs max-w-sm">
-            Insights will populate automatically as the AI research agent completes experimentation iterations.
-          </p>
-        </GlassCard>
+        <EmptyState
+          icon={BookOpen}
+          title="No Knowledge Base Entries Yet"
+          description="Insights will populate automatically as the AI research agent completes experimentation iterations."
+          action={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => router.push(`/timeline/${jobId}`)}
+            >
+              View Timeline Progress
+            </Button>
+          }
+        />
       ) : (
+
         <div className="space-y-4">
           <p className="text-xs text-text-muted uppercase tracking-widest font-semibold mb-2">
             Chronological Insight Trajectory ({findings.length})

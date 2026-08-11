@@ -19,9 +19,11 @@ import { Badge } from "@/components/badges/Badge";
 import { StageTimeline } from "@/components/cards/StageTimeline";
 import { Modal } from "@/components/modals/Modal";
 import { GlassCard } from "@/components/cards/GlassCard";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { useJob, useWebSocket } from "@/hooks/useResearch";
 import { useResearchStore } from "@/store/researchStore";
 import { cancelJob } from "@/services/apiClient";
+
 import type { TimelineStage } from "@/components/cards/StageTimeline";
 import type { PipelineStage, JobStatus } from "@/types/api";
 import { formatDate } from "@/utils/formatters";
@@ -65,8 +67,9 @@ export default function TimelinePage({
   const { jobId } = use(params);
   const router = useRouter();
 
-  const { data: job, isLoading } = useJob(jobId);
+  const { data: job, isLoading, error: jobError, refetch } = useJob(jobId);
   useWebSocket(jobId);
+
 
   const { wsConnected, progressPercent, currentStage, logMessages } =
     useResearchStore();
@@ -128,9 +131,31 @@ export default function TimelinePage({
       ? "warning"
       : "brand";
 
+  if (jobError) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <ErrorState
+          title="Research Job Not Found"
+          description={`Unable to retrieve research job "${jobId}". The job ID may be invalid or the backend database was reset.`}
+          onRetry={() => refetch()}
+          action={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => router.push("/upload")}
+            >
+              Start New Run
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col lg:flex-row h-full overflow-hidden">
+
         
         {/* ── LEFT PANE: Pipeline Stepper & Control Card ── */}
         <div className="w-full lg:max-w-md xl:max-w-lg flex-shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-border-subtle overflow-y-auto">

@@ -19,14 +19,18 @@ import {
   BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/buttons/Button";
-import { GlassCard } from "@/components/cards/GlassCard";
 import { MetricCard } from "@/components/cards/MetricCard";
+
+
 import { SkeletonCard } from "@/components/loading/Loading";
 import { HorizontalBarChart } from "@/components/charts/Charts";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { useReport, useExperiments, useDataset } from "@/hooks/useResearch";
 import { downloadReport } from "@/services/apiClient";
 import { formatMetric } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
+
 
 export default function RecommendationPage({
   params,
@@ -35,11 +39,28 @@ export default function RecommendationPage({
 }) {
   const { jobId } = use(params);
   const router = useRouter();
-  const { data: report, isLoading } = useReport(jobId);
+  const { data: report, isLoading, isError, refetch } = useReport(jobId);
   const { data: experiments } = useExperiments(jobId);
   const { data: dataset } = useDataset(report?.dataset_id ?? null);
 
   const rec = report?.recommendation;
+
+  if (isError) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <ErrorState
+          title="Failed to Load Research Report"
+          description={`Unable to fetch the recommendation report for job "${jobId}". Please check if the backend service is running.`}
+          onRetry={() => refetch()}
+          action={
+            <Button variant="primary" size="sm" onClick={() => router.push(`/timeline/${jobId}`)}>
+              View Timeline
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
 
   // Feature importance for winner experiment
   const winnerExp = experiments?.find(
@@ -112,22 +133,22 @@ export default function RecommendationPage({
           <SkeletonCard />
         </div>
       ) : !rec ? (
-        <GlassCard className="text-center py-16 flex flex-col items-center gap-3">
-          <FlaskConical className="w-10 h-10 text-text-muted" />
-          <p className="text-text font-semibold text-base">Recommendation Not Ready</p>
-          <p className="text-text-muted text-xs max-w-sm">
-            The AI research engine is still evaluating model experiments. Check the timeline for real-time progress.
-          </p>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => router.push(`/timeline/${jobId}`)}
-            className="mt-2"
-          >
-            View Timeline
-          </Button>
-        </GlassCard>
+        <EmptyState
+          icon={FlaskConical}
+          title="Recommendation Report Not Ready"
+          description="The AI research engine is currently evaluating pipeline experiments for this job. Check the live timeline for execution progress."
+          action={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => router.push(`/timeline/${jobId}`)}
+            >
+              View Timeline Progress
+            </Button>
+          }
+        />
       ) : (
+
         <>
           {/* ── 1. PRIMARY RESULT HERO BANNER ── */}
           <motion.div

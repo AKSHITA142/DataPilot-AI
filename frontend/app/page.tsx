@@ -11,19 +11,22 @@ import {
   Zap,
   ArrowRight,
   Database,
-  AlertTriangle,
   RefreshCw,
   Upload,
+
 } from "lucide-react";
 import { MetricCard } from "@/components/cards/MetricCard";
 import { Badge } from "@/components/badges/Badge";
 import { Button } from "@/components/buttons/Button";
 import { Skeleton } from "@/components/loading/Loading";
 import { AppPieChart } from "@/components/charts/Charts";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import dynamic from "next/dynamic";
 import { useDashboard, useDatasets } from "@/hooks/useResearch";
 import { formatDate, formatBytes, formatNumber } from "@/utils/formatters";
 import type { Job, JobStatus } from "@/types/api";
+
 
 const DataFlowCanvas = dynamic(
   () => import("@/components/visuals/DataFlowCanvas"),
@@ -55,29 +58,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ── Empty state ─────────────────────────────────────────── */
-function EmptyState({
-  icon: Icon,
-  title,
-  desc,
-  action,
-}: {
-  icon: React.ElementType;
-  title: string;
-  desc: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col items-center text-center gap-3 py-10 px-6">
-      <div className="w-12 h-12 rounded-xl bg-surface-3 border border-border flex items-center justify-center mb-1">
-        <Icon className="w-5 h-5 text-text-muted" />
-      </div>
-      <p className="text-sm font-semibold text-text-secondary">{title}</p>
-      <p className="text-xs text-text-muted max-w-xs leading-relaxed">{desc}</p>
-      {action && <div className="mt-2">{action}</div>}
-    </div>
-  );
-}
+
 
 /* ── Metric skeleton ─────────────────────────────────────── */
 function MetricSkeleton() {
@@ -209,24 +190,15 @@ export default function DashboardPage() {
 
       {/* Error banner */}
       {dashError && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="card p-4 mb-6 flex items-center gap-3"
-          style={{ borderColor: "var(--error)" }}
-        >
-          <AlertTriangle className="w-4 h-4 text-error-400 shrink-0" />
-          <p className="text-sm text-text-secondary">
-            Could not load dashboard data — is the backend running?
-          </p>
-          <button
-            onClick={() => refetch()}
-            className="ml-auto text-xs text-brand-400 hover:text-brand-300 transition-colors"
-          >
-            Retry
-          </button>
-        </motion.div>
+        <div className="mb-6">
+          <ErrorState
+            title="Unable to connect to DataPilot-AI backend"
+            description="Failed to fetch dashboard metrics. Please verify that the backend API server is running on http://localhost:8000."
+            onRetry={() => refetch()}
+          />
+        </div>
       )}
+
 
       {/* KPI metrics grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
@@ -311,7 +283,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={Briefcase}
                 title="No research jobs yet"
-                desc="Upload a CSV dataset and define a mission to start your first automated ML research run."
+                description="Upload a CSV dataset and define a mission to start your first automated ML research run."
                 action={
                   <Link href="/upload">
                     <Button
@@ -350,7 +322,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={Clock}
                 title="No data yet"
-                desc="Status breakdown appears once you have research jobs."
+                description="Status breakdown appears once you have research jobs."
               />
             ) : (
               <>
@@ -404,7 +376,7 @@ export default function DashboardPage() {
             <EmptyState
               icon={Database}
               title="No datasets uploaded"
-              desc="Upload a CSV file to begin. DataPilot-AI will profile it and run your research mission automatically."
+              description="Upload a CSV file to begin. DataPilot-AI will profile it and run your research mission automatically."
               action={
                 <Link href="/upload">
                   <Button

@@ -18,11 +18,14 @@ import { GlassCard } from "@/components/cards/GlassCard";
 import { SkeletonTable } from "@/components/loading/Loading";
 import { HorizontalBarChart, AppScatterChart } from "@/components/charts/Charts";
 import { Modal } from "@/components/modals/Modal";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { useExperiments } from "@/hooks/useResearch";
 import { useExperimentStore } from "@/store/experimentStore";
 import { formatMetric, formatDuration, snakeToTitle } from "@/utils/formatters";
 import type { ExperimentResult } from "@/types/api";
 import { useRouter } from "next/navigation";
+
 
 function ExperimentRow({
   exp,
@@ -335,7 +338,7 @@ export default function ExperimentsPage({
 }) {
   const { jobId } = use(params);
   const router = useRouter();
-  const { data: experiments, isLoading } = useExperiments(jobId);
+  const { data: experiments, isLoading, isError, refetch } = useExperiments(jobId);
 
   const {
     filterModelType,
@@ -348,6 +351,28 @@ export default function ExperimentsPage({
     clearSelection,
     setCompareModalOpen,
   } = useExperimentStore();
+
+  if (isError) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <ErrorState
+          title="Failed to Load Experiments"
+          description={`Unable to fetch experiment results for job "${jobId}". The job may still be initializing or the backend server is unreachable.`}
+          onRetry={() => refetch()}
+          action={
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => router.push(`/timeline/${jobId}`)}
+            >
+              View Timeline
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
+
 
   // Filter experiments
   const filtered = (experiments ?? [])
@@ -477,12 +502,39 @@ export default function ExperimentsPage({
             <SkeletonTable rows={6} />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center flex flex-col items-center gap-2">
-            <FlaskConical className="w-8 h-8 text-text-muted mb-1" />
-            <p className="text-text font-medium text-sm">No experiments match your criteria.</p>
-            <p className="text-text-muted text-xs">Try resetting filters to view all runs.</p>
-          </div>
+          <EmptyState
+            icon={FlaskConical}
+            title="No experiments found"
+            description={
+              filterModelType || filterStatus
+                ? "No experiment runs match your selected filters. Try clearing active filters to view all runs."
+                : "The research job is still initializing or has not completed any experiment pipelines yet."
+            }
+            action={
+              filterModelType || filterStatus ? (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setFilterModelType(null);
+                    setFilterStatus(null);
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => router.push(`/timeline/${jobId}`)}
+                >
+                  View Timeline Progress
+                </Button>
+              )
+            }
+          />
         ) : (
+
           <div>
             {/* Desktop Table View */}
             <table className="hidden md:table w-full text-left">
