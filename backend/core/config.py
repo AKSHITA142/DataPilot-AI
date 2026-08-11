@@ -30,10 +30,11 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: Union[List[str], str] = Field(default=["*"], alias="CORS_ORIGINS")
 
-    # LLM Settings (Dynamically loaded from environment, never hardcoded)
+    # LLM Settings (Strictly loaded from .env environment configuration)
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
-    llm_model_name: str = Field(default="gemini-3.5-flash", alias="LLM_MODEL_NAME")
+    llm_model_name: Optional[str] = Field(default=None, alias="LLM_MODEL_NAME")
+
 
     model_config = SettingsConfigDict(
         env_file=".env",

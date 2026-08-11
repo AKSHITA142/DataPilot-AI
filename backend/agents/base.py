@@ -66,10 +66,14 @@ class LLMClient:
 
     def __init__(self, model_name: Optional[str] = None):
         settings = get_settings()
-        self.model_name = model_name or settings.llm_model_name or "gemini-3.6-flash"
+        self.model_name = model_name or settings.llm_model_name
+        if not self.model_name:
+            raise ValueError("LLM_MODEL_NAME is not set. Please define LLM_MODEL_NAME in your .env file.")
         self.gemini_key = settings.gemini_api_key
         self.openai_key = settings.openai_api_key
         self.timeout = _LLM_TIMEOUT_SECONDS
+
+
 
     def is_api_configured(self) -> bool:
         """Checks if a valid live API key is configured."""
