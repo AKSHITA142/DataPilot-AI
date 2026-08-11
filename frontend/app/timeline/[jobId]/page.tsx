@@ -102,31 +102,31 @@ export default function TimelinePage({
 
   return (
     <>
-      <div className="flex h-full overflow-hidden">
-      {/* ── LEFT: Pipeline timeline ── */}
-      <div className="w-full max-w-lg flex-shrink-0 flex flex-col border-r border-border-subtle overflow-y-auto">
-        <div className="p-6">
-          {/* Job header — includes WS indicator + action buttons */}
-          {isLoading ? (
-            <SkeletonCard />
-          ) : job ? (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6"
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex flex-col md:flex-row h-full overflow-hidden">
+        {/* ── LEFT: Pipeline timeline ── */}
+        <div className="w-full md:max-w-lg flex-shrink-0 flex flex-col border-r border-border-subtle overflow-y-auto">
+          <div className="p-6">
+            {/* Job header — includes WS indicator + action buttons */}
+            {isLoading ? (
+              <SkeletonCard />
+            ) : job ? (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6"
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
-                    <p className="text-xs text-slate-500 mb-1 uppercase tracking-wider">Research Job</p>
-                    <p className="text-xs font-mono text-slate-600 truncate">{job.job_id}</p>
+                    <p className="text-xs text-text-muted mb-1 uppercase tracking-wider font-medium">Research Job</p>
+                    <p className="text-xs font-mono text-text-secondary truncate">{job.job_id}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     {/* WS indicator — inline */}
                     <div className="flex items-center gap-1.5 text-xs">
                       {wsConnected ? (
-                        <><Wifi className="w-3.5 h-3.5 text-emerald-400" /><span className="text-emerald-400">Live</span></>
+                        <><Wifi className="w-3.5 h-3.5 text-success-400" /><span className="text-success-400">Live</span></>
                       ) : (
-                        <><WifiOff className="w-3.5 h-3.5 text-slate-500" /><span className="text-slate-500">Offline</span></>
+                        <><WifiOff className="w-3.5 h-3.5 text-text-muted" /><span className="text-text-muted">Offline</span></>
                       )}
                     </div>
                     <Badge variant={job.status} label={job.status} />
@@ -150,10 +150,10 @@ export default function TimelinePage({
 
                 {/* Mission */}
                 <GlassCard padding="sm" hover={false} className="mb-4">
-                  <p className="text-xs text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                    <FlaskConical className="w-3 h-3" /> Mission
+                  <p className="text-xs text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-medium">
+                    <FlaskConical className="w-3 h-3 text-brand-400" /> Mission
                   </p>
-                  <p className="text-sm text-slate-300 leading-relaxed">{job.mission}</p>
+                  <p className="text-sm text-text leading-relaxed">{job.mission}</p>
                 </GlassCard>
 
                 {/* Global progress bar */}
@@ -178,7 +178,7 @@ export default function TimelinePage({
                 />
 
                 {/* Started / created */}
-                <p className="text-xs text-slate-600 mt-3">
+                <p className="text-xs text-text-muted mt-3">
                   Started {job.started_at ? formatDate(job.started_at) : formatDate(job.created_at)}
                 </p>
               </motion.div>
@@ -189,13 +189,13 @@ export default function TimelinePage({
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/25 flex items-start gap-3"
+                className="mb-4 p-4 rounded-xl bg-error-500/10 border border-error-500/25 flex items-start gap-3"
               >
-                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 text-error-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-red-300">Job Failed</p>
+                  <p className="text-sm font-medium text-error-400">Job Failed</p>
                   {job.error_message && (
-                    <p className="text-xs text-red-400/80 mt-1 font-mono">
+                    <p className="text-xs text-error-400/80 mt-1 font-mono">
                       {job.error_message}
                     </p>
                   )}
@@ -208,9 +208,9 @@ export default function TimelinePage({
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="mb-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-center"
+                className="mb-4 p-4 rounded-xl bg-success-500/10 border border-success-500/25 text-center"
               >
-                <p className="text-sm font-semibold text-emerald-300">
+                <p className="text-sm font-semibold text-success-400">
                   ✓ Research Complete — Redirecting to results…
                 </p>
               </motion.div>
@@ -222,9 +222,9 @@ export default function TimelinePage({
         </div>
 
         {/* ── RIGHT: Live log panel ── */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800/60 bg-slate-950/50">
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+        <div className="flex-1 flex flex-col overflow-hidden bg-surface-1">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-surface-2">
+            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">
               Live Research Log
             </span>
             {isLoading && <Spinner size="sm" />}
@@ -237,7 +237,7 @@ export default function TimelinePage({
                   key="empty"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-slate-700 italic pt-4 text-center"
+                  className="text-text-muted italic pt-4 text-center"
                 >
                   Waiting for research events…
                 </motion.p>
@@ -250,15 +250,15 @@ export default function TimelinePage({
                   transition={{ duration: 0.2 }}
                   className={`flex gap-3 py-0.5 leading-relaxed ${
                     msg.level === "error"
-                      ? "text-red-400"
+                      ? "text-error-400"
                       : msg.level === "warning"
-                      ? "text-amber-400"
+                      ? "text-warning-400"
                       : msg.level === "success"
-                      ? "text-emerald-400"
-                      : "text-slate-400"
+                      ? "text-success-400"
+                      : "text-text-secondary"
                   }`}
                 >
-                  <span className="text-slate-700 shrink-0">
+                  <span className="text-text-muted shrink-0">
                     {new Date(msg.timestamp).toLocaleTimeString("en-US", {
                       hour12: false,
                       hour: "2-digit",
@@ -266,7 +266,7 @@ export default function TimelinePage({
                       second: "2-digit",
                     })}
                   </span>
-                  <span className="shrink-0 uppercase text-[10px] font-semibold opacity-60 w-14 text-right">
+                  <span className="shrink-0 uppercase text-[10px] font-semibold opacity-70 w-14 text-right">
                     {msg.stage ?? msg.level}
                   </span>
                   <span className="break-all">{msg.message}</span>
@@ -284,7 +284,7 @@ export default function TimelinePage({
         title="Cancel Research Job"
         size="sm"
       >
-        <p className="text-slate-300 text-sm mb-6">
+        <p className="text-text-secondary text-sm mb-6 leading-relaxed">
           Are you sure you want to cancel this research job? All progress will
           be lost and cannot be resumed.
         </p>
