@@ -17,45 +17,58 @@ import {
   X,
   LayoutDashboard,
 } from "lucide-react";
+import { useDashboard } from "@/hooks/useResearch";
 
-/* ── Nav items — only real routes ──────────────── */
-const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Overview" },
-  { href: "/upload", icon: Upload, label: "New Run" },
-  { href: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
-  { href: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
-  { href: "/knowledge", icon: BookOpen, label: "Knowledge", dynamic: true },
-  { href: "/recommendation", icon: Lightbulb, label: "Recommendation", dynamic: true },
+/* ── Base Nav Items ────────────────────────────── */
+interface NavItemSpec {
+  baseHref: string;
+  icon: React.ElementType;
+  label: string;
+  dynamic?: boolean;
+}
+
+const NAV_ITEMS: NavItemSpec[] = [
+  { baseHref: "/", icon: LayoutDashboard, label: "Overview" },
+  { baseHref: "/upload", icon: Upload, label: "New Run" },
+  { baseHref: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
+  { baseHref: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
+  { baseHref: "/knowledge", icon: BookOpen, label: "Knowledge", dynamic: true },
+  { baseHref: "/recommendation", icon: Lightbulb, label: "Recommendation", dynamic: true },
 ];
 
-/* ── Single nav link ─────────────────────────────── */
+/* ── Helper to resolve target URL for dynamic job routes ── */
+function resolveHref(baseHref: string, dynamic: boolean | undefined, activeJobId: string | null): string {
+  if (!dynamic) return baseHref;
+  if (activeJobId) return `${baseHref}/${activeJobId}`;
+  return "/upload"; // Fallback to upload page if no active or recent job exists
+}
+
+/* ── Single Nav Link Component ───────────────────── */
 function NavLink({
   href,
   icon: Icon,
   label,
   collapsed,
   active,
-  dynamic,
 }: {
   href: string;
   icon: React.ElementType;
   label: string;
   collapsed: boolean;
   active: boolean;
-  dynamic?: boolean;
 }) {
-  const sharedClassName = `
-    group relative flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium
-    transition-colors duration-150 select-none
-    ${active
-      ? "bg-surface-4 text-text"
-      : "text-text-muted hover:text-text-secondary hover:bg-surface-3"
-    }
-    ${dynamic && !active ? "cursor-default opacity-60" : "cursor-pointer"}
-  `;
-
-  const innerContent = (
-    <>
+  return (
+    <Link
+      href={href}
+      className={`
+        group relative flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium
+        transition-colors duration-150 select-none cursor-pointer
+        ${active
+          ? "bg-surface-4 text-text"
+          : "text-text-muted hover:text-text-secondary hover:bg-surface-3"
+        }
+      `}
+    >
       {/* Active indicator stripe */}
       {active && (
         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-brand-500" />
@@ -91,35 +104,29 @@ function NavLink({
           {label}
         </span>
       )}
-    </>
-  );
-
-  if (dynamic) {
-    return (
-      <div
-        title={`${label} (open from an active run)`}
-        className={sharedClassName}
-      >
-        {innerContent}
-      </div>
-    );
-  }
-
-  return (
-    <Link href={href} className={sharedClassName}>
-      {innerContent}
     </Link>
   );
 }
 
-
-/* ── Main Sidebar ───────────────────────────────── */
+/* ── Main Desktop Sidebar ────────────────────────── */
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { data: dash } = useDashboard();
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+  // Extract active jobId from URL if on a job route (e.g. /timeline/abc-123)
+  const pathParts = pathname.split("/");
+  const isJobRoute = ["timeline", "experiments", "knowledge", "recommendation"].includes(pathParts[1]);
+  const urlJobId = isJobRoute && pathParts[2] ? pathParts[2] : null;
+
+  // Fallback to most recent job from backend if on overview/upload page
+  const latestJobId = dash?.recent_jobs?.[0]?.job_id ?? null;
+  const activeJobId = urlJobId || latestJobId;
+
+  const isActive = (spec: NavItemSpec) => {
+    if (spec.baseHref === "/") return pathname === "/";
+    return pathname.startsWith(spec.baseHref);
+  };
 
   return (
     <motion.aside
@@ -155,14 +162,19 @@ export function Sidebar() {
 
       {/* Nav links */}
       <nav className="flex-1 px-2 py-3 flex flex-col gap-0.5 overflow-y-auto overflow-x-hidden">
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.href}
-            {...item}
-            collapsed={collapsed}
-            active={isActive(item.href)}
-          />
-        ))}
+        {NAV_ITEMS.map((item) => {
+          const href = resolveHref(item.baseHref, item.dynamic, activeJobId);
+          return (
+            <NavLink
+              key={item.baseHref}
+              href={href}
+              icon={item.icon}
+              label={item.label}
+              collapsed={collapsed}
+              active={isActive(item)}
+            />
+          );
+        })}
       </nav>
 
       {/* Collapse toggle */}
@@ -172,7 +184,7 @@ export function Sidebar() {
           className="
             w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md
             text-text-muted hover:text-text-secondary hover:bg-surface-3
-            transition-colors text-xs font-medium
+            transition-colors text-xs font-medium cursor-pointer
           "
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
@@ -199,9 +211,19 @@ export function MobileDrawer({
   onClose: () => void;
 }) {
   const pathname = usePathname();
+  const { data: dash } = useDashboard();
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+  const pathParts = pathname.split("/");
+  const isJobRoute = ["timeline", "experiments", "knowledge", "recommendation"].includes(pathParts[1]);
+  const urlJobId = isJobRoute && pathParts[2] ? pathParts[2] : null;
+
+  const latestJobId = dash?.recent_jobs?.[0]?.job_id ?? null;
+  const activeJobId = urlJobId || latestJobId;
+
+  const isActive = (spec: NavItemSpec) => {
+    if (spec.baseHref === "/") return pathname === "/";
+    return pathname.startsWith(spec.baseHref);
+  };
 
   return (
     <AnimatePresence>
@@ -241,7 +263,7 @@ export function MobileDrawer({
               </Link>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors"
+                className="p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -249,14 +271,20 @@ export function MobileDrawer({
 
             {/* Nav */}
             <nav className="flex-1 px-3 py-3 flex flex-col gap-0.5 overflow-y-auto">
-              {NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item.href}
-                  {...item}
-                  collapsed={false}
-                  active={isActive(item.href)}
-                />
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const href = resolveHref(item.baseHref, item.dynamic, activeJobId);
+                return (
+                  <div key={item.baseHref} onClick={onClose}>
+                    <NavLink
+                      href={href}
+                      icon={item.icon}
+                      label={item.label}
+                      collapsed={false}
+                      active={isActive(item)}
+                    />
+                  </div>
+                );
+              })}
             </nav>
           </motion.aside>
         </>
@@ -268,15 +296,25 @@ export function MobileDrawer({
 /* ── Mobile Bottom Nav ───────────────────────────── */
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const { data: dash } = useDashboard();
 
-  const isActive = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
+  const pathParts = pathname.split("/");
+  const isJobRoute = ["timeline", "experiments", "knowledge", "recommendation"].includes(pathParts[1]);
+  const urlJobId = isJobRoute && pathParts[2] ? pathParts[2] : null;
 
-  const BOTTOM_ITEMS = [
-    { href: "/", icon: LayoutDashboard, label: "Overview" },
-    { href: "/upload", icon: Upload, label: "New Run" },
-    { href: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
-    { href: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
+  const latestJobId = dash?.recent_jobs?.[0]?.job_id ?? null;
+  const activeJobId = urlJobId || latestJobId;
+
+  const isActive = (spec: NavItemSpec) => {
+    if (spec.baseHref === "/") return pathname === "/";
+    return pathname.startsWith(spec.baseHref);
+  };
+
+  const BOTTOM_ITEMS: NavItemSpec[] = [
+    { baseHref: "/", icon: LayoutDashboard, label: "Overview" },
+    { baseHref: "/upload", icon: Upload, label: "New Run" },
+    { baseHref: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
+    { baseHref: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
   ];
 
   return (
@@ -286,25 +324,18 @@ export function MobileBottomNav() {
       flex items-center justify-around px-2 pb-safe
     ">
       {BOTTOM_ITEMS.map((item) => {
-        const active = isActive(item.href);
-        const itemClassName = `
-          flex flex-col items-center gap-0.5 px-3 py-2.5 min-w-[56px]
-          text-xs font-medium transition-colors
-          ${active ? "text-brand-400" : "text-text-muted"}
-          ${item.dynamic && !active ? "opacity-50 cursor-default" : "cursor-pointer"}
-        `;
-
-        if (item.dynamic) {
-          return (
-            <div key={item.href} className={itemClassName}>
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </div>
-          );
-        }
-
+        const href = resolveHref(item.baseHref, item.dynamic, activeJobId);
+        const active = isActive(item);
         return (
-          <Link key={item.href} href={item.href} className={itemClassName}>
+          <Link
+            key={item.baseHref}
+            href={href}
+            className={`
+              flex flex-col items-center gap-0.5 px-3 py-2.5 min-w-[56px]
+              text-xs font-medium transition-colors cursor-pointer
+              ${active ? "text-brand-400" : "text-text-muted hover:text-text-secondary"}
+            `}
+          >
             <item.icon className="w-5 h-5" />
             <span>{item.label}</span>
           </Link>
@@ -314,15 +345,14 @@ export function MobileBottomNav() {
   );
 }
 
-
-/* ── Hamburger trigger (used in Topbar) ─────────── */
+/* ── Hamburger trigger ───────────────────────────── */
 export function HamburgerButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       className="
         md:hidden p-2 rounded-md text-text-muted hover:text-text
-        hover:bg-surface-3 transition-colors
+        hover:bg-surface-3 transition-colors cursor-pointer
       "
       aria-label="Open navigation"
     >
