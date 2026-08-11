@@ -44,7 +44,10 @@ build/
 *.parquet
 *.sqlite3
 *.db
+*.log
+backend/logs/
 
 storage/data/
 storage/models/
 storage/reports/
+
