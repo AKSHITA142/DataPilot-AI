@@ -90,6 +90,15 @@ export default function RecommendationPage({
     }
   };
 
+  const handleDownloadDataset = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const downloadUrl = `${backendUrl}/api/v1/reports/${jobId}/download-dataset`;
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = `preprocessed_${jobId}.csv`;
+    a.click();
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 md:py-8">
       {/* ── Page Header / Action Bar ── */}
@@ -107,7 +116,7 @@ export default function RecommendationPage({
           <span className="text-xs font-mono text-text-muted">Job {jobId.slice(0, 8)}</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -120,12 +129,21 @@ export default function RecommendationPage({
             variant="secondary"
             size="sm"
             icon={<Download className="w-3.5 h-3.5" />}
+            onClick={() => handleDownloadDataset()}
+          >
+            Export Cleaned CSV
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            icon={<Download className="w-3.5 h-3.5" />}
             onClick={() => handleDownload("markdown")}
           >
             Export Report
           </Button>
         </div>
       </div>
+
 
       {isLoading ? (
         <div className="space-y-6">

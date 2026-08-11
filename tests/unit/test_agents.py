@@ -20,7 +20,9 @@ from backend.agents import (
 
 def test_llm_client_dynamic_model():
     client = LLMClient()
-    assert client.model_name == get_settings().llm_model_name  # Loaded dynamically from environment config
+    expected_model = get_settings().model_name or get_settings().llm_model_name
+    assert client.model_name == expected_model
+
 
 
     custom_client = LLMClient(model_name="custom-model-v1")

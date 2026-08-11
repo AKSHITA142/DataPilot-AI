@@ -42,9 +42,11 @@ class MetricsResult(BaseSchema):
 class Artifacts(BaseSchema):
     """Paths or metadata for persistent execution artifacts."""
     model_path: Optional[str] = None
+    processed_dataset_path: Optional[str] = None
     feature_importance: Optional[Dict[str, float]] = None
     confusion_matrix: Optional[List[List[int]]] = None
     plots: Dict[str, str] = Field(default_factory=dict)
+
 
 
 class ExperimentResult(BaseSchema):

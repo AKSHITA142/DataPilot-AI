@@ -1157,3 +1157,490 @@ pipeline
 2026-08-11 22:08:55,796 - datapilot.api - INFO - [6185b557-ba91-4b80-bb3a-982370b08650] GET /api/v1/dashboard - Status: 200 (9.94ms)
 2026-08-11 22:09:33,463 - datapilot.api - INFO - [90ccb351-ab40-47b2-8e30-45aeb1a98785] GET /api/v1/dashboard - Status: 200 (1.83ms)
 2026-08-11 22:09:42,814 - datapilot.api - INFO - [36f489d9-1bb4-4bbd-ba96-45783a498a54] GET /api/v1/dashboard - Status: 200 (1.64ms)
+2026-08-11 22:14:05,250 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 22:14:05,252 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 22:14:05,259 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_1ab215e6
+2026-08-11 22:14:05,259 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 22:14:05,272 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 22:14:17,276 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 22:14:17,278 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 22:14:17,278 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_1ab215e6
+2026-08-11 22:14:17,377 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 22:17:01,345 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 22:17:01,351 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 22:17:01,359 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 22:17:01,360 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 22:17:01,374 - datapilot.api - INFO - [4646bf43-4f6a-46ed-afc3-1f8736b015bb] GET /api/v1/experiments/job_live_test_999 - Status: 200 (11.80ms)
+2026-08-11 22:17:01,375 - datapilot.api - INFO - [1f8c968a-fce3-44cf-98e8-c23fa70432bb] GET /api/v1/dashboard - Status: 200 (14.11ms)
+2026-08-11 22:17:01,376 - datapilot.api - INFO - [391447c3-d71e-4ac6-a8ce-4b14ee653e66] GET /api/v1/dashboard - Status: 200 (13.13ms)
+2026-08-11 22:17:01,376 - datapilot.api - INFO - [523c2c26-8ec8-4229-8c63-c6f4aa910ca2] GET /api/v1/reports/job_live_test_999 - Status: 200 (12.87ms)
+2026-08-11 22:17:01,376 - datapilot.api - INFO - [d70539bf-63ce-41bf-90b4-246d3332b5c3] GET /api/v1/reports/job_live_test_999 - Status: 200 (14.69ms)
+2026-08-11 22:17:01,445 - datapilot.api - INFO - [037aeb8d-8871-4fbc-a7ad-56f7d88945fb] GET /api/v1/datasets/ds_live_test_999 - Status: 200 (3.18ms)
+2026-08-11 22:17:10,341 - datapilot.services.dataset_service - INFO - Dataset 'test_full.csv' saved (107 bytes, SHA256=88a80f539f50...)
+2026-08-11 22:17:10,359 - datapilot.api - INFO - [e8091c4b-e430-4c7e-b63b-0371d4c799e8] POST /api/v1/upload - Status: 201 (23.60ms)
+2026-08-11 22:17:10,360 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/upload "HTTP/1.1 201 Created"
+2026-08-11 22:17:10,364 - datapilot.api - INFO - [c0ed2f4b-a0cc-4acb-9ddf-62fecbf36485] POST /api/v1/jobs/start - Status: 202 (4.05ms)
+2026-08-11 22:17:10,365 - datapilot.services.job_service - WARNING - No running event loop found for job job_28e01007; creating new loop
+2026-08-11 22:17:10,381 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:17:10,381 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:17:20,724 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:17:20,725 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:17:28,932 - datapilot.api - INFO - [335e4c7f-6829-4a4d-b1eb-cf10d6eb5b23] GET /api/v1/dashboard - Status: 200 (8.03ms)
+2026-08-11 22:17:31,698 - httpx - INFO - HTTP Request: POST http://testserver/api/v1/jobs/start "HTTP/1.1 202 Accepted"
+2026-08-11 22:17:31,714 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:17:31,715 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:17:55,966 - datapilot.api - INFO - [77e9f6f9-4af2-41d9-b297-6dcac5e68e4e] GET /api/v1/dashboard - Status: 200 (2.44ms)
+2026-08-11 22:18:01,393 - datapilot.api - INFO - [f2df84f1-ce3d-48e4-9f82-00ae8ddd8eb1] GET /api/v1/dashboard - Status: 200 (2.65ms)
+2026-08-11 22:18:02,109 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:18:02,111 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:07,299 - datapilot.api - INFO - [26a5ee87-43cc-44e3-b1df-11317e0c944d] GET /api/v1/dashboard - Status: 200 (2.20ms)
+2026-08-11 22:18:07,320 - datapilot.api - INFO - [ba67ffaf-fff8-40e1-98c6-456a20803888] GET /api/v1/experiments/job_live_test_999 - Status: 200 (3.88ms)
+2026-08-11 22:18:07,323 - datapilot.api - INFO - [b00f5bbf-75cf-4861-b06e-0a78b9ad4b25] GET /api/v1/reports/job_live_test_999 - Status: 200 (7.20ms)
+2026-08-11 22:18:07,380 - datapilot.api - INFO - [8c2d57b5-c7f6-4b91-b1c1-5412e2bc8c89] GET /api/v1/datasets/ds_live_test_999 - Status: 200 (1.39ms)
+2026-08-11 22:18:11,272 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...g for minimal dataset.'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'LogisticRegres...g, and minmax scaling.'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:18:11,877 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:11,878 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:18:11,878 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:18:11,878 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:18:11,881 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:18:11,881 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:18:11,947 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.066s | Metrics: {'accuracy': 0.5, 'precision': 0.5, 'recall': 0.5, 'f1': 0.5, 'f1_score': 0.5, 'balanced_accuracy': 0.5, 'roc_auc': 0.625}
+2026-08-11 22:18:12,022 - datapilot.api - INFO - [3cf19441-e479-4be5-9e10-72a6a5993940] GET /api/v1/reports/job_live_test_999/download-dataset - Status: 200 (4.24ms)
+2026-08-11 22:18:12,117 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2359s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:18:12,118 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_28e01007
+2026-08-11 22:18:12,118 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:18:12,120 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:17,239 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:18:17,263 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:17,264 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:18:17,265 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:18:17,265 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:18:17,268 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:18:17,269 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:28,964 - datapilot.api - INFO - [1cc957e4-6678-4970-a917-4daeb25864c1] GET /api/v1/dashboard - Status: 200 (10.68ms)
+2026-08-11 22:18:37,024 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...s': 50, 'max_depth': 3}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'LogisticRegres... 'solver': 'liblinear'}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:18:37,055 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:37,056 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:18:37,057 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:18:37,057 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:18:37,067 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:18:37,067 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:18:37,136 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0695s | Metrics: {'accuracy': 0.5, 'precision': 0.5, 'recall': 0.5, 'f1': 0.5, 'f1_score': 0.5, 'balanced_accuracy': 0.5, 'roc_auc': 0.625}
+2026-08-11 22:18:37,246 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.1796s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:18:37,247 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_28e01007
+2026-08-11 22:18:37,248 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:18:37,248 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:45,392 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:18:45,419 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:45,419 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:18:45,420 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:18:45,420 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:18:45,426 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:18:45,427 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:55,209 - datapilot.api - INFO - [bcaa516b-6b83-426f-a166-f52f136404ee] GET /api/v1/experiments/job_live_test_999 - Status: 200 (12.28ms)
+2026-08-11 22:18:55,211 - datapilot.api - INFO - [6510c058-430c-4b20-9353-ff517114d26f] GET /api/v1/dashboard - Status: 200 (14.77ms)
+2026-08-11 22:18:55,211 - datapilot.api - INFO - [85ce413a-5329-439b-ab34-170cf9de3a8f] GET /api/v1/reports/job_live_test_999 - Status: 200 (14.37ms)
+2026-08-11 22:18:55,246 - datapilot.api - INFO - [34d74e37-91a5-4f9e-b025-df2b7b76fb6d] GET /api/v1/datasets/ds_live_test_999 - Status: 200 (2.50ms)
+2026-08-11 22:18:55,978 - datapilot.api - INFO - [3f6256dc-7926-4ee5-b534-d9082d1f3f15] GET /api/v1/dashboard - Status: 200 (1.58ms)
+2026-08-11 22:18:58,293 - datapilot.api - INFO - [706ac811-2487-4cfc-8b23-8837a142fb7b] GET /api/v1/reports/job_live_test_999/download-dataset - Status: 200 (2.88ms)
+2026-08-11 22:18:59,405 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'LogisticRegres... 'scaling': 'standard'}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...', 'scaling': 'minmax'}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:18:59,417 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:18:59,417 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:18:59,417 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:18:59,417 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:18:59,421 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:18:59,421 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:18:59,465 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0436s | Metrics: {'accuracy': 0.5, 'precision': 0.5, 'recall': 0.5, 'f1': 0.5, 'f1_score': 0.5, 'balanced_accuracy': 0.5, 'roc_auc': 0.625}
+2026-08-11 22:18:59,699 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2782s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:18:59,700 - datapilot.evaluation.evaluator - INFO - Evaluating 6 experiments for job job_28e01007
+2026-08-11 22:18:59,703 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:18:59,705 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:07,344 - datapilot.api - INFO - [92566b7c-e4ee-4b0d-8bf6-e5377d5b34b9] GET /api/v1/dashboard - Status: 200 (4.53ms)
+2026-08-11 22:19:08,919 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='STOP', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:19:08,934 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:08,937 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:19:08,938 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:19:08,938 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:19:08,947 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:19:08,948 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:20,290 - datapilot.services.job_manager - INFO - Research job job_28e01007 completed successfully!
+2026-08-11 22:19:20,297 - datapilot.api - INFO - [3195acf5-8fc9-4e96-a305-23f0466be5e3] GET /api/v1/jobs/job_28e01007 - Status: 200 (2.49ms)
+2026-08-11 22:19:20,298 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/jobs/job_28e01007 "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,303 - datapilot.api - INFO - [5e53832a-e3fb-471b-b4ac-8431315258c4] GET /api/v1/experiments/job_28e01007 - Status: 200 (4.48ms)
+2026-08-11 22:19:20,304 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/experiments/job_28e01007 "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,313 - datapilot.api - INFO - [113a9c4e-08e8-4ca8-8d4f-010b876fb265] GET /api/v1/reports/job_28e01007 - Status: 200 (8.38ms)
+2026-08-11 22:19:20,314 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/reports/job_28e01007 "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,326 - datapilot.api - INFO - [6ad54b0d-6266-4315-9db1-cf8379cfab82] GET / - Status: 200 (4.31ms)
+2026-08-11 22:19:20,326 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,330 - datapilot.api - INFO - [1731fe08-3aaa-4df1-839c-f34fa4ab0250] GET /health - Status: 200 (2.09ms)
+2026-08-11 22:19:20,330 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,333 - datapilot.api - INFO - [24dbdffb-eccd-4118-94e3-3b4789981b9f] GET /health - Status: 200 (1.01ms)
+2026-08-11 22:19:20,333 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,334 - datapilot.api - INFO - [4ff44cdb-0254-4e9c-8733-bcd022226637] GET / - Status: 200 (0.32ms)
+2026-08-11 22:19:20,334 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,336 - datapilot.api - INFO - [0d3c6451-f4c0-41e3-aa71-4cde9503d4ff] GET /health - Status: 200 (0.58ms)
+2026-08-11 22:19:20,336 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-08-11 22:19:20,338 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-11 22:19:20,338 - datapilot.api - INFO - [ea929e18-03cb-4ee9-a508-e56d86ddb262] GET /health/error-test - Status: 404 (0.74ms)
+2026-08-11 22:19:20,338 - httpx - INFO - HTTP Request: GET http://testserver/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-11 22:19:20,442 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:19:20,443 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:43,989 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionConstraints
+2026-08-11 22:19:43,991 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:55,258 - datapilot.api - INFO - [a0d91868-d02a-409a-9d46-b0ed91632828] GET /api/v1/dashboard - Status: 200 (18.33ms)
+2026-08-11 22:19:55,411 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:19:55,412 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:19:56,001 - datapilot.api - INFO - [f636dfa1-d278-446e-91fe-ce46d6494e80] GET /api/v1/dashboard - Status: 200 (2.56ms)
+2026-08-11 22:20:07,362 - datapilot.api - INFO - [de9093a7-37aa-4b67-bb62-a6b1bd120d7d] GET /api/v1/dashboard - Status: 200 (3.37ms)
+2026-08-11 22:20:16,473 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'XGBoost', 'imp...y', 'scaling': 'robust'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'SVC', 'imputat..., 'scaling': 'standard'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:20:16,495 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:16,496 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:20:16,497 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:20:16,497 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:20:16,499 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:20:16,500 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:26,492 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:20:26,507 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:26,507 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:20:26,508 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:20:26,508 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:20:26,510 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:20:26,510 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:41,630 - datapilot.evaluation.evaluator - INFO - Evaluating 0 experiments for job J1
+2026-08-11 22:20:41,631 - datapilot.evaluation.evaluator - INFO - Evaluating 3 experiments for job JOB_TEST_100
+2026-08-11 22:20:41,653 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:20:41,654 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:51,355 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:20:51,357 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:20:55,285 - datapilot.api - INFO - [e1759717-f954-4833-98e2-2d9c233ab887] GET /api/v1/dashboard - Status: 200 (11.56ms)
+2026-08-11 22:20:56,020 - datapilot.api - INFO - [52949dc7-29ca-4516-9342-8b37eb58e3c4] GET /api/v1/dashboard - Status: 200 (1.81ms)
+2026-08-11 22:21:03,519 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...arget_column': 'target'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'XGBoost', 'imp...arget_column': 'target'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:21:03,537 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:21:03,537 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:21:03,538 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:21:03,538 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:21:03,540 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:21:03,540 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:21:03,604 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0638s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 22:21:03,789 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2489s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:21:03,789 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_test
+2026-08-11 22:21:03,790 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:21:03,790 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:21:07,382 - datapilot.api - INFO - [47afea39-9168-48b0-b49d-a037cf650b36] GET /api/v1/dashboard - Status: 200 (1.65ms)
+2026-08-11 22:21:29,982 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:21:30,008 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:21:30,008 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:21:30,009 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:21:30,009 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:21:30,011 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:21:30,011 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:21:47,544 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:21:47,545 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:21:56,048 - datapilot.api - INFO - [23511a7c-5a69-4e19-bb95-18886ed2d521] GET /api/v1/dashboard - Status: 200 (4.34ms)
+2026-08-11 22:21:57,875 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:21:57,875 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:07,393 - datapilot.api - INFO - [7cf37069-1219-4a5e-bb4f-965adcc64b55] GET /api/v1/dashboard - Status: 200 (2.26ms)
+2026-08-11 22:22:09,632 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',..., 'scaling': 'standard'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'XGBoost', 'imp...y', 'scaling': 'robust'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:22:09,673 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:09,674 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:22:09,674 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:22:09,674 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:22:09,677 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:22:09,678 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:22:09,730 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0523s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 22:22:09,906 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2282s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:22:09,906 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_ds_graph_test
+2026-08-11 22:22:09,907 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:22:09,907 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:15,439 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='EXPLORE_ALTERNATIVES', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:22:15,458 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:15,458 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:22:15,459 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:22:15,459 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:22:15,461 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:22:15,462 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:27,695 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'name': 'RandomForest wi...get_metric': 'f1_score'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'name': 'XGBoost with Co...rget_metric': 'roc_auc'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:22:27,713 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:27,713 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:22:27,713 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:22:27,713 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:22:27,716 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:22:27,716 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:22:27,755 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0394s | Metrics: {'accuracy': 0.64, 'precision': 0.6397, 'recall': 0.64, 'f1': 0.6388, 'f1_score': 0.6388, 'balanced_accuracy': 0.6378, 'roc_auc': 0.6779}
+2026-08-11 22:22:27,926 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.2101s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:22:27,927 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_ds_graph_test
+2026-08-11 22:22:27,927 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:22:27,928 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:34,769 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE_ITERATION', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:22:34,791 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:34,791 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:22:34,792 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:22:34,792 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:22:34,794 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:22:34,795 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:40,268 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:22:40,268 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:22:40,298 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.0308s | Metrics: {'accuracy': 0.56, 'precision': 0.5539, 'recall': 0.56, 'f1': 0.5379, 'f1_score': 0.5379, 'balanced_accuracy': 0.5427, 'roc_auc': 0.5934}
+2026-08-11 22:22:40,414 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.1466s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:22:40,414 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_REG_001
+2026-08-11 22:22:40,427 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_REG_001 | Status: completed | Runtime: 0.0126s | Metrics: {'mae': 8.3344, 'rmse': 10.5896, 'r2': 0.0365, 'explained_variance': 0.0365}
+2026-08-11 22:22:40,452 - datapilot.reports.service - INFO - Generating reports for job JOB_TEST_99 (Winner: EXP_WINNER_001)
+2026-08-11 22:22:40,458 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
+2026-08-11 22:22:40,466 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
+2026-08-11 22:22:40,470 - datapilot.services.job_service - WARNING - No running event loop found for job job_35e9eaa6; creating new loop
+2026-08-11 22:22:40,483 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 22:22:40,485 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:54,817 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:22:54,822 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:22:56,061 - datapilot.api - INFO - [dc671c0e-eebd-4b26-8ce4-7a2625a4df84] GET /api/v1/dashboard - Status: 200 (1.74ms)
+2026-08-11 22:23:04,436 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',..., 'scaling': 'standard'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'SVC', 'imputat...y', 'scaling': 'minmax'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:23:04,452 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:04,452 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:23:04,452 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:23:04,452 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:23:04,455 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:23:04,455 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:23:04,460 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.005s | Metrics: {}
+2026-08-11 22:23:04,468 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+Traceback (most recent call last):
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/executor.py", line 79, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/cross_validation.py", line 51, in run_cv
+    pipeline.fit(X_train, y_train)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/pipeline.py", line 663, in fit
+    self._final_estimator.fit(Xt, y, **last_step_params["fit"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py", line 1335, in fit
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+2026-08-11 22:23:04,553 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.0978s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:23:04,553 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_35e9eaa6
+2026-08-11 22:23:04,554 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:23:04,554 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:07,406 - datapilot.api - INFO - [efbb1db8-6c16-4fdd-82df-9d8f6eca50fc] GET /api/v1/dashboard - Status: 200 (3.48ms)
+2026-08-11 22:23:09,959 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:23:09,980 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:09,980 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:23:09,981 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:23:09,981 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:23:09,983 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:23:09,985 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:21,932 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...': 200, 'max_depth': 5}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'LogisticRegres... 'solver': 'liblinear'}}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:23:21,949 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:21,949 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:23:21,949 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:23:21,949 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:23:21,953 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:23:21,953 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:23:21,965 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.012s | Metrics: {}
+2026-08-11 22:23:21,968 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+Traceback (most recent call last):
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/executor.py", line 79, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/cross_validation.py", line 51, in run_cv
+    pipeline.fit(X_train, y_train)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/pipeline.py", line 663, in fit
+    self._final_estimator.fit(Xt, y, **last_step_params["fit"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py", line 1335, in fit
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+2026-08-11 22:23:22,051 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.0981s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:23:22,052 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_35e9eaa6
+2026-08-11 22:23:22,052 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:23:22,053 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:38,469 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:23:38,482 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:38,482 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:23:38,483 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:23:38,483 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:23:38,484 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:23:38,485 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:51,985 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...t default transformers'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'XGBoost', 'imp...e scaling optimization'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:23:52,010 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:52,011 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:23:52,011 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:23:52,011 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:23:52,015 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:23:52,016 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:23:52,030 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0143s | Metrics: {}
+2026-08-11 22:23:52,034 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+Traceback (most recent call last):
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/executor.py", line 79, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/cross_validation.py", line 51, in run_cv
+    pipeline.fit(X_train, y_train)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/pipeline.py", line 663, in fit
+    self._final_estimator.fit(Xt, y, **last_step_params["fit"])
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/base.py", line 1365, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py", line 1335, in fit
+    raise ValueError(
+    ...<3 lines>...
+    )
+ValueError: This solver needs samples of at least 2 classes in the data, but the data contains only one class: 0
+2026-08-11 22:23:52,120 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.105s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:23:52,121 - datapilot.evaluation.evaluator - INFO - Evaluating 6 experiments for job job_35e9eaa6
+2026-08-11 22:23:52,121 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:23:52,122 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:23:56,096 - datapilot.api - INFO - [b43d99f6-f353-484c-9d29-a460a9aee0d8] GET /api/v1/dashboard - Status: 200 (8.71ms)
+2026-08-11 22:24:01,344 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE_ITERATION', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:24:01,355 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:24:01,355 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:24:01,355 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:24:01,355 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:24:01,357 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:24:01,357 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:24:07,420 - datapilot.api - INFO - [d49cff16-767f-49c9-88b5-1f6f95de6e22] GET /api/v1/dashboard - Status: 200 (2.36ms)
+2026-08-11 22:24:10,519 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for FinalRecommendation
+exported_artifacts.metadata
+  Input should be a valid string [type=string_type, input_value={'experiment_id': 'EXP_00...'classification', 'v2']}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type); trying secondary providers
+2026-08-11 22:24:10,531 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:24:10,531 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:24:10,531 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'PipelineDefinition'); using fallback response
+2026-08-11 22:24:10,531 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:24:10,542 - datapilot.services.job_manager - INFO - Research job job_35e9eaa6 completed successfully!
+2026-08-11 22:24:24,290 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 22:24:24,290 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 22:24:24,391 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 22:24:26,519 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 22:24:26,520 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 22:24:26,527 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 22:24:26,528 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 22:24:56,134 - datapilot.api - INFO - [a8fd1508-2cc3-4dad-bb27-6f7ff546f868] GET /api/v1/dashboard - Status: 200 (12.13ms)
+2026-08-11 22:25:07,438 - datapilot.api - INFO - [6adaae56-d36a-419e-894f-6c18fe796ebd] GET /api/v1/dashboard - Status: 200 (6.72ms)
+2026-08-11 22:25:56,158 - datapilot.api - INFO - [c1a470c8-af55-4f31-afa9-39b5dd612c38] GET /api/v1/dashboard - Status: 200 (2.28ms)
+2026-08-11 22:26:07,465 - datapilot.api - INFO - [36a59d2d-dba8-46c2-bdb4-200e7e62945f] GET /api/v1/dashboard - Status: 200 (6.97ms)
