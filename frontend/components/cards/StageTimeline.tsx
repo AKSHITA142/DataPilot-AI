@@ -29,15 +29,15 @@ interface StageTimelineProps {
 const StageIcon = ({ status }: { status: TimelineStage["status"] }) => {
   switch (status) {
     case "completed":
-      return <CheckCircle2 className="w-5 h-5 text-emerald-400" />;
+      return <CheckCircle2 className="w-5 h-5 text-success-400" />;
     case "running":
-      return <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />;
+      return <Loader2 className="w-5 h-5 text-brand-400 animate-spin" />;
     case "failed":
-      return <XCircle className="w-5 h-5 text-red-400" />;
+      return <XCircle className="w-5 h-5 text-error-400" />;
     case "waiting":
-      return <Circle className="w-5 h-5 text-slate-600" />;
+      return <Circle className="w-5 h-5 text-text-muted" />;
     default:
-      return <Clock className="w-5 h-5 text-slate-500" />;
+      return <Clock className="w-5 h-5 text-text-muted" />;
   }
 };
 
@@ -52,7 +52,7 @@ export function StageTimeline({ stages, className }: StageTimelineProps) {
   return (
     <div className={cn("relative", className)}>
       {/* Vertical connector line */}
-      <div className="absolute left-5 top-5 bottom-5 w-px bg-slate-800" />
+      <div className="absolute left-5 top-5 bottom-5 w-px bg-border-subtle" />
 
       <div className="space-y-0">
         {stages.map((stage, idx) => (
@@ -65,16 +65,16 @@ export function StageTimeline({ stages, className }: StageTimelineProps) {
                 "relative flex items-start gap-4 p-4 rounded-xl",
                 "transition-colors duration-200",
                 stage.status === "running" &&
-                  "bg-blue-500/5 border border-blue-500/15",
+                  "bg-brand-500/10 border border-brand-500/25",
                 stage.status === "completed" &&
-                  "bg-emerald-500/3 border border-transparent",
+                  "bg-success-500/5 border border-transparent",
                 stage.status === "failed" &&
-                  "bg-red-500/5 border border-red-500/15",
+                  "bg-error-500/10 border border-error-500/25",
                 stage.status === "waiting" && "border border-transparent opacity-50"
               )}
             >
-              {/* Icon with white bg circle */}
-              <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center">
+              {/* Icon circle */}
+              <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full bg-surface-1 border border-border flex items-center justify-center">
                 <StageIcon status={stage.status} />
               </div>
 
@@ -84,11 +84,11 @@ export function StageTimeline({ stages, className }: StageTimelineProps) {
                   <span
                     className={cn(
                       "font-semibold text-sm",
-                      stage.status === "completed" && "text-emerald-300",
-                      stage.status === "running" && "text-blue-300",
-                      stage.status === "failed" && "text-red-300",
-                      stage.status === "waiting" && "text-slate-500",
-                      stage.status === "queued" && "text-slate-400"
+                      stage.status === "completed" && "text-success-400",
+                      stage.status === "running" && "text-brand-400",
+                      stage.status === "failed" && "text-error-400",
+                      stage.status === "waiting" && "text-text-muted",
+                      stage.status === "queued" && "text-text-secondary"
                     )}
                   >
                     {stage.label}
@@ -99,14 +99,14 @@ export function StageTimeline({ stages, className }: StageTimelineProps) {
                     dot={stage.status === "running"}
                   />
                   {stage.duration && (
-                    <span className="text-xs text-slate-500 ml-auto">
+                    <span className="text-xs text-text-muted ml-auto font-mono">
                       {stage.duration}
                     </span>
                   )}
                 </div>
 
                 {stage.description && (
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-text-muted mt-1 leading-relaxed">
                     {stage.description}
                   </p>
                 )}
@@ -114,12 +114,12 @@ export function StageTimeline({ stages, className }: StageTimelineProps) {
                 {/* Running animation bar */}
                 {stage.status === "running" && (
                   <motion.div
-                    className="mt-2 h-0.5 bg-blue-500/30 rounded-full overflow-hidden"
+                    className="mt-2.5 h-0.5 bg-brand-500/20 rounded-full overflow-hidden"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
                     <motion.div
-                      className="h-full w-1/3 bg-blue-400 rounded-full"
+                      className="h-full w-1/3 bg-brand-400 rounded-full"
                       animate={{ x: ["0%", "300%"] }}
                       transition={{
                         duration: 1.4,

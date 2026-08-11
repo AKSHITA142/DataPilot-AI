@@ -8,7 +8,8 @@ interface GlassCardProps {
   children: ReactNode;
   className?: string;
   hover?: boolean;
-  glow?: boolean;
+  /** Reserve for genuinely important/selected cards only — not default state */
+  emphasis?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
   onClick?: () => void;
 }
@@ -24,7 +25,7 @@ export function GlassCard({
   children,
   className,
   hover = true,
-  glow = false,
+  emphasis = false,
   padding = "md",
   onClick,
 }: GlassCardProps) {
@@ -36,20 +37,21 @@ export function GlassCard({
       whileHover={
         hover
           ? {
-              borderColor: "rgba(99,102,241,0.35)",
-              boxShadow:
-                "0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(99,102,241,0.2)",
+              y: -2,
+              borderColor: "var(--border)",
+              boxShadow: "var(--shadow-md)",
             }
           : undefined
       }
       onClick={onClick}
       className={cn(
-        "glass-card",
+        "card depth-hover",
         paddingStyles[padding],
-        glow && "glow-primary",
+        emphasis && "ring-brand-emphasis",
         onClick && "cursor-pointer",
         className
       )}
+
     >
       {children}
     </motion.div>
@@ -65,9 +67,8 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border",
-        "bg-slate-900/60",
-        "border-slate-700/50",
+        "rounded-lg border",
+        "bg-surface-2 border-border-subtle",
         paddingStyles[padding],
         className
       )}

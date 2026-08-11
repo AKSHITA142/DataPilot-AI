@@ -50,33 +50,33 @@ export function Modal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm"
             onClick={onClose}
           />
 
           {/* Panel */}
           <motion.div
             key="modal"
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
             className={cn(
               "fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-              "w-[calc(100%-2rem)] glass-strong rounded-2xl shadow-2xl",
+              "w-[calc(100%-2rem)] card-elevated rounded-xl shadow-lg border border-border bg-surface-3",
               sizeClasses[size],
               className
             )}
           >
             {/* Header */}
             {title && (
-              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
-                <h2 className="text-base font-semibold text-slate-100">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
+                <h2 className="text-base font-semibold text-text">
                   {title}
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg hover:bg-slate-700/60 text-slate-400 hover:text-slate-100 transition-colors"
+                  className="p-1.5 rounded-md hover:bg-surface-4 text-text-muted hover:text-text transition-colors"
                   aria-label="Close modal"
                 >
                   <X className="w-4 h-4" />
@@ -85,7 +85,7 @@ export function Modal({
             )}
 
             {/* Body */}
-            <div className="p-6">{children}</div>
+            <div className="p-6 overflow-y-auto max-h-[calc(85vh-4rem)]">{children}</div>
           </motion.div>
         </>
       )}

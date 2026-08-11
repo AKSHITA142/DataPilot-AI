@@ -12,39 +12,40 @@ interface MetricCardProps {
   trend?: "up" | "down" | "neutral";
   trendValue?: string;
   className?: string;
-  accent?: "indigo" | "emerald" | "amber" | "cyan" | "violet";
+  /** Semantic, not decorative — pick the one that matches what the metric means */
+  accent?: "brand" | "success" | "warning" | "error" | "neutral";
 }
 
 const accentMap = {
-  indigo: {
-    icon: "text-indigo-400",
-    bg: "bg-indigo-500/10",
-    border: "border-indigo-500/20",
-    value: "text-indigo-300",
+  brand: {
+    icon: "text-brand-400",
+    bg: "bg-brand-500/10",
+    border: "border-brand-500/25",
+    value: "text-text",
   },
-  emerald: {
-    icon: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/20",
-    value: "text-emerald-300",
+  success: {
+    icon: "text-success-400",
+    bg: "bg-success-500/10",
+    border: "border-success-500/25",
+    value: "text-text",
   },
-  amber: {
-    icon: "text-amber-400",
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/20",
-    value: "text-amber-300",
+  warning: {
+    icon: "text-warning-400",
+    bg: "bg-warning-500/10",
+    border: "border-warning-500/25",
+    value: "text-text",
   },
-  cyan: {
-    icon: "text-cyan-400",
-    bg: "bg-cyan-500/10",
-    border: "border-cyan-500/20",
-    value: "text-cyan-300",
+  error: {
+    icon: "text-error-400",
+    bg: "bg-error-500/10",
+    border: "border-error-500/25",
+    value: "text-text",
   },
-  violet: {
-    icon: "text-violet-400",
-    bg: "bg-violet-500/10",
-    border: "border-violet-500/20",
-    value: "text-violet-300",
+  neutral: {
+    icon: "text-text-secondary",
+    bg: "bg-surface-3",
+    border: "border-border",
+    value: "text-text",
   },
 };
 
@@ -56,49 +57,47 @@ export function MetricCard({
   trend,
   trendValue,
   className,
-  accent = "indigo",
+  accent = "neutral",
 }: MetricCardProps) {
   const colors = accentMap[accent];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      whileHover={{ y: -2, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}
-      className={cn(
-        "glass-card p-5 flex items-start gap-4",
-        className
-      )}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      whileHover={{ y: -2 }}
+      className={cn("card p-5 flex items-start gap-4 depth-hover", className)}
+
     >
       {icon && (
         <div
           className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+            "w-10 h-10 rounded-md flex items-center justify-center shrink-0 border",
             colors.bg,
-            `border ${colors.border}`
+            colors.border
           )}
         >
           <span className={cn("w-5 h-5", colors.icon)}>{icon}</span>
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-slate-400 font-medium mb-1 uppercase tracking-wider">
+        <p className="text-xs text-text-secondary font-medium mb-1 uppercase tracking-wider">
           {label}
         </p>
-        <p className={cn("text-2xl font-bold leading-none", colors.value)}>
+        <p className={cn("text-2xl font-bold leading-none tabular-nums", colors.value)}>
           {value}
         </p>
         {subtext && (
-          <p className="text-xs text-slate-500 mt-1.5 truncate">{subtext}</p>
+          <p className="text-xs text-text-muted mt-1.5 truncate">{subtext}</p>
         )}
         {trend && trendValue && (
           <p
             className={cn(
               "text-xs font-medium mt-1.5",
-              trend === "up" && "text-emerald-400",
-              trend === "down" && "text-red-400",
-              trend === "neutral" && "text-slate-400"
+              trend === "up" && "text-success-400",
+              trend === "down" && "text-error-400",
+              trend === "neutral" && "text-text-secondary"
             )}
           >
             {trend === "up" ? "↑" : trend === "down" ? "↓" : "→"} {trendValue}

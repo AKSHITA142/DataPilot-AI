@@ -2,10 +2,12 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { getJob, getExperiments, getReport } from "@/services/apiClient";
+import { getJob, getExperiments, getReport, getDashboard, listDatasets, getDataset } from "@/services/apiClient";
+
 import { wsClient } from "@/services/websocketClient";
 import { useResearchStore } from "@/store/researchStore";
 import type { WSEvent } from "@/types/api";
+
 
 // ── useJob — fetch job status with polling fallback ──────────────────
 export function useJob(jobId: string | null) {
@@ -106,3 +108,34 @@ export function useWebSocket(jobId: string | null) {
     };
   }, [jobId, queryClient, setWsConnected, setCurrentStage, setProgressPercent, addLogMessage]);
 }
+
+// ── useDashboard — overview stats ────────────────────────────────────
+export function useDashboard() {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: getDashboard,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+}
+
+// ── useDatasets — full list for the datasets table ───────────────────
+export function useDatasets() {
+  return useQuery({
+    queryKey: ["datasets"],
+    queryFn: listDatasets,
+    staleTime: 60_000,
+  });
+}
+
+// ── useDataset — fetch single dataset details ─────────────────────────
+export function useDataset(datasetId: string | null) {
+  return useQuery({
+    queryKey: ["dataset", datasetId],
+    queryFn: () => getDataset(datasetId!),
+    enabled: !!datasetId,
+    staleTime: 60_000,
+  });
+}
+
+
