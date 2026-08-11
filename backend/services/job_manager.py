@@ -146,13 +146,13 @@ class JobManager:
             for k_idx, k_dict in enumerate(kb_findings):
                 knowledge_repo.create(
                     KnowledgeEntryModel(
-                        id=f"k_{job_id}_{k_idx}",
                         job_id=job_id,
                         finding=k_dict.get("finding", ""),
                         confidence=k_dict.get("confidence", 0.9),
                         source_experiment_ids=k_dict.get("source_experiment_ids", []),
                     )
                 )
+
 
             if kb_findings:
                 await cls._broadcast(job_id, {
