@@ -20,10 +20,27 @@ class CrossValidationRunner:
         task_type: str = "classification",
     ) -> Tuple[List[float], Any]:
         """Runs K-Fold cross-validation and returns fold scores and fitted pipeline."""
+        n_samples = len(X)
+        if n_samples < 2:
+            pipeline.fit(X, y)
+            score = float(pipeline.score(X, y))
+            return [score], pipeline
+
+        # Adapt n_splits dynamically based on sample size
+        effective_splits = min(self.n_splits, n_samples)
+
         if task_type == "classification" and len(np.unique(y)) > 1:
-            cv = StratifiedKFold(n_splits=self.n_splits, shuffle=True, random_state=self.random_state)
+            class_counts = pd.Series(y).value_counts()
+            min_class_count = class_counts.min()
+            if min_class_count < 2 or len(class_counts) > n_samples * 0.5:
+                # Fall back to standard KFold if any class has 1 sample or target is continuous floats
+                cv = KFold(n_splits=max(2, effective_splits), shuffle=True, random_state=self.random_state)
+            else:
+                effective_splits = max(2, min(effective_splits, int(min_class_count)))
+                cv = StratifiedKFold(n_splits=effective_splits, shuffle=True, random_state=self.random_state)
         else:
-            cv = KFold(n_splits=self.n_splits, shuffle=True, random_state=self.random_state)
+            effective_splits = max(2, effective_splits)
+            cv = KFold(n_splits=effective_splits, shuffle=True, random_state=self.random_state)
 
         scores: List[float] = []
 
@@ -38,3 +55,4 @@ class CrossValidationRunner:
         # Final fit on full dataset
         pipeline.fit(X, y)
         return scores, pipeline
+

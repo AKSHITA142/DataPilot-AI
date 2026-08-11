@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     cors_origins: Union[List[str], str] = Field(default=["*"], alias="CORS_ORIGINS")
 
     # LLM Settings (Strictly loaded from .env environment configuration)
+    openrouter_api_key: Optional[str] = Field(default=None, alias="OPEN_ROUTER")
+    model_name: Optional[str] = Field(default=None, alias="MODEL_NAME")
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
     llm_model_name: Optional[str] = Field(default=None, alias="LLM_MODEL_NAME")

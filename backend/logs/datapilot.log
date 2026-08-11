@@ -733,3 +733,427 @@ ValueError: n_splits=5 cannot be greater than the number of members in each clas
 2026-08-11 19:17:05,354 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
 2026-08-11 19:17:05,356 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
 2026-08-11 19:17:05,358 - datapilot.services.job_service - WARNING - No running event loop found for job job_c39dc517; creating new loop
+2026-08-11 21:33:17,767 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:33:17,772 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:33:17,780 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:34:21,314 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:34:21,415 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:34:23,587 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:34:23,588 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:34:23,596 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:34:31,574 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:34:31,674 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:34:33,466 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:34:33,467 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:34:33,474 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:34:56,801 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:34:56,903 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:34:58,643 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:34:58,643 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:34:58,748 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:36:08,036 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:36:08,138 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:36:10,023 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:36:10,023 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:36:10,030 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:39:40,808 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:39:40,909 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:40:08,016 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:40:08,019 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:40:11,433 - datapilot.api - INFO - [a5d687b8-b210-4aa1-b80e-670ee40dcc3b] GET /api/v1/datasets - Status: 200 (27.31ms)
+2026-08-11 21:40:11,433 - datapilot.api - INFO - [4ce53522-1bff-45cf-a7f7-6dfc6df58355] GET /api/v1/dashboard - Status: 200 (29.43ms)
+2026-08-11 21:40:15,319 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:40:15,320 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:40:15,325 - datapilot.api - INFO - [00909b95-452f-4b87-87ab-0b1e6d86e7e2] GET /api/v1/jobs/job_2e7a8378 - Status: 200 (4.57ms)
+2026-08-11 21:40:16,322 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_2e7a8378
+2026-08-11 21:40:24,813 - datapilot.services.dataset_service - INFO - Dataset 'raw_data.csv' saved (371 bytes, SHA256=1e789febbf70...)
+2026-08-11 21:40:24,816 - datapilot.api - INFO - [41e996b8-d0cc-4fab-82fd-9a938f74a110] POST /api/v1/upload - Status: 201 (5.76ms)
+2026-08-11 21:40:24,830 - datapilot.api - INFO - [24f937a4-016e-4bc9-aacf-c4aa898980f5] POST /api/v1/jobs/start - Status: 202 (8.62ms)
+2026-08-11 21:40:24,831 - datapilot.services.job_service - WARNING - No running event loop found for job job_f285240d; creating new loop
+2026-08-11 21:40:24,878 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 21:40:24,880 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:25,473 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_2e7a8378
+2026-08-11 21:40:25,487 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:40:25,488 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 21:40:25,491 - datapilot.api - INFO - [265ad8fc-4ffe-41ca-8234-205042b5ff93] GET /api/v1/jobs/job_f285240d - Status: 200 (3.18ms)
+2026-08-11 21:40:26,484 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:40:35,503 - datapilot.api - INFO - [a7958876-6091-4649-9399-ee64cc1f36be] GET /api/v1/jobs/job_f285240d - Status: 200 (2.53ms)
+2026-08-11 21:40:36,104 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 21:40:36,105 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:42,537 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'name': 'XGBoost_MedianI...hap_feature_importance'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'name': 'LightGBM_Consta...gbm_feature_importance'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 21:40:43,137 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:43,138 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 21:40:43,138 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 21:40:43,138 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 21:40:43,141 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 21:40:43,141 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 21:40:43,142 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: failed | Runtime: 0.0013s | Metrics: {}
+2026-08-11 21:40:43,143 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: failed | Runtime: 0.0019s | Metrics: {}
+2026-08-11 21:40:43,143 - datapilot.ml_execution - ERROR - Experiment ID: EXP_001 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 21:40:43,143 - datapilot.ml_execution - ERROR - Experiment ID: EXP_002 failed with error: n_splits=5 cannot be greater than the number of members in each class.
+Traceback (most recent call last):
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/executor.py", line 77, in execute_single_experiment
+    cv_scores, fitted_pipeline = self.cv_runner.run_cv(
+                                 ~~~~~~~~~~~~~~~~~~~~~^
+        pipeline=pipeline,
+        ^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        task_type=task_type,
+        ^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/akshitajariwala/Desktop/Akshita's Project/DataPilot-AI/backend/ml_execution/cross_validation.py", line 30, in run_cv
+    for train_idx, val_idx in cv.split(X, y):
+                              ~~~~~~~~^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 411, in split
+    for train, test in super().split(X, y, groups):
+                       ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 142, in split
+    for test_index in self._iter_test_masks(X, y, groups):
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 844, in _iter_test_masks
+    test_folds = self._make_test_folds(X, y)
+  File "/opt/anaconda3/lib/python3.13/site-packages/sklearn/model_selection/_split.py", line 806, in _make_test_folds
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: n_splits=5 cannot be greater than the number of members in each class.
+2026-08-11 21:40:43,150 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_f285240d
+2026-08-11 21:40:43,151 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 21:40:43,151 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:45,525 - datapilot.api - INFO - [e47f22e9-f029-4205-ba07-0c79ecc840ca] GET /api/v1/jobs/job_f285240d - Status: 200 (9.59ms)
+2026-08-11 21:40:49,669 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='STOP_AND_REPORT', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 21:40:49,694 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:49,694 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 21:40:49,694 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 21:40:49,694 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 21:40:49,698 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 21:40:49,698 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:40:55,535 - datapilot.api - INFO - [46af93b4-8ea4-4de9-97e2-b91ff3235bc0] GET /api/v1/jobs/job_f285240d - Status: 200 (1.44ms)
+2026-08-11 21:41:05,542 - datapilot.api - INFO - [9cb4d407-564e-400f-8bd3-17e753e0c357] GET /api/v1/jobs/job_f285240d - Status: 200 (1.12ms)
+2026-08-11 21:41:11,469 - datapilot.api - INFO - [35eb6961-f351-4d42-b97d-b80238c2b207] GET /api/v1/dashboard - Status: 200 (2.75ms)
+2026-08-11 21:41:15,552 - datapilot.api - INFO - [f4e0647a-4617-42c8-8d58-ab2bacdd3511] GET /api/v1/jobs/job_f285240d - Status: 200 (2.40ms)
+2026-08-11 21:41:15,867 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 3 validation errors for FinalRecommendation
+exported_artifacts.reports
+  Input should be a valid string [type=string_type, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+exported_artifacts.model_files
+  Input should be a valid string [type=string_type, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+exported_artifacts.logs
+  Input should be a valid string [type=string_type, input_value=[], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type); trying secondary providers
+2026-08-11 21:41:15,886 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:41:15,887 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 21:41:15,888 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'PipelineDefinition'); using fallback response
+2026-08-11 21:41:15,888 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 21:41:15,902 - datapilot.services.job_manager - INFO - Research job job_f285240d completed successfully!
+2026-08-11 21:41:15,948 - datapilot.api - INFO - [e95b76f1-870e-41a5-ad26-cbdae39d4df5] GET /api/v1/jobs/job_f285240d - Status: 200 (1.36ms)
+2026-08-11 21:41:17,555 - datapilot.api - INFO - [16a94e17-b9a7-424c-abee-7e9e12a4213c] GET /api/v1/experiments/job_f285240d - Status: 200 (5.04ms)
+2026-08-11 21:41:55,213 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 21:41:55,329 - datapilot.api - INFO - [386307d7-5688-48e8-bc31-9bc371672478] GET /api/v1/experiments/job_f285240d - Status: 200 (6.20ms)
+2026-08-11 21:41:55,330 - datapilot.api - INFO - [e02973d0-956c-4d75-a156-56b1c439e0e0] GET /api/v1/dashboard - Status: 200 (7.64ms)
+2026-08-11 21:42:03,388 - datapilot.api - INFO - [95080dc7-262c-479f-b1cc-1d472286f49b] GET /api/v1/jobs/job_f285240d - Status: 200 (6.41ms)
+2026-08-11 21:42:04,380 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:42:04,950 - datapilot.api - INFO - [74f503f4-63f9-40c5-a367-18b9ad5cb7d4] GET /api/v1/experiments/job_f285240d - Status: 200 (2.05ms)
+2026-08-11 21:42:11,883 - datapilot.api - INFO - [26627b8e-a5ce-4c58-bc94-2b4cf5f98a0b] GET /api/v1/experiments/job_f285240d - Status: 200 (2.78ms)
+2026-08-11 21:42:17,129 - datapilot.api - INFO - [5a8718bd-639b-4e3c-b51d-b5889db411a9] GET /api/v1/experiments/job_f285240d - Status: 200 (3.04ms)
+2026-08-11 21:42:26,999 - datapilot.api - INFO - [fcf97c70-05d3-4c74-9cc6-d01f9cc4076c] GET /api/v1/experiments/job_f285240d - Status: 200 (2.02ms)
+2026-08-11 21:42:55,370 - datapilot.api - INFO - [d18eb235-8baf-495e-b68e-f0f978f603c2] GET /api/v1/dashboard - Status: 200 (9.00ms)
+2026-08-11 21:43:09,898 - datapilot.api - INFO - [d4f7acad-b77d-48e5-b1db-a15a37b6ed89] GET /api/v1/jobs/job_f285240d - Status: 200 (4.35ms)
+2026-08-11 21:43:11,457 - datapilot.api - INFO - [bd49eb53-fecf-40ba-a7ec-b0059a176917] GET /api/v1/experiments/job_f285240d - Status: 200 (3.76ms)
+2026-08-11 21:43:19,228 - datapilot.api - INFO - [7a096aa9-c1a8-4de9-a174-94639fcbf1b0] GET /api/v1/experiments/job_f285240d - Status: 200 (3.24ms)
+2026-08-11 21:43:55,409 - datapilot.api - INFO - [99375ed5-c87c-4350-97a6-534741d59a9d] GET /api/v1/dashboard - Status: 200 (7.54ms)
+2026-08-11 21:44:55,426 - datapilot.api - INFO - [ec0395d5-088a-4b59-adac-6491a760e694] GET /api/v1/dashboard - Status: 200 (3.06ms)
+2026-08-11 21:45:45,986 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 21:45:46,088 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-11 21:45:47,857 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-11 21:45:47,857 - datapilot.main - INFO - Database initialized successfully.
+2026-08-11 21:45:47,864 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:45:55,447 - datapilot.api - INFO - [ecfcedc4-e9bc-4a68-bb2f-81a86bb38842] GET /api/v1/dashboard - Status: 200 (7.28ms)
+2026-08-11 21:46:40,210 - datapilot.api - INFO - [f1e34228-ecd9-4321-a430-1607cba78744] GET /api/v1/dashboard - Status: 200 (33.77ms)
+2026-08-11 21:46:40,214 - datapilot.api - INFO - [232bb4b0-6b0b-469f-a027-a201c0d740e0] GET /api/v1/datasets - Status: 200 (36.54ms)
+2026-08-11 21:46:55,462 - datapilot.api - INFO - [fcc98afb-c484-4576-8497-d31d32ed892b] GET /api/v1/dashboard - Status: 200 (4.92ms)
+2026-08-11 21:47:40,338 - datapilot.api - INFO - [f6bb6712-def2-4fc9-b56c-3a10a0d8047f] GET /api/v1/dashboard - Status: 200 (9.04ms)
+2026-08-11 21:47:55,473 - datapilot.api - INFO - [07f84fb5-3809-4548-bc42-96b3eece9b00] GET /api/v1/dashboard - Status: 200 (1.78ms)
+2026-08-11 21:48:40,355 - datapilot.api - INFO - [70bfbfd8-176c-4e5a-bfd7-bd6fcbf74284] GET /api/v1/dashboard - Status: 200 (4.45ms)
+2026-08-11 21:48:55,485 - datapilot.api - INFO - [06f3ba55-59aa-4ecc-893e-89f2a85900e5] GET /api/v1/dashboard - Status: 200 (2.54ms)
+2026-08-11 21:49:40,378 - datapilot.api - INFO - [f06c4eb1-ae6f-4f14-a972-22735288a7de] GET /api/v1/dashboard - Status: 200 (7.09ms)
+2026-08-11 21:49:55,516 - datapilot.api - INFO - [839871bd-6450-42ea-838d-b80caa2fca36] GET /api/v1/dashboard - Status: 200 (10.27ms)
+2026-08-11 21:50:40,400 - datapilot.api - INFO - [d8ec4eb7-0fbe-44fc-ba25-67a277e96dd9] GET /api/v1/dashboard - Status: 200 (4.31ms)
+2026-08-11 21:50:42,231 - datapilot.api - INFO - [c74a0e9e-4bab-429b-8d5b-bd47fa79360f] GET /api/v1/dashboard - Status: 200 (1.92ms)
+2026-08-11 21:50:55,533 - datapilot.api - INFO - [790e5631-bffe-4bf7-bdab-39851fcea80e] GET /api/v1/dashboard - Status: 200 (2.27ms)
+2026-08-11 21:51:04,437 - datapilot.api - INFO - [4df2ddc0-5153-4c08-b922-b00278d8a708] GET /api/v1/dashboard - Status: 200 (3.87ms)
+2026-08-11 21:51:04,457 - datapilot.api - INFO - [2c89c2fd-5e32-4657-94aa-00e6a25253b3] GET /api/v1/experiments/job_f285240d - Status: 200 (13.91ms)
+2026-08-11 21:51:17,902 - datapilot.api - INFO - [b1768bd4-4fa0-4e9e-838a-d67ccf78726f] GET /api/v1/dashboard - Status: 200 (8.77ms)
+2026-08-11 21:51:17,915 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:51:17,921 - datapilot.api - INFO - [7285e52c-d8f2-44b4-a4c4-21cc45a52237] GET /api/v1/jobs/job_f285240d - Status: 200 (5.06ms)
+2026-08-11 21:51:17,923 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 21:51:18,927 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_f285240d
+2026-08-11 21:51:19,584 - datapilot.api - INFO - [0d6f8804-3bdc-465a-bbfb-67b7b3589aef] GET /api/v1/experiments/job_f285240d - Status: 200 (4.65ms)
+2026-08-11 21:51:40,419 - datapilot.api - INFO - [7e51d399-4561-4117-aa85-118d65669642] GET /api/v1/dashboard - Status: 200 (4.85ms)
+2026-08-11 21:51:42,209 - datapilot.api - INFO - [f37ba676-106a-4d00-b9fc-bd0e9e82c327] GET /api/v1/experiments/job_f285240d - Status: 200 (2.44ms)
+2026-08-11 21:51:55,542 - datapilot.api - INFO - [524061e7-b0d6-46b6-9dc7-9c81fb9a3b65] GET /api/v1/dashboard - Status: 200 (1.46ms)
+2026-08-11 21:52:00,666 - datapilot.api - INFO - [e59eac3d-eb10-4ada-ba82-387c03d965df] GET /api/v1/dashboard - Status: 200 (2.19ms)
+2026-08-11 21:52:00,682 - datapilot.api - INFO - [d2481646-1107-424b-89b5-83555a974dff] GET /api/v1/experiments/job_132d13ec - Status: 200 (9.14ms)
+2026-08-11 21:52:14,041 - datapilot.api - INFO - [41699939-0591-4ee7-bf21-391e82237301] GET /api/v1/datasets - Status: 200 (34.73ms)
+2026-08-11 21:52:14,043 - datapilot.api - INFO - [9be03cd2-ce25-4da7-b728-b8eb46a33954] GET /api/v1/dashboard - Status: 200 (40.09ms)
+2026-08-11 21:52:27,866 - datapilot.api - INFO - [a8687192-ad9e-49eb-9a75-030544a2e1c4] GET /api/v1/dashboard - Status: 200 (8.16ms)
+2026-08-11 21:52:40,438 - datapilot.api - INFO - [af7c8697-e73d-4b63-8a95-7a3b5c7133b4] GET /api/v1/dashboard - Status: 200 (4.55ms)
+2026-08-11 21:52:55,553 - datapilot.api - INFO - [bd94659a-fc3d-4d84-8bd9-02b404dc83cc] GET /api/v1/dashboard - Status: 200 (3.57ms)
+2026-08-11 21:53:12,564 - datapilot.api - INFO - [825dd4b9-83d1-4dbe-9d01-d38f8d70365f] GET /api/v1/dashboard - Status: 200 (31.87ms)
+2026-08-11 21:53:12,574 - datapilot.api - INFO - [c1f66a01-921e-4107-b03e-346a0dd535b6] GET /api/v1/reports/job_f285240d - Status: 200 (40.01ms)
+2026-08-11 21:53:30,725 - datapilot.api - INFO - [19d5d241-9436-4dd5-88d1-1ec61e4c6221] GET /api/v1/dashboard - Status: 200 (8.60ms)
+2026-08-11 21:53:30,735 - datapilot.api - INFO - [229086c7-39c0-4adb-92da-fd3a6d40a686] GET /api/v1/reports/job_f285240d - Status: 200 (8.06ms)
+2026-08-11 21:53:30,736 - datapilot.api - INFO - [cccc8db7-30f6-4159-bb47-a95516d77e58] GET /api/v1/experiments/job_f285240d - Status: 200 (8.31ms)
+2026-08-11 21:53:30,788 - datapilot.api - INFO - [ca16fb96-1b88-4e81-b9b2-61476571af01] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (2.72ms)
+2026-08-11 21:53:40,447 - datapilot.api - INFO - [3f9e74d0-320f-4332-b574-72018f80a927] GET /api/v1/dashboard - Status: 200 (1.75ms)
+2026-08-11 21:53:45,266 - datapilot.api - INFO - [d2b9d4c1-9b2d-4cb2-9493-cbab81b7b35e] GET /api/v1/dashboard - Status: 200 (4.89ms)
+2026-08-11 21:53:45,274 - datapilot.api - INFO - [e821fbce-23ca-4fc1-ab50-15cd930d6bb8] GET /api/v1/experiments/job_live - Status: 200 (3.15ms)
+2026-08-11 21:53:55,591 - datapilot.api - INFO - [a146d4b3-0cb4-4355-bcf7-1b97daa880a8] GET /api/v1/dashboard - Status: 200 (11.97ms)
+2026-08-11 21:53:57,490 - datapilot.api - INFO - [84f8ef97-882f-475c-ac46-6c37a6fd4b82] GET /api/v1/dashboard - Status: 200 (13.55ms)
+2026-08-11 21:53:57,492 - datapilot.api - INFO - [57daf040-3cff-4495-99bc-fc63df6bae0b] GET /api/v1/experiments/job_f285240d - Status: 200 (8.63ms)
+2026-08-11 21:54:18,231 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_f285240d
+2026-08-11 21:54:18,310 - datapilot.api - INFO - [595c23e5-01a2-4e67-99da-73b0c5b23a32] GET /api/v1/dashboard - Status: 200 (8.13ms)
+2026-08-11 21:54:18,317 - datapilot.api - INFO - [023d2537-a12e-46db-a9b2-7d78a3948b2b] GET /api/v1/experiments/job_3213 - Status: 200 (4.93ms)
+2026-08-11 21:54:40,472 - datapilot.api - INFO - [6db17624-9aa5-4ccd-96cd-ea8890acfc1d] GET /api/v1/dashboard - Status: 200 (7.49ms)
+2026-08-11 21:54:49,174 - datapilot.api - INFO - [89922084-9712-4b8f-8b3a-5b5c2863aea4] GET /api/v1/dashboard - Status: 200 (3.78ms)
+2026-08-11 21:54:49,187 - datapilot.api - INFO - [028ec2a1-69a9-41ef-817a-04347d50f133] GET /api/v1/datasets - Status: 200 (4.20ms)
+2026-08-11 21:54:55,609 - datapilot.api - INFO - [b2c9112e-93fb-4e5c-8d1d-3110cace7f10] GET /api/v1/dashboard - Status: 200 (3.13ms)
+2026-08-11 21:55:03,158 - datapilot.api - INFO - [78497f77-9059-46a0-8dea-889419c62eed] GET /api/v1/dashboard - Status: 200 (4.29ms)
+2026-08-11 21:55:03,174 - datapilot.api - INFO - [67784215-bf90-4554-9716-117a446ebb94] GET /api/v1/experiments/job_f285240d - Status: 200 (2.72ms)
+2026-08-11 21:55:11,029 - datapilot.api - INFO - [a3f67c2b-55e0-4006-9264-02bb11d578a9] GET /api/v1/dashboard - Status: 200 (3.07ms)
+2026-08-11 21:55:11,041 - datapilot.api - INFO - [988508e1-8a82-4aea-89a6-11bf89206a20] GET /api/v1/datasets - Status: 200 (6.12ms)
+2026-08-11 21:55:17,557 - datapilot.api - INFO - [737c55b0-f155-48ac-8d06-eec1bc8fb25d] GET /api/v1/experiments/job_f285240d - Status: 200 (25.80ms)
+2026-08-11 21:55:17,559 - datapilot.api - INFO - [f9f1e762-e680-41b6-889e-76c05b740cb3] GET /api/v1/reports/job_f285240d - Status: 200 (27.77ms)
+2026-08-11 21:55:17,600 - datapilot.api - INFO - [eb9c2d2d-1b7f-4f39-a373-021914d425b7] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (2.50ms)
+2026-08-11 21:55:40,517 - datapilot.api - INFO - [b293de89-0674-4a3a-b7ca-02b36fed9dbd] GET /api/v1/dashboard - Status: 200 (12.66ms)
+2026-08-11 21:55:50,391 - datapilot.api - INFO - [1f2b15c7-0ffc-403e-aa4c-1b14499c2c05] GET /api/v1/experiments/job_2e7a8378 - Status: 200 (53.38ms)
+2026-08-11 21:55:50,393 - datapilot.api - INFO - [0508d77d-2424-48c4-96cb-99926a02c110] GET /api/v1/dashboard - Status: 200 (91.85ms)
+2026-08-11 21:55:55,621 - datapilot.api - INFO - [14309962-6119-46d3-887d-ec7b858e7c8d] GET /api/v1/dashboard - Status: 200 (2.46ms)
+2026-08-11 21:55:55,860 - datapilot.api - INFO - [63119953-82e2-48a1-9e62-82bb443fb72c] GET /api/v1/reports/job_f285240d - Status: 200 (10.75ms)
+2026-08-11 21:55:55,860 - datapilot.api - INFO - [94ee7628-47d2-41af-9fdb-487c0b84ac27] GET /api/v1/experiments/job_f285240d - Status: 200 (4.66ms)
+2026-08-11 21:55:55,879 - datapilot.api - INFO - [292ba720-96b7-49e0-8e2e-5db5490a54c0] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (1.92ms)
+2026-08-11 21:56:12,376 - datapilot.api - INFO - [3db5bec9-2d78-4bce-a09a-2fd79e08562c] GET /api/v1/datasets - Status: 200 (74.03ms)
+2026-08-11 21:56:35,915 - datapilot.api - INFO - [b00aa5f2-adf1-42c3-8a19-24089524fbdc] GET /api/v1/dashboard - Status: 200 (23.13ms)
+2026-08-11 21:56:35,981 - datapilot.api - INFO - [f72dffe9-8d95-4db2-8cf6-688f679a2107] GET /api/v1/experiments/job_live_test_999 - Status: 200 (66.78ms)
+2026-08-11 21:56:40,532 - datapilot.api - INFO - [e3cbb87e-1f32-4703-99a2-e46bbdde3df1] GET /api/v1/dashboard - Status: 200 (1.42ms)
+2026-08-11 21:56:55,635 - datapilot.api - INFO - [44fdc128-1afe-4150-bc14-9d1b1b589f52] GET /api/v1/dashboard - Status: 200 (2.56ms)
+2026-08-11 21:57:10,455 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:10,466 - datapilot.api - INFO - [65dc1f2d-d899-45bf-bdfd-5ab5f1688509] GET /api/v1/jobs/job_live_test_999 - Status: 200 (9.59ms)
+2026-08-11 21:57:10,468 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 21:57:10,469 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:10,470 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 21:57:11,480 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:12,261 - datapilot.api - INFO - [a161f526-5e71-47fb-afd6-16edf360bd64] GET /api/v1/experiments/job_live_test_999 - Status: 200 (14.34ms)
+2026-08-11 21:57:35,962 - datapilot.api - INFO - [53ce33d9-0fac-446f-aacf-857fe74c0ca1] GET /api/v1/dashboard - Status: 200 (8.07ms)
+2026-08-11 21:57:40,542 - datapilot.api - INFO - [69e477e8-ed95-462f-b632-7ec7593712f7] GET /api/v1/dashboard - Status: 200 (2.23ms)
+2026-08-11 21:57:42,482 - datapilot.api - INFO - [19695c24-9b10-4f2e-8f06-44baa00dcb1e] GET /api/v1/dashboard - Status: 200 (8.23ms)
+2026-08-11 21:57:42,526 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:42,533 - datapilot.api - INFO - [037467d9-cfe7-45fa-b82f-cbe33d8d998e] GET /api/v1/jobs/job_live_test_999 - Status: 200 (5.84ms)
+2026-08-11 21:57:42,547 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:42,585 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 21:57:42,589 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 21:57:43,592 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_live_test_999
+2026-08-11 21:57:44,293 - datapilot.api - INFO - [4179be0b-597f-4f42-b729-115d56f4b0df] GET /api/v1/experiments/job_live_test_999 - Status: 200 (3.34ms)
+2026-08-11 21:57:55,644 - datapilot.api - INFO - [f44dc8e5-ad78-470d-be49-56ee16f0f775] GET /api/v1/dashboard - Status: 200 (1.55ms)
+2026-08-11 21:58:33,282 - datapilot.api - INFO - [443fb2ed-553d-4ddd-80d0-9019a510eece] GET /api/v1/dashboard - Status: 200 (15.31ms)
+2026-08-11 21:58:33,323 - datapilot.api - INFO - [674c9123-eee6-46d6-b08f-f82636de1f8b] GET /api/v1/experiments/job_f285240d - Status: 200 (23.96ms)
+2026-08-11 21:58:33,326 - datapilot.api - INFO - [d5886633-8dfa-4138-801d-00971d875454] GET /api/v1/reports/job_f285240d - Status: 200 (27.66ms)
+2026-08-11 21:58:33,393 - datapilot.api - INFO - [0333bcb0-6f7e-4b05-bbba-9836ef56fe00] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (2.80ms)
+2026-08-11 21:58:42,622 - datapilot.api - INFO - [7588e060-e764-4edd-a1db-4094d2ba1179] GET /api/v1/dashboard - Status: 200 (14.06ms)
+2026-08-11 21:58:55,661 - datapilot.api - INFO - [7a7cdeda-b42e-474e-84fd-05619d9fe306] GET /api/v1/dashboard - Status: 200 (5.40ms)
+2026-08-11 21:59:18,738 - datapilot.services.dataset_service - INFO - Dataset 'raw_data.csv' saved (371 bytes, SHA256=1e789febbf70...)
+2026-08-11 21:59:18,740 - datapilot.api - INFO - [ed1c0f06-d0ed-45ec-a1f6-6842f78dd4ee] POST /api/v1/upload - Status: 201 (7.47ms)
+2026-08-11 21:59:18,760 - datapilot.api - INFO - [1011ce41-d0f0-4d55-b0f5-8b4459feab72] POST /api/v1/jobs/start - Status: 202 (12.75ms)
+2026-08-11 21:59:18,761 - datapilot.services.job_service - WARNING - No running event loop found for job job_1ab215e6; creating new loop
+2026-08-11 21:59:18,843 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-11 21:59:18,848 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:59:19,461 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_1ab215e6
+2026-08-11 21:59:19,467 - datapilot.api - INFO - [ce51967b-97a8-4a98-93c6-0fe37fcd4bae] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (5.06ms)
+2026-08-11 21:59:19,473 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_1ab215e6
+2026-08-11 21:59:19,478 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_1ab215e6
+2026-08-11 21:59:19,480 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_1ab215e6
+2026-08-11 21:59:20,481 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_1ab215e6
+2026-08-11 21:59:29,483 - datapilot.api - INFO - [d9d9a480-273c-4f64-a35c-cc41f79d1d25] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.19ms)
+2026-08-11 21:59:30,713 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 21:59:30,715 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:59:33,328 - datapilot.api - INFO - [15f6a804-64a6-45fb-a0ff-c2ee14ec5aa1] GET /api/v1/dashboard - Status: 200 (2.93ms)
+2026-08-11 21:59:39,484 - datapilot.api - INFO - [db37a5fd-6b95-4475-b3db-051ab3fbee41] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.08ms)
+2026-08-11 21:59:40,635 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: exp_1
+2026-08-11 21:59:40,636 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: exp_2
+2026-08-11 21:59:41,329 - datapilot.ml_execution - INFO - Finished Experiment ID: exp_2 | Status: completed | Runtime: 0.6933s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 21:59:41,352 - datapilot.ml_execution - INFO - Finished Experiment ID: exp_1 | Status: completed | Runtime: 0.717s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 21:59:41,354 - datapilot.evaluation.evaluator - INFO - Evaluating 2 experiments for job job_1ab215e6
+2026-08-11 21:59:41,355 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 21:59:41,357 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:59:42,625 - datapilot.api - INFO - [ee3480b2-6992-478d-98cd-417e9f26a998] GET /api/v1/dashboard - Status: 200 (1.51ms)
+2026-08-11 21:59:49,490 - datapilot.api - INFO - [1c5dc5b7-580e-4057-b3eb-32b6222be0a9] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.81ms)
+2026-08-11 21:59:54,920 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 21:59:55,668 - datapilot.api - INFO - [c7655560-b05b-41ba-91be-be2a709e67cd] GET /api/v1/dashboard - Status: 200 (3.39ms)
+2026-08-11 21:59:55,809 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:59:55,810 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 21:59:55,810 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 21:59:55,810 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 21:59:55,814 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 21:59:55,815 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 21:59:59,496 - datapilot.api - INFO - [7e648dde-aed1-4047-81e6-d18efb9f0f3f] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.39ms)
+2026-08-11 22:00:09,504 - datapilot.api - INFO - [106b416e-a14c-48da-a291-6786015c177a] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.36ms)
+2026-08-11 22:00:11,021 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'model': 'RandomForest',...nd one‑hot encoding.'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'model': 'XGBoost', 'tra...iverse feature ranges.'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:00:11,039 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:11,039 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:00:11,040 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:00:11,040 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:00:11,047 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:00:11,047 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:00:11,429 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.3819s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:00:11,881 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.8341s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:00:11,883 - datapilot.evaluation.evaluator - INFO - Evaluating 4 experiments for job job_1ab215e6
+2026-08-11 22:00:11,885 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:00:11,886 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:19,514 - datapilot.api - INFO - [23bea2b8-ce52-453a-a6f2-f5e9c0763a10] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (2.14ms)
+2026-08-11 22:00:20,618 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='CONTINUE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:00:20,633 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:20,633 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:00:20,633 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:00:20,633 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:00:20,636 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-11 22:00:20,637 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:25,929 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 2 validation errors for ExperimentPlan
+experiments.0.experiment_id
+  Field required [type=missing, input_value={'name': 'RandomForest_Me...anation_method': 'SHAP'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+experiments.1.experiment_id
+  Field required [type=missing, input_value={'name': 'XGBoost_Constan...anation_method': 'LIME'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing); trying secondary providers
+2026-08-11 22:00:25,942 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:25,943 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:00:25,943 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'ExperimentSpec'); using fallback response
+2026-08-11 22:00:25,943 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:00:25,946 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_001
+2026-08-11 22:00:25,958 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: EXP_002
+2026-08-11 22:00:26,155 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_002 | Status: completed | Runtime: 0.1971s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:00:26,615 - datapilot.ml_execution - INFO - Finished Experiment ID: EXP_001 | Status: completed | Runtime: 0.6692s | Metrics: {'accuracy': 1.0, 'precision': 1.0, 'recall': 1.0, 'f1': 1.0, 'f1_score': 1.0, 'balanced_accuracy': 1.0, 'roc_auc': 1.0}
+2026-08-11 22:00:26,617 - datapilot.evaluation.evaluator - INFO - Evaluating 6 experiments for job job_1ab215e6
+2026-08-11 22:00:26,618 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-11 22:00:26,619 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:29,520 - datapilot.api - INFO - [be5e7a18-0f09-45b4-997b-f5415629d6af] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.15ms)
+2026-08-11 22:00:33,325 - datapilot.api - INFO - [f2903038-6c28-4f6f-91fd-aab5c8ecaab4] GET /api/v1/dashboard - Status: 200 (1.76ms)
+2026-08-11 22:00:37,132 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for ResearchDirectorDecision
+decision
+  Input should be 'stop', 'continue', 'explore' or 'refine' [type=enum, input_value='STOP', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/enum); trying secondary providers
+2026-08-11 22:00:37,149 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:37,149 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:00:37,150 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'DecisionType'); using fallback response
+2026-08-11 22:00:37,150 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:00:37,152 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-11 22:00:37,153 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:00:39,527 - datapilot.api - INFO - [2958c052-a62a-49da-9139-978a93a7ccbb] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.11ms)
+2026-08-11 22:00:42,674 - datapilot.api - INFO - [356ce6cc-7f1b-4491-affa-b03a7329cdff] GET /api/v1/dashboard - Status: 200 (4.73ms)
+2026-08-11 22:00:49,537 - datapilot.api - INFO - [daab43d6-8485-449d-9028-3bbac124c376] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.68ms)
+2026-08-11 22:00:55,681 - datapilot.api - INFO - [66f361e9-f0ed-4e51-8e38-06c40418459a] GET /api/v1/dashboard - Status: 200 (3.35ms)
+2026-08-11 22:00:59,549 - datapilot.api - INFO - [ef0063b0-550f-49bc-95fb-b6e2f2dc715d] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.66ms)
+2026-08-11 22:01:09,558 - datapilot.api - INFO - [1e8b3686-da03-4d85-a1fe-9665d24da386] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.38ms)
+2026-08-11 22:01:19,571 - datapilot.api - INFO - [9c55ceba-1483-4ab1-a176-75c629aa99f8] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.82ms)
+2026-08-11 22:01:26,401 - datapilot.agents.base - WARNING - OpenRouter call failed (ValidationError: 1 validation error for FinalRecommendation
+pipeline
+  Input should be an object [type=model_type, input_value=['Data ingestion', 'Featu...training', 'Evaluation'], input_type=list]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type); trying secondary providers
+2026-08-11 22:01:26,425 - datapilot.agents.base - INFO - Calling Gemini model 'nvidia/nemotron-3.5-lightning:free' (timeout=30s)
+2026-08-11 22:01:26,426 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2026-08-11 22:01:26,426 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (KeyError: 'PipelineDefinition'); using fallback response
+2026-08-11 22:01:26,426 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-11 22:01:26,451 - datapilot.services.job_manager - INFO - Research job job_1ab215e6 completed successfully!
+2026-08-11 22:01:26,570 - datapilot.api - INFO - [fc1b90ad-bda6-4cf6-962b-6e400bf33ff1] GET /api/v1/jobs/job_1ab215e6 - Status: 200 (1.16ms)
+2026-08-11 22:01:28,191 - datapilot.api - INFO - [8a79599d-1f98-4b5e-9f10-a7142b1e5a23] GET /api/v1/experiments/job_1ab215e6 - Status: 200 (3.85ms)
+2026-08-11 22:01:33,334 - datapilot.api - INFO - [6c41c40e-24e1-4d08-9a01-80c7f8021b02] GET /api/v1/dashboard - Status: 200 (1.57ms)
+2026-08-11 22:01:42,704 - datapilot.api - INFO - [c7d7c293-45be-406b-b4b2-627434e3497e] GET /api/v1/dashboard - Status: 200 (7.38ms)
+2026-08-11 22:01:55,690 - datapilot.api - INFO - [bf96c78e-b972-49b0-91e1-0560b8da4ab0] GET /api/v1/dashboard - Status: 200 (1.30ms)
+2026-08-11 22:02:33,352 - datapilot.api - INFO - [a06c0fb2-ee20-44d1-ac55-680003dacb0e] GET /api/v1/dashboard - Status: 200 (5.13ms)
+2026-08-11 22:02:42,719 - datapilot.api - INFO - [e38dd05f-1930-46de-9fb1-62439e970c1d] GET /api/v1/dashboard - Status: 200 (2.91ms)
+2026-08-11 22:02:55,700 - datapilot.api - INFO - [5e303c7e-6161-4aad-8f71-9cb24a8d5ee6] GET /api/v1/dashboard - Status: 200 (1.62ms)
+2026-08-11 22:03:23,903 - datapilot.api - INFO - [e0e89cda-a880-45d9-bf0b-025d9f14bd5b] GET /api/v1/reports/job_1ab215e6 - Status: 200 (8.96ms)
+2026-08-11 22:03:33,365 - datapilot.api - INFO - [bf0d5344-95f0-4f00-a701-3cc20951d58f] GET /api/v1/dashboard - Status: 200 (2.80ms)
+2026-08-11 22:03:38,305 - datapilot.api - INFO - [e7073b89-711e-47c5-b560-7c88358e0ed7] GET /api/v1/experiments/job_1ab215e6 - Status: 200 (3.48ms)
+2026-08-11 22:03:38,308 - datapilot.api - INFO - [3d3551e6-abab-4c3b-87e0-f7361c79e11b] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (5.48ms)
+2026-08-11 22:03:42,734 - datapilot.api - INFO - [a115432d-a689-4c65-bc26-ea27ed4a5a23] GET /api/v1/dashboard - Status: 200 (1.52ms)
+2026-08-11 22:03:46,796 - datapilot.api - INFO - [c34cb17b-fede-4281-baf1-4e346c36e5b5] GET /api/v1/reports/rep_job_1ab215e6/download - Status: 200 (3.27ms)
+2026-08-11 22:03:55,716 - datapilot.api - INFO - [665a3d83-eca8-4adf-9e02-d0b890cda2f4] GET /api/v1/dashboard - Status: 200 (6.04ms)
+2026-08-11 22:04:32,611 - datapilot.api - INFO - [1c45136b-106f-49ba-96d6-89a0f38c05b1] GET /api/v1/reports/rep_job_1ab215e6/download - Status: 200 (1.73ms)
+2026-08-11 22:04:33,381 - datapilot.api - INFO - [a96f2b8a-0f0f-4e82-b89c-cae6e7279fa4] GET /api/v1/dashboard - Status: 200 (5.35ms)
+2026-08-11 22:04:42,747 - datapilot.api - INFO - [0bb96a67-6923-48e4-b974-ef8fafcb646f] GET /api/v1/dashboard - Status: 200 (2.59ms)
+2026-08-11 22:04:55,730 - datapilot.api - INFO - [90d13635-4364-4c41-8015-d9996ff2592e] GET /api/v1/dashboard - Status: 200 (2.76ms)
+2026-08-11 22:05:19,833 - datapilot.api - INFO - [922d217a-52f3-4ef3-959e-1d0f0e522328] GET /api/v1/dashboard - Status: 200 (9.25ms)
+2026-08-11 22:05:33,394 - datapilot.api - INFO - [3ba84668-4f06-44fc-b611-b09c319535d2] GET /api/v1/dashboard - Status: 200 (2.24ms)
+2026-08-11 22:05:37,714 - datapilot.api - INFO - [b2d06f32-6e8a-4e0d-819b-b04c040b81a8] GET /api/v1/reports/rep_job_1ab215e6/download - Status: 200 (3.10ms)
+2026-08-11 22:05:42,757 - datapilot.api - INFO - [31bc309e-b95d-45f0-a6c8-3420633d2825] GET /api/v1/dashboard - Status: 200 (1.57ms)
+2026-08-11 22:05:55,743 - datapilot.api - INFO - [f5f5f0d4-e54f-4cd8-bf40-7a5f4f1beffc] GET /api/v1/dashboard - Status: 200 (2.97ms)
+2026-08-11 22:06:33,429 - datapilot.api - INFO - [2ac2ad40-3b11-4e7b-889f-0338e0a12d98] GET /api/v1/dashboard - Status: 200 (18.91ms)
+2026-08-11 22:06:42,770 - datapilot.api - INFO - [fc271ce5-6b02-4da9-8f49-9cf6b1140813] GET /api/v1/dashboard - Status: 200 (1.71ms)
+2026-08-11 22:06:55,754 - datapilot.api - INFO - [f0a0e7e8-1c38-4f4c-8265-5ffcf8414c20] GET /api/v1/dashboard - Status: 200 (1.86ms)
+2026-08-11 22:07:07,780 - datapilot.api - INFO - [4e164b9d-16c7-4292-a52d-f8494878fd47] GET /api/v1/reports/job_1ab215e6 - Status: 200 (7.35ms)
+2026-08-11 22:07:09,057 - datapilot.api - INFO - [b0847e2f-6433-4ef7-b0b1-b6b20499333b] GET /api/v1/experiments/job_1ab215e6 - Status: 200 (5.50ms)
+2026-08-11 22:07:09,057 - datapilot.api - INFO - [99166c3a-de7a-4bfb-95a5-a406b44ab6d0] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (5.26ms)
+2026-08-11 22:07:33,442 - datapilot.api - INFO - [35abab8b-bf5e-4676-909a-08264536ab2b] GET /api/v1/dashboard - Status: 200 (1.92ms)
+2026-08-11 22:07:42,200 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_live_test_999
+2026-08-11 22:07:42,785 - datapilot.api - INFO - [b1849361-430f-428f-a870-9f6ba19f8fb0] GET /api/v1/dashboard - Status: 200 (5.84ms)
+2026-08-11 22:07:55,767 - datapilot.api - INFO - [793d010e-3989-4d66-8437-12ef969d7022] GET /api/v1/dashboard - Status: 200 (1.66ms)
+2026-08-11 22:08:10,449 - datapilot.api - INFO - [599a85e2-ca8c-462b-9d08-31e891bc7d95] GET /api/v1/reports/rep_job_1ab215e6/download - Status: 200 (5.10ms)
+2026-08-11 22:08:27,825 - datapilot.api - INFO - [cc6b7df2-0f71-4c20-b078-5f3f46783b5d] GET /api/v1/reports/job_1ab215e6 - Status: 200 (12.66ms)
+2026-08-11 22:08:30,594 - datapilot.api - INFO - [61d70e2d-29df-4d0a-bfd9-36d109156d8a] GET /api/v1/experiments/job_1ab215e6 - Status: 200 (2.28ms)
+2026-08-11 22:08:33,451 - datapilot.api - INFO - [3da5d429-2005-47c7-8d19-5ff0068fe110] GET /api/v1/dashboard - Status: 200 (2.88ms)
+2026-08-11 22:08:41,007 - datapilot.api - INFO - [12c71c6d-227d-469e-85e5-e0e7cd84defb] GET /api/v1/experiments/job_1ab215e6 - Status: 200 (3.62ms)
+2026-08-11 22:08:41,007 - datapilot.api - INFO - [78def5e8-3e52-488a-980c-e1017c41f6ab] GET /api/v1/datasets/ds_b5d51ca3 - Status: 200 (3.77ms)
+2026-08-11 22:08:42,801 - datapilot.api - INFO - [69465c36-f285-4c87-b2d0-9fb0543f142c] GET /api/v1/dashboard - Status: 200 (3.53ms)
+2026-08-11 22:08:55,796 - datapilot.api - INFO - [6185b557-ba91-4b80-bb3a-982370b08650] GET /api/v1/dashboard - Status: 200 (9.94ms)
+2026-08-11 22:09:33,463 - datapilot.api - INFO - [90ccb351-ab40-47b2-8e30-45aeb1a98785] GET /api/v1/dashboard - Status: 200 (1.83ms)
+2026-08-11 22:09:42,814 - datapilot.api - INFO - [36f489d9-1bb4-4bbd-ba96-45783a498a54] GET /api/v1/dashboard - Status: 200 (1.64ms)

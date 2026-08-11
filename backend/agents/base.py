@@ -41,10 +41,11 @@ _gemini_rate_limiter = GeminiRateLimiter(max_rpm=14)
 
 
 def _clean_json_schema(schema: Any) -> Any:
-    """Strips Google API unsupported keys from Pydantic JSON schema dicts for Gemini API compatibility."""
+    """Strips unsupported keys ($defs, $schema, additionalProperties, etc.) from Pydantic JSON schema dicts for LLM API compatibility."""
     FORBIDDEN_KEYS = {
         "additionalProperties",
         "$schema",
+        "$defs",
         "exclusiveMinimum",
         "exclusiveMaximum",
         "minimum",
@@ -66,17 +67,18 @@ class LLMClient:
 
     def __init__(self, model_name: Optional[str] = None):
         settings = get_settings()
-        self.model_name = model_name or settings.llm_model_name
+        self.model_name = model_name or settings.model_name or settings.llm_model_name
         if not self.model_name:
-            raise ValueError("LLM_MODEL_NAME is not set. Please define LLM_MODEL_NAME in your .env file.")
+            raise ValueError("LLM model name is not set. Please define MODEL_NAME or LLM_MODEL_NAME in your .env file.")
+        self.openrouter_key = settings.openrouter_api_key
         self.gemini_key = settings.gemini_api_key
         self.openai_key = settings.openai_api_key
         self.timeout = _LLM_TIMEOUT_SECONDS
 
-
-
     def is_api_configured(self) -> bool:
         """Checks if a valid live API key is configured."""
+        if self.openrouter_key and not self.openrouter_key.startswith("your_") and len(self.openrouter_key) > 5:
+            return True
         if self.gemini_key and not self.gemini_key.startswith("your_") and len(self.gemini_key) > 5:
             return True
         if self.openai_key and not self.openai_key.startswith("your_") and len(self.openai_key) > 5:
@@ -94,8 +96,60 @@ class LLMClient:
         if self.is_api_configured():
             try:
                 logger.info(f"Invoking LLM model '{self.model_name}' for structured output {response_model.__name__}")
-                
-                # 1. Handle OpenAI if key configured
+
+                # 1. Handle OpenRouter if key configured
+                if self.openrouter_key and not self.openrouter_key.startswith("your_"):
+                    try:
+                        import json
+                        import urllib.request
+
+                        url = "https://openrouter.ai/api/v1/chat/completions"
+                        headers = {
+                            "Authorization": f"Bearer {self.openrouter_key}",
+                            "Content-Type": "application/json",
+                            "HTTP-Referer": "http://localhost:8000",
+                            "X-Title": "DataPilot-AI",
+                        }
+
+                        schema_json = json.dumps(_clean_json_schema(response_model.model_json_schema()), indent=2)
+                        schema_instruction = (
+                            f"{system_instruction or 'You are an expert AI Data Science assistant.'}\n"
+                            f"Output raw valid JSON object ONLY, strictly matching this target JSON Schema:\n{schema_json}"
+                        )
+
+                        payload = {
+                            "model": self.model_name,
+                            "messages": [
+                                {"role": "system", "content": schema_instruction},
+                                {"role": "user", "content": prompt},
+                            ],
+                            "response_format": {"type": "json_object"},
+                        }
+
+                        req = urllib.request.Request(
+                            url,
+                            data=json.dumps(payload).encode("utf-8"),
+                            headers=headers,
+                        )
+
+                        logger.info(f"Calling OpenRouter model '{self.model_name}' (timeout={self.timeout}s)")
+                        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                            res_bytes = resp.read()
+                            res_json = json.loads(res_bytes.decode("utf-8"))
+                            raw_text = res_json["choices"][0]["message"]["content"].strip()
+
+                            # Clean markdown if returned
+                            if raw_text.startswith("```"):
+                                raw_text = raw_text.split("```")[1]
+                                if raw_text.startswith("json"):
+                                    raw_text = raw_text[4:]
+                                raw_text = raw_text.strip()
+
+                            return response_model.model_validate_json(raw_text)
+                    except Exception as ore:
+                        logger.warning(f"OpenRouter call failed ({type(ore).__name__}: {ore}); trying secondary providers")
+
+                # 2. Handle OpenAI if key configured
                 if self.openai_key and not self.openai_key.startswith("your_"):
                     try:
                         openai_mod = importlib.import_module("openai")
@@ -110,28 +164,24 @@ class LLMClient:
                         )
                         return resp.choices[0].message.parsed
                     except Exception as oe:
-                        logger.warning(f"OpenAI call failed ({oe}); using fallback response")
+                        logger.warning(f"OpenAI call failed ({oe}); trying secondary providers")
 
-                # 2. Handle Google Gemini if key configured
-                elif self.gemini_key and not self.gemini_key.startswith("your_"):
+                # 3. Handle Google Gemini if key configured
+                if self.gemini_key and not self.gemini_key.startswith("your_"):
                     try:
                         genai_mod = importlib.import_module("google.genai")
                         types_mod = importlib.import_module("google.genai.types")
 
-                        # Enforce 15 RPM rate limiting before calling API
                         _gemini_rate_limiter.acquire()
 
-                        # Create client with explicit HTTP timeout to prevent worker hangs
                         try:
                             client = genai_mod.Client(
                                 api_key=self.gemini_key,
-                                http_options={"timeout": self.timeout * 1000},  # ms
+                                http_options={"timeout": self.timeout * 1000},
                             )
                         except Exception:
-                            # Fallback: create client without explicit timeout config
                             client = genai_mod.Client(api_key=self.gemini_key)
 
-                        # Clean JSON schema for Developer API compatibility
                         cleaned_schema = _clean_json_schema(response_model.model_json_schema())
 
                         logger.info(f"Calling Gemini model '{self.model_name}' (timeout={self.timeout}s)")
@@ -145,10 +195,6 @@ class LLMClient:
                             ),
                         )
                         return response_model.model_validate_json(resp.text)
-                    except ImportError:
-                        logger.error("google-genai package not installed. Run: pip install google-genai")
-                    except TimeoutError:
-                        logger.warning(f"Gemini API call timed out after {self.timeout}s; using fallback")
                     except Exception as ge:
                         logger.warning(f"Google GenAI SDK call failed ({type(ge).__name__}: {ge}); using fallback response")
 
