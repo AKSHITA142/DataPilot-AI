@@ -12,11 +12,23 @@ class ExperimentOperation(BaseSchema):
 
 class ExperimentSpec(BaseSchema):
     """Individual experiment specification created by the Strategy Planner."""
-    experiment_id: str
+    experiment_id: str = "EXP_001"
     priority: int = 1
     reason: str = ""
     operations: List[ExperimentOperation] = Field(default_factory=list)
     model_name: str = "RandomForest"
+
+    from pydantic import model_validator
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_fields(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if not data.get("experiment_id"):
+                data["experiment_id"] = data.get("id") or data.get("spec_id") or "EXP_001"
+            if not data.get("model_name"):
+                data["model_name"] = data.get("model") or data.get("algorithm") or data.get("estimator") or "RandomForestClassifier"
+        return data
 
 
 class ExperimentPlan(BaseSchema):

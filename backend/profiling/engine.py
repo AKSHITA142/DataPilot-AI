@@ -14,6 +14,12 @@ from backend.profiling.resource_analyzer import ResourceAnalyzer
 from backend.profiling.execution_hints import ExecutionHints
 
 
+import logging
+from backend.core.logging_config import log_phase_banner
+
+logger = logging.getLogger("datapilot.profiling")
+
+
 class ProfilingEngine:
     """
     Main orchestrator for dataset profiling.
@@ -29,7 +35,10 @@ class ProfilingEngine:
         """
         Profiles a dataset file (CSV/Parquet) and returns (SemanticProfile, ExecutionHints).
         """
+        log_phase_banner("Phase 06: Profiling & Diagnostics", f"Profiling raw dataset file: {file_path}")
+        logger.info(f"[PROFILING] Reading dataset file: {file_path}")
         df, file_meta = DataLoader.load_data(file_path)
+        logger.info(f"[PROFILING] File loaded. Rows: {len(df)}, Columns: {len(df.columns)}, Format: {file_meta.get('format')}")
         return cls.profile_dataframe(df, file_meta, target_column=target_column)
 
     @classmethod
@@ -50,34 +59,37 @@ class ProfilingEngine:
             "format": "dataframe",
         }
 
-        # 1. Schema Analysis
+        logger.info(f"[PROFILING STEP 1/8] Analyzing column schemas for {len(df.columns)} columns...")
         schema_result = SchemaAnalyzer.analyze_schema(df)
         column_types = schema_result["column_types"]
+        logger.info(f"[PROFILING STEP 1/8] Inferred types: {column_types} | Candidate IDs: {schema_result['id_candidates']}")
 
-        # 2. Statistics Analysis
+        logger.info("[PROFILING STEP 2/8] Computing column statistical summaries (mean, std, min, max, nulls)...")
         col_profiles = StatisticsAnalyzer.compute_column_profiles(df, column_types)
 
-        # 3. Quality Analysis
+        logger.info("[PROFILING STEP 3/8] Evaluating data quality issues (missingness, cardinality, duplicates)...")
         quality_issues = QualityAnalyzer.analyze_quality(df, col_profiles)
+        logger.info(f"[PROFILING STEP 3/8] Identified {len(quality_issues)} quality issues.")
 
-        # 4. Distribution Analysis
+        logger.info("[PROFILING STEP 4/8] Analyzing numerical feature distributions & skewness...")
         dist_result = DistributionAnalyzer.analyze_distributions(df, col_profiles)
 
-        # 5. Relationship / Correlation Analysis
+        logger.info("[PROFILING STEP 5/8] Computing feature correlations & relationships...")
         rel_result = RelationshipAnalyzer.analyze_relationships(df)
 
-        # 6. Outlier Analysis
+        logger.info("[PROFILING STEP 6/8] Detecting numeric outliers via IQR rule...")
         outlier_result = OutlierAnalyzer.analyze_outliers(df)
 
-        # 7. Target Analysis
+        logger.info(f"[PROFILING STEP 7/8] Analyzing target column: {target_column or 'Auto-detect'}...")
         target_result = TargetAnalyzer.analyze_target(df, target_column, column_types)
+        logger.info(f"[PROFILING STEP 7/8] Target task type resolved: {target_result.get('task_type')}")
 
-        # 8. Resource Analysis & Execution Hints
+        logger.info("[PROFILING STEP 8/8] Assessing RAM footprint & generating execution hints...")
         resource_prof, exec_hints = ResourceAnalyzer.analyze_resources(
             df, file_meta.get("file_size_bytes", 0)
         )
+        logger.info(f"[PROFILING STEP 8/8] RAM Footprint: {resource_prof.memory_mb:.2f} MB | Execution Mode: '{exec_hints.execution_mode}' | Workers: {exec_hints.parallel_workers}")
 
-        # Construct Dataset Summary
         dataset_summary = {
             "rows": len(df),
             "columns": len(df.columns),
@@ -89,14 +101,12 @@ class ProfilingEngine:
             "timestamp_candidates": schema_result["timestamp_candidates"],
         }
 
-        # Construct Recommendation Context
         recommendation_context = {
             "distributions": dist_result,
             "relationships": rel_result,
             "outliers": outlier_result,
         }
 
-        # Build SemanticProfile Pydantic object
         semantic_profile = SemanticProfile(
             dataset_summary=dataset_summary,
             column_profiles=col_profiles,
@@ -105,4 +115,5 @@ class ProfilingEngine:
             recommendation_context=recommendation_context,
         )
 
+        logger.info(f"[PROFILING COMPLETE] Generated SemanticProfile for dataset '{file_meta.get('filename')}' successfully.")
         return semantic_profile, exec_hints

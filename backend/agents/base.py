@@ -184,9 +184,10 @@ class LLMClient:
 
                         cleaned_schema = _clean_json_schema(response_model.model_json_schema())
 
-                        logger.info(f"Calling Gemini model '{self.model_name}' (timeout={self.timeout}s)")
+                        gemini_model_id = self.model_name if ("gemini" in self.model_name.lower()) else "gemini-2.0-flash"
+                        logger.info(f"Calling Gemini model '{gemini_model_id}' (timeout={self.timeout}s)")
                         resp = client.models.generate_content(
-                            model=self.model_name,
+                            model=gemini_model_id,
                             contents=prompt,
                             config=types_mod.GenerateContentConfig(
                                 system_instruction=system_instruction or "You are an expert AI Data Science assistant.",

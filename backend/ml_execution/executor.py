@@ -71,16 +71,18 @@ class MLExecutionEngine:
         logger_inst = ExperimentLogger(spec.experiment_id)
         logger_inst.start()
 
-        # Create fresh copy of original dataset for complete isolation
+        logger.info(f"[ML EXECUTION: {spec.experiment_id}] Target Column: '{target_column}' | Task: {task_type} | Algorithm: {spec.model_name}")
         df_copy = df.copy()
 
         try:
             # 1. Validation
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 1/7: Validating experiment spec parameters...")
             self.validator.validate_spec(spec, df_copy, target_column, mission_brief)
 
             # Separate metadata (id, name), features X, and target y
             meta_df, X = self._extract_meta_and_features(df_copy, target_column)
             y = df_copy[target_column]
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 2/7: Isolated {len(meta_df.columns)} meta/ID columns {list(meta_df.columns)}. Remaining features X: {len(X.columns)} columns.")
 
             # For classification, clean NaNs in y and encode string targets
             if task_type == "classification":
@@ -93,32 +95,41 @@ class MLExecutionEngine:
                 if y.dtype == object or isinstance(y.iloc[0], str) or str(y.dtype) in ("category", "string"):
                     le = LabelEncoder()
                     y = pd.Series(le.fit_transform(y.astype(str)), index=y.index)
+                    logger.info(f"[ML EXECUTION: {spec.experiment_id}] Label-encoded string target classes: {list(le.classes_)}")
 
             # 2. Build Pipeline
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 3/7: Building scikit-learn pipeline for model '{spec.model_name}'...")
             pipeline = self.pipeline_builder.build_pipeline(
                 spec=spec,
                 task_type=task_type,
                 random_state=self.random_state,
             )
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Pipeline steps built: {list(pipeline.named_steps.keys())}")
 
             # 3. Cross-Validation & Fit
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 4/7: Executing adaptive cross-validation ({self.n_splits} folds)...")
             cv_scores, fitted_pipeline = self.cv_runner.run_cv(
                 pipeline=pipeline,
                 X=X,
                 y=y,
                 task_type=task_type,
             )
+            mean_cv = float(np.mean(cv_scores)) if cv_scores else 0.0
+            std_cv = float(np.std(cv_scores)) if cv_scores else 0.0
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 4/7: CV Completed. Fold Scores: {[round(s, 4) for s in cv_scores]} | Mean: {mean_cv:.4f} (+/- {std_cv:.4f})")
 
             # 4. Predict for metric calculation
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 5/7: Generating predictions for full metric calculation...")
             y_pred = fitted_pipeline.predict(X)
             y_proba = None
             if task_type == "classification" and hasattr(fitted_pipeline, "predict_proba"):
                 try:
                     y_proba = fitted_pipeline.predict_proba(X)
-                except Exception:
-                    pass
+                except Exception as pe:
+                    logger.debug(f"predict_proba skipped: {pe}")
 
             # 5. Compute Metrics
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 6/7: Computing performance metrics via MetricEngine...")
             metrics_result = MetricEngine.compute_metrics(
                 y_true=y,
                 y_pred=y_pred,
@@ -126,13 +137,13 @@ class MLExecutionEngine:
                 task_type=task_type,
                 cv_scores=cv_scores,
             )
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 6/7: Computed metrics: {metrics_result.metrics}")
 
             # 6. Extract Feature Importances if available
             feature_importance: Optional[Dict[str, float]] = None
             try:
                 model_step = fitted_pipeline.named_steps.get("model")
                 if hasattr(model_step, "feature_importances_"):
-                    # Use feature names from previous steps if available
                     importances = model_step.feature_importances_
                     feature_importance = {f"feature_{i}": float(val) for i, val in enumerate(importances)}
                 elif hasattr(model_step, "coef_"):
@@ -142,6 +153,7 @@ class MLExecutionEngine:
                 pass
 
             # 7. Generate and save preprocessed dataset CSV artifact
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 7/7: Exporting preprocessed cleaned CSV artifact...")
             processed_csv_path: Optional[str] = None
             try:
                 import os
@@ -164,6 +176,7 @@ class MLExecutionEngine:
                 os.makedirs("storage/artifacts", exist_ok=True)
                 processed_csv_path = f"storage/artifacts/{spec.experiment_id}_cleaned.csv"
                 clean_df.to_csv(processed_csv_path, index=False)
+                logger.info(f"[ML EXECUTION: {spec.experiment_id}] Saved preprocessed dataset ({len(clean_df)} rows, {len(clean_df.columns)} cols) to {processed_csv_path}")
             except Exception as pe:
                 logger.warning(f"Could not export preprocessed dataset CSV: {pe}")
 

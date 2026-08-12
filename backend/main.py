@@ -22,26 +22,10 @@ from backend.api.routes import (
 import os
 from logging.handlers import RotatingFileHandler
 
+from backend.core.logging_config import setup_logging
+
 settings = get_settings()
-
-# Setup logging configuration (Console + Rotating File Log)
-os.makedirs("backend/logs", exist_ok=True)
-log_file_path = "backend/logs/datapilot.log"
-
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-
-file_handler = RotatingFileHandler(
-    log_file_path, maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8"
-)
-file_handler.setFormatter(formatter)
-
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
-
-root_logger = logging.getLogger()
-root_logger.setLevel(getattr(logging, settings.log_level.upper(), logging.INFO))
-root_logger.handlers = [console_handler, file_handler]
-
+setup_logging()
 logger = logging.getLogger("datapilot.main")
 
 

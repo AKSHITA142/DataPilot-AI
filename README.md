@@ -14,90 +14,214 @@
 
 ---
 
-## 📌 Executive Overview
-
-**DataPilot-AI** is a production-grade autonomous data science research engine designed to transform raw tabular datasets into optimized machine learning pipelines and scientific research reports without human intervention.
-
-By integrating **LLM multi-agent consensus**, **LangGraph state machine orchestration**, **statistical diagnostics**, and **scikit-learn deterministic execution**, DataPilot-AI iteratively formulates hypotheses, executes candidate pipelines, isolates non-predictive metadata (preventing target memorization data leakage), and ranks models via a 5-dimensional multi-objective scoring matrix.
-
----
-
-## 🏗️ Unified Master System Architecture Flow
-
-The flowchart below details the single, end-to-end operational pipeline—from raw file ingestion to state machine execution, agent reasoning, ML evaluation, and multi-format artifact export.
+## 📌 1. The Big Picture System Architecture
 
 ```mermaid
-flowchart TB
-    subgraph Layer1 ["1. INGESTION & DIAGNOSTICS LAYER"]
-        Client["🖥️ Next.js 14 Web Dashboard"] ==>|Raw CSV / Parquet Upload| REST["🔌 FastAPI REST Gateway"]
-        REST ==>|Dispatch Stream| Profiler["🔬 Statistical Profiling Engine"]
-        Profiler ==>|Generate SemanticProfile| JobMgr["⚙️ Async JobManager Worker"]
-    end
+flowchart TD
+    User["👤 User Request\n(Upload CSV + Set Objective Goal)"] ==>|Upload File & Parameters| Ingestion["📥 Dataset Ingestion Gateway"]
+    Ingestion ==>|Validate Payload| Schemas["📑 Phase 1: Schemas & Contracts\n(Pydantic V2 Models)"]
+    Schemas ==>|Persist Records| DB["🗄️ Phase 2: Database & Persistence\n(SQLAlchemy ORM & Repositories)"]
+    DB ==>|Supply Context & State| Orchestration["🎼 Phase 3+ Systems\n(LangGraph Orchestration & ML Engine)"]
 
-    subgraph Layer2 ["2. LANGGRAPH STATE MACHINE LOOP"]
-        JobMgr ==>|Spawn State Machine| Graph["🎼 LangGraph Engine"]
-        
-        subgraph AgentCouncil ["🧠 AI Multi-Agent Council (OpenRouter LLMs)"]
-            Agent1["DatasetUnderstandingAgent"] --> Agent2["StrategyPlannerAgent"]
-            Agent2 --> Agent3["ResearchDirectorAgent"]
-            Agent3 --> Agent4["ReportGeneratorAgent"]
-        end
+    classDef userStyle fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef phase1Style fill:#2e1065,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
+    classDef phase2Style fill:#451a03,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
+    classDef futureStyle fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#f8fafc;
 
-        Graph ==>|Profile State| Agent1
-        Agent1 ==>|Mission Brief| Agent2
-        Agent2 ==>|Experiment Plan| MLExecutor["🔬 Scikit-Learn ML Execution Engine"]
-        MLExecutor ==>|Cross-Validation Results| EvalEngine["🏆 5D Multi-Objective Evaluator"]
-        EvalEngine ==>|Evaluation Report| Agent3
-        
-        Agent3 ==>|Check Gain & Budget| Router{"🚦 route_next Router"}
-        Router -.->|Gain > 0.5% & Budget Left| Agent2
-    end
-
-    subgraph Layer3 ["3. PERSISTENCE & ARTIFACT EXPORT LAYER"]
-        Router ==>|Converged / Budget Reached| Agent4
-        Agent4 ==>|Synthesize Final Report| Exporter["📦 ArtifactExporter"]
-        
-        Exporter ==>|Pickled Pipeline (.pkl)| Models[("💾 Storage: storage/models/")]
-        Exporter ==>|Cleaned CSV (.csv)| CleanCSV[("💾 Storage: storage/artifacts/")]
-        Exporter ==>|Markdown & HTML Reports| Reports[("💾 Storage: storage/reports/")]
-        Exporter ==>|Persist DB Records| Database[("🗄️ SQLite Database")]
-
-        JobMgr <==>|Real-Time WebSockets Telemetry| WS["📡 WebSocket Broadcaster"]
-        WS <==>|Live Event & Terminal Logs| Client
-    end
-
-    classDef clientStyle fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
-    classDef gatewayStyle fill:#1e1e38,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
-    classDef graphStyle fill:#1e293b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
-    classDef agentStyle fill:#2e1065,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
-    classDef mlStyle fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#f8fafc;
-    classDef storageStyle fill:#451a03,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
-
-    class Client clientStyle;
-    class REST,JobMgr,WS gatewayStyle;
-    class Graph,Router graphStyle;
-    class Agent1,Agent2,Agent3,Agent4 agentStyle;
-    class Profiler,MLExecutor,EvalEngine mlStyle;
-    class Exporter,Models,CleanCSV,Reports,Database storageStyle;
+    class User,Ingestion userStyle;
+    class Schemas phase1Style;
+    class DB phase2Style;
+    class Orchestration futureStyle;
 ```
 
 ---
 
-## ⚡ Core Technical Capabilities
+## 📑 2. Phase 1 — Contracts & Schemas
 
-| Capability | Architecture Specification | Technical Implementation |
+> **Phase 1 defines the common structure and universal vocabulary used across all of DataPilot-AI.**
+
+### Information Flow Through Contracts
+
+```mermaid
+flowchart LR
+    Raw["Raw CSV Dataset"] -->|`profiling.py`| Profile["SemanticProfile"]
+    Profile -->|`mission_brief.py`| Mission["MissionBrief"]
+    Mission -->|`experiment.py`| Config["ExperimentConfig"]
+    Config -->|`experiment.py`| Result["ExperimentResult"]
+    Result -->|`evaluation.py`| Eval["EvaluationReport"]
+    Eval -->|`report.py`| Report["FinalRecommendation"]
+
+    classDef schemaNode fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    class Raw,Profile,Mission,Config,Result,Eval,Report schemaNode;
+```
+
+| Contract Schema File | Primary Role | Output Contract |
 | :--- | :--- | :--- |
-| **Multi-Agent Consensus** | 5 Specialized Reasoning Agents | OpenRouter (`nvidia/nemotron-3.5-lightning:free`) with zero-downtime rule fallbacks |
-| **State Orchestration** | Cyclic Directed Acyclic Graph (DAG) | LangGraph `StateGraph` enforcing max 5 iterations and $0.5\%$ gain threshold |
-| **ML Execution Engine** | Scikit-Learn Pipeline Serialization | Automated imputation, encoding, scaling & adaptive `StratifiedKFold`/`KFold` CV |
-| **Meta-Column Isolation** | Zero Data Leakage Enforcement | Identifies `id`/`name` entity columns, isolates during training, restores in export |
-| **Composite Ranking** | 5-Dimensional Multi-Objective Matrix | $35\%$ metric, $25\%$ generalization, $20\%$ variance, $10\%$ runtime, rule screening |
-| **Real-Time Telemetry** | Asynchronous Event Streaming | FastAPI WebSocket Channel (`/ws/jobs/{job_id}`) broadcasting status & logs |
-| **Polyglot Artifacts** | Multi-Format Serialization | 1-click downloads for `.csv`, pickled `.pkl`, GitHub `.md`, and `.html` reports |
+| [`backend/schemas/semantic_profile.py`](file:///Users/akshitajariwala/Desktop/Akshita's%20Project/DataPilot-AI/backend/schemas/semantic_profile.py) | Captures column types, stats, missing values & data quality risks | `SemanticProfile` |
+| [`backend/schemas/mission_brief.py`](file:///Users/akshitajariwala/Desktop/Akshita's%20Project/DataPilot-AI/backend/schemas/mission_brief.py) | Translates raw goal into target metric, risk level & constraints | `MissionBrief` |
+| [`backend/schemas/experiment.py`](file:///Users/akshitajariwala/Desktop/Akshita's%20Project/DataPilot-AI/backend/schemas/experiment.py) | Defines preprocessing operations, model family & CV execution results | `ExperimentConfig` / `ExperimentResult` |
+| [`backend/schemas/evaluation.py`](file:///Users/akshitajariwala/Desktop/Akshita's%20Project/DataPilot-AI/backend/schemas/evaluation.py) | Scores model rankings across 5 composite dimensions & mines findings | `EvaluationReport` |
+| [`backend/schemas/report.py`](file:///Users/akshitajariwala/Desktop/Akshita's%20Project/DataPilot-AI/backend/schemas/report.py) | Synthesizes executive summary, top pipeline & business guidance | `FinalRecommendation` |
 
 ---
 
-## 📚 10-Phase System Architecture Documentation Index
+## 🗄️ 3. Phase 2 — Database & Persistence
+
+> **Phase 2 provides persistent storage for all research artifacts created during execution.**
+
+### Persistence Architecture Stack
+
+```mermaid
+flowchart TD
+    App["Application Data (Pydantic Models)"] --> ORM["SQLAlchemy ORM Models\n(backend/models/)"]
+    ORM --> Repo["Data Repositories\n(backend/repositories/)" ]
+    Repo --> DB[("SQLite Database\n(datapilot.db)")]
+
+    classDef layerStyle fill:#1e1e38,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    class App,ORM,Repo,DB layerStyle;
+```
+
+### Entity Relationship Model
+
+```mermaid
+erDiagram
+    Dataset ||--o{ Job : "1. Dispatches"
+    Job ||--o{ Experiment : "2. Runs"
+    Job ||--o{ KnowledgeEntry : "3. Mines"
+    Job ||--o| Report : "4. Produces"
+
+    Dataset {
+        string id PK
+        string filename
+        int row_count
+        json profile_json
+    }
+    Job {
+        string id PK
+        string dataset_id FK
+        string status
+        string target_column
+    }
+    Experiment {
+        string id PK
+        string job_id FK
+        json metrics
+        string status
+    }
+    KnowledgeEntry {
+        string id PK
+        string job_id FK
+        string finding
+    }
+    Report {
+        string id PK
+        string job_id FK
+        string winning_experiment_id
+    }
+```
+
+---
+
+## 🎬 4. Animated End-to-End System Walkthrough
+
+**Scenario**: User uploads `customer_churn.csv` and sets objective: *"Predict customer churn with high recall."*
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Ingestion as REST Gateway
+    participant P1 as Phase 1 (Schemas)
+    participant P2 as Phase 2 (Database)
+    participant State as LangGraph Workflow Engine
+
+    User->>Ingestion: 1. Upload customer_churn.csv + Goal ("Predict churn with high recall")
+    Ingestion->>P1: 2. Validate file format & parameters (DatasetUploadSchema)
+    Ingestion->>P2: 3. Persist DatasetModel & create JobModel (Status: QUEUED)
+    State->>P1: 4. Profile file statistics -> Generate SemanticProfile
+    State->>State: 5. Agent translates Profile + Goal -> MissionBrief (Metric: Recall)
+    State->>State: 6. Execute ML experiments & evaluate 5D composite scores
+    State->>P2: 7. Save ExperimentModel metrics & KnowledgeEntryModel findings
+    State->>P2: 8. Persist final ReportModel record & export CSV/PKL artifacts
+    P2-->>User: 9. Stream completed notification & serve download links
+```
+
+### Step-by-Step Execution Sequence
+
+| Step | What Happens | Why It Happens | Where It Goes Next |
+| :---: | :--- | :--- | :--- |
+| **1** | User uploads `customer_churn.csv` | File ingestion & initial research setup | REST Gateway (`upload.py`) |
+| **2** | System calculates SHA256 & validates payload | Guarantees schema integrity via `backend/schemas/dataset.py` | Storage & Database Layer |
+| **3** | `DatasetModel` & `JobModel` saved to DB | Ensures job state survives server restarts | `DatasetRepository` & `JobRepository` |
+| **4** | Dataset profiling runs | Calculates missing values, data types & quality risks | `ProfilingEngine` |
+| **5** | Profiling output compiled into `SemanticProfile` | Provides structured input for AI Agents | `DatasetUnderstandingAgent` |
+| **6** | LangGraph state machine iterates research loops | Trains candidate ML models & evaluates performance | `MLExecutionEngine` |
+| **7** | `ExperimentModel` & `KnowledgeEntryModel` saved | Stores cross-validation scores & strategy insights | `ExperimentRepository` |
+| **8** | Final recommendation report rendered | Packages Markdown/HTML & pickled models | `ReportService` & `ArtifactExporter` |
+| **9** | User receives discharge summary & download links | Completes autonomous research cycle | Frontend Web Dashboard |
+
+---
+
+## 💡 5. The Core Data Model Pipeline
+
+Understanding how data representation evolves across system layers:
+
+```text
+1. Pydantic Schema       👉 "What structure must input/output data strictly follow?"
+        ↓
+2. LangGraph State       👉 "What active context is currently passing through the live workflow?"
+        ↓
+3. SQLAlchemy Model      👉 "How is this data structured for database persistence?"
+        ↓
+4. Repository            👉 "What methods do we use to query, insert, or update this data?"
+        ↓
+5. SQLite Database       👉 "Where is this data permanently saved on disk?"
+```
+
+---
+
+## 💾 6. In-Memory vs. Persistent Data
+
+```text
+IN-MEMORY (Transient State)
+┌─────────────────────────────────────────────────────────┐
+│ • LangGraph State Channel (WorkflowStateDict)           │
+│ • Ephemeral Pydantic Objects (SemanticProfile, Brief)   │
+│ • Intermediate Model Pipeline Estimators & Arrays       │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼  (Persisted via Repositories)
+PERSISTED (Permanent Storage)
+┌─────────────────────────────────────────────────────────┐
+│ • Dataset Records (storage/datasets/ + DatasetModel)    │
+│ • Research Job Metadata (JobModel)                      │
+│ • Experiment Leaderboard & Metrics (ExperimentModel)    │
+│ • Scientific Knowledge Base (KnowledgeEntryModel)      │
+│ • Markdown, HTML & PKL Model Artifacts (ReportModel)    │
+└─────────────────────────────────────────────────────────┘
+```
+
+- **In-Memory Data**: Exists only while a research node is actively executing.
+- **Persisted Data**: Written to `datapilot.db` and disk storage so research history, leaderboard scores, and reports remain accessible indefinitely.
+
+---
+
+## 🔗 7. Phase Dependency Topology
+
+```mermaid
+flowchart TD
+    P1["📑 PHASE 1: Contracts & Schemas\n(Defines standard data structures & validation rules)"]
+    P2["🗄️ PHASE 2: Persistence & DB\n(Provides ORM models & repository storage)"]
+    P3["⚙️ PHASE 3+: Core, ML, Agents & Graph\n(Consumes Phase 1 schemas for logic & Phase 2 DB for storage)"]
+
+    P1 ==>|Supply Schemas| P2
+    P1 ==>|Supply Validation| P3
+    P2 ==>|Supply Persistence| P3
+```
+
+---
+
+## 📚 8. 10-Phase Documentation Index
 
 | Phase | Module Title | Document Reference | Primary Focus |
 | :---: | :--- | :--- | :--- |
@@ -147,19 +271,10 @@ pytest
 
 ---
 
-## 🔌 Primary REST & WebSocket API Specification
+## 🧠 Final Mental Model & Takeaways
 
-| Endpoint | Method | Response Payload / Behavior |
-| :--- | :---: | :--- |
-| `/api/v1/upload` | `POST` | Processes dataset upload & returns initial `SemanticProfile` |
-| `/api/v1/jobs/start` | `POST` | Spawns non-blocking async background research job |
-| `/api/v1/jobs/{job_id}` | `GET` | Returns real-time status, execution stage & progress % |
-| `/api/v1/experiments/{job_id}` | `GET` | Retrieves experiment leaderboard rankings & cross-validation metrics |
-| `/api/v1/reports/{job_id}` | `GET` | Fetches synthesized recommendation report payload |
-| `/api/v1/reports/{job_id}/download-dataset` | `GET` | **Serves cleaned CSV artifact attachment with ID columns preserved** |
-| `/ws/jobs/{job_id}` | `WS` | Real-time WebSocket channel streaming live telemetry logs & events |
-
----
-
-## 📄 License
-Distributed under the MIT License. See `LICENSE` for details.
+1. **Phase 1 is the Universal Language**: Pydantic schemas enforce type safety across agents, ML execution, and API routes.
+2. **Phase 2 is the Memory Vault**: SQLAlchemy ORM models and repositories make research progress permanent.
+3. **Separation of Concerns**: Contracts validate, LangGraph routes, Repositories persist, and ML Engine executes.
+4. **Data Leakage Safeguard**: Metadata columns (`id`, `name`) are isolated during ML training but preserved in Phase 2 exported datasets.
+5. **Decoupled Architecture**: Services interact with the database exclusively through repositories (`DatasetRepository`, `JobRepository`).
