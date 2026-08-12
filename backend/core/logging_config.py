@@ -6,7 +6,6 @@ from typing import Optional
 
 from backend.core.config import get_settings
 
-
 class DailyDateFileHandler(logging.Handler):
     """
     Custom Logging Handler that dynamically writes log records into daily dated log files:
@@ -45,12 +44,7 @@ class DailyDateFileHandler(logging.Handler):
 
 
 def setup_logging() -> logging.Logger:
-    """
-    Configures system-wide logging:
-    - Clean Console Output (Only WARNING/ERROR messages to keep terminal clean).
-    - Comprehensive Development Log File (storage/logs/development.log).
-    - Daily Dated Log File (storage/logs/YYYY-MM-DD.log).
-    """
+    """Configures system-wide logging with Console output and Daily Dated Log Files."""
     settings = get_settings()
     log_dir = os.path.join(settings.storage_dir, "logs")
     os.makedirs(log_dir, exist_ok=True)
@@ -59,33 +53,24 @@ def setup_logging() -> logging.Logger:
     formatter = logging.Formatter(log_format)
 
     root_logger = logging.getLogger()
-    root_logger.setLevel(logging.DEBUG)
+    root_logger.setLevel(getattr(logging, settings.log_level.upper(), logging.INFO))
 
     # Clear existing handlers to prevent duplicate log entries
     root_logger.handlers.clear()
 
-    # 1. Console Handler (Restricted to WARNING & ERROR to keep terminal clean)
+    # 1. Console Handler
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.WARNING)
     console_handler.setFormatter(formatter)
     root_logger.addHandler(console_handler)
 
-    # 2. Separate Dedicated Development Log File (storage/logs/development.log)
-    dev_log_path = os.path.join(log_dir, "development.log")
-    dev_file_handler = logging.FileHandler(dev_log_path, encoding="utf-8")
-    dev_file_handler.setLevel(logging.INFO)
-    dev_file_handler.setFormatter(formatter)
-    root_logger.addHandler(dev_file_handler)
-
-    # 3. Daily Dated File Handler (storage/logs/YYYY-MM-DD.log)
+    # 2. Daily Dated File Handler (storage/logs/YYYY-MM-DD.log)
     daily_handler = DailyDateFileHandler(log_dir=log_dir)
-    daily_handler.setLevel(logging.INFO)
     daily_handler.setFormatter(formatter)
     root_logger.addHandler(daily_handler)
 
     logger = logging.getLogger("datapilot")
-
-    # Session Startup Banner in Log Files
+    
+    # Session Startup Banner
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     banner = f"\n{'='*80}\n>>> NEW DATAPILOT-AI SESSION STARTED AT {now_str} <<<\n{'='*80}"
     logger.info(banner)
@@ -94,7 +79,7 @@ def setup_logging() -> logging.Logger:
 
 
 def log_phase_banner(phase_name: str, phase_description: str = "") -> None:
-    """Logs a prominent Phase Header Banner across file loggers."""
+    """Logs a prominent Phase Header Banner across console and daily log files."""
     logger = logging.getLogger("datapilot.phase")
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     banner = (

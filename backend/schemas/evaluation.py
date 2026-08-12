@@ -34,12 +34,3 @@ class ResearchDirectorDecision(ConfidenceScoredModel):
     knowledge: List[str] = Field(default_factory=list)
     remaining_questions: List[str] = Field(default_factory=list)
     next_experiments: List[ExperimentSpec] = Field(default_factory=list)
-
-    from pydantic import field_validator
-
-    @field_validator("decision", mode="before")
-    @classmethod
-    def lowercase_decision(cls, v: Any) -> Any:
-        if isinstance(v, str):
-            return v.lower().strip()
-        return v

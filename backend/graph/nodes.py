@@ -114,7 +114,7 @@ def planning_node(state: WorkflowStateDict) -> WorkflowStateDict:
 
         state["experiment_plan"] = plan.model_dump()
         state["job_status"] = JobStatus.EXECUTING.value
-        logger.info(f"[GRAPH NODE: PLANNING SUCCESS] Generated plan with {len(plan.experiments)} candidate experiments: {[e.model_name for e in plan.experiments]}")
+        logger.info(f"[GRAPH NODE: PLANNING SUCCESS] Generated plan with {len(plan.experiments)} candidate experiments: {[e.model for e in plan.experiments]}")
     except Exception as e:
         state["job_status"] = JobStatus.FAILED.value
         state["error_message"] = f"Strategy Planner failed: {str(e)}"
@@ -246,8 +246,7 @@ def decision_node(state: WorkflowStateDict) -> WorkflowStateDict:
             )
 
         state["decision"] = decision.model_dump()
-        dec_val = getattr(decision.decision, "value", str(decision.decision))
-        logger.info(f"[GRAPH NODE: DECISION SUCCESS] Director decision: {str(dec_val).upper()} (Confidence: {decision.confidence:.2f})")
+        logger.info(f"[GRAPH NODE: DECISION SUCCESS] Director decision: {decision.decision.value.upper()} (Confidence: {decision.confidence:.2f})")
     except Exception as e:
         state["job_status"] = JobStatus.FAILED.value
         state["error_message"] = f"Research Director Agent failed: {str(e)}"

@@ -71,7 +71,7 @@ class MLExecutionEngine:
         logger_inst = ExperimentLogger(spec.experiment_id)
         logger_inst.start()
 
-        logger.info(f"[ML EXECUTION: {spec.experiment_id}] Target Column: '{target_column}' | Task: {task_type} | Algorithm: {spec.model_name}")
+        logger.info(f"[ML EXECUTION: {spec.experiment_id}] Target Column: '{target_column}' | Task: {task_type} | Algorithm: {spec.model}")
         df_copy = df.copy()
 
         try:
@@ -98,7 +98,7 @@ class MLExecutionEngine:
                     logger.info(f"[ML EXECUTION: {spec.experiment_id}] Label-encoded string target classes: {list(le.classes_)}")
 
             # 2. Build Pipeline
-            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 3/7: Building scikit-learn pipeline for model '{spec.model_name}'...")
+            logger.info(f"[ML EXECUTION: {spec.experiment_id}] Step 3/7: Building scikit-learn pipeline for model '{spec.model}'...")
             pipeline = self.pipeline_builder.build_pipeline(
                 spec=spec,
                 task_type=task_type,
