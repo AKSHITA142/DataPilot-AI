@@ -229,9 +229,10 @@ class MLExecutionEngine:
 
                 os.makedirs("storage/artifacts", exist_ok=True)
 
-                # Format 1: Business Action CSV (IDs, Names, Transformed Features, Target, Predictions)
-                business_df = pd.concat([meta_df.reset_index(drop=True), clean_features_df.reset_index(drop=True)], axis=1)
-                business_df[target_column] = y.values
+                # Format 1: Business Action CSV (Original raw columns + Predictions, unscaled & unencoded for human readability)
+                business_df = df_cleaned.copy().reset_index(drop=True)
+                if 'y_pred_test' in locals() and y_pred_test is not None and len(y_pred_test) == len(business_df):
+                    business_df["predicted_" + str(target_column)] = y_pred_test
 
                 business_csv_path = f"storage/artifacts/{spec.experiment_id}_business_action.csv"
                 business_df.to_csv(business_csv_path, index=False)

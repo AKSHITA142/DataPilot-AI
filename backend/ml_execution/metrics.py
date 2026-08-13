@@ -61,8 +61,8 @@ class MetricEngine:
             primary = metrics.get("f1", acc)
 
         else:
-            mae = float(mean_absolute_error(y_true, y_pred))
-            rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
+            mae = abs(float(mean_absolute_error(y_true, y_pred)))
+            rmse = abs(float(np.sqrt(mean_squared_error(y_true, y_pred))))
             r2 = float(r2_score(y_true, y_pred))
             evs = float(explained_variance_score(y_true, y_pred))
 
@@ -71,7 +71,7 @@ class MetricEngine:
             metrics["r2"] = round(r2, 4)
             metrics["explained_variance"] = round(evs, 4)
 
-            primary = metrics.get("r2", -mae)
+            primary = metrics.get("rmse", rmse)
 
         if cv_scores:
             cv_mean = float(np.mean(cv_scores))
