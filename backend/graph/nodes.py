@@ -154,7 +154,11 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
         df = pd.read_csv(file_path)
         plan = ExperimentPlan(**plan_dict)
 
-        ml_engine = MLExecutionEngine(max_workers=2)
+        cpu_count = os.cpu_count() or 4
+        budget = plan.experiment_budget or len(plan.experiments) or 4
+        max_workers = max(1, min(cpu_count, budget, 8))
+
+        ml_engine = MLExecutionEngine(max_workers=max_workers)
         batch_results = ml_engine.execute_plan(
             plan=plan,
             dataset=df,

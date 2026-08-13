@@ -88,9 +88,14 @@ class MLExecutionEngine:
             X = X[valid_mask]
             y = y[valid_mask]
 
+            # Fit LabelEncoder on target y for classification tasks to convert string/raw targets to integers
+            if task_type == "classification":
+                from sklearn.preprocessing import LabelEncoder
+                le_full = LabelEncoder()
+                y = pd.Series(le_full.fit_transform(y.astype(str)), index=y.index)
+
             # 1b. Perform 80/20 train/test split BEFORE fitting or CV
             from sklearn.model_selection import train_test_split
-            from sklearn.preprocessing import LabelEncoder
 
             stratify_target = None
             if task_type == "classification" and len(y) >= 10:
@@ -114,14 +119,13 @@ class MLExecutionEngine:
                     stratify=None,
                 )
 
-            # Fit LabelEncoder ONLY on training target rows y_train
+            # Ensure y_train has contiguous integer labels [0..K-1] post-split for estimators like XGBoost
             if task_type == "classification":
-                if y_train.dtype == object or isinstance(y_train.iloc[0], str) or str(y_train.dtype) in ("category", "string"):
-                    le = LabelEncoder()
-                    y_train = pd.Series(le.fit_transform(y_train.astype(str)), index=y_train.index)
-                    known_classes = set(le.classes_)
-                    y_test_str = y_test.astype(str).map(lambda v: v if v in known_classes else le.classes_[0])
-                    y_test = pd.Series(le.transform(y_test_str), index=y_test.index)
+                le_train = LabelEncoder()
+                y_train = pd.Series(le_train.fit_transform(y_train), index=y_train.index)
+                known_classes = set(le_train.classes_)
+                y_test_clean = y_test.map(lambda v: v if v in known_classes else le_train.classes_[0])
+                y_test = pd.Series(le_train.transform(y_test_clean), index=y_test.index)
 
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(

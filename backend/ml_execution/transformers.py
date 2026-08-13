@@ -80,15 +80,17 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
         if not categorical_cols:
             return self
 
+        X_cat = X_df[categorical_cols].astype(str)
+
         if self.method == "onehot":
             self.encoder_ = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
-            self.encoder_.fit(X_df[categorical_cols])
+            self.encoder_.fit(X_cat)
         elif self.method == "ordinal":
             self.encoder_ = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-            self.encoder_.fit(X_df[categorical_cols])
+            self.encoder_.fit(X_cat)
         elif self.method == "frequency":
             for col in categorical_cols:
-                freqs = X_df[col].value_counts(normalize=True).to_dict()
+                freqs = X_cat[col].value_counts(normalize=True).to_dict()
                 self.freq_maps_[col] = freqs
 
         return self
@@ -100,17 +102,26 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
         if not categorical_cols:
             return X_df
 
+        X_cat = X_df[categorical_cols].astype(str)
+
         if self.method == "onehot" and self.encoder_:
-            encoded_arr = self.encoder_.transform(X_df[categorical_cols])
+            encoded_arr = self.encoder_.transform(X_cat)
             encoded_cols = self.encoder_.get_feature_names_out(categorical_cols)
             encoded_df = pd.DataFrame(encoded_arr, columns=encoded_cols, index=X_df.index)
-            X_df = X_df.drop(columns=categorical_cols).join(encoded_df)
+
+            numeric_df = X_df.drop(columns=categorical_cols)
+            return pd.concat([numeric_df, encoded_df], axis=1)
+
         elif self.method == "ordinal" and self.encoder_:
-            X_df[categorical_cols] = self.encoder_.transform(X_df[categorical_cols])
+            encoded_arr = self.encoder_.transform(X_cat)
+            X_df[categorical_cols] = encoded_arr
+            return X_df
+
         elif self.method == "frequency":
             for col in categorical_cols:
                 freq_map = self.freq_maps_.get(col, {})
-                X_df[col] = X_df[col].map(freq_map).fillna(0.0)
+                X_df[col] = X_cat[col].map(freq_map).fillna(0.0)
+            return X_df
 
         return X_df
 

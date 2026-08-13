@@ -55,6 +55,22 @@ class ExperimentValidator:
                         f"Operation '{op.method}' ({op.type}) is forbidden by mission constraints"
                     )
 
+        # Validate Model & Dataset Compatibility
+        model_clean = spec.model_name.lower().replace(" ", "").replace("_", "").replace("-", "")
+
+        # 1. MultinomialNB requires non-negative values
+        if model_clean in ("multinomialnb", "multinomial"):
+            num_cols = df.select_dtypes(include=["number"]).columns
+            num_cols = [c for c in num_cols if c != target_column]
+            if len(num_cols) > 0 and (df[num_cols] < 0).any().any():
+                raise ValidationException("MultinomialNB model requires non-negative feature values.")
+
+        # 2. GaussianProcess dataset row limit (O(N^3) memory/compute bound)
+        if "gaussianprocess" in model_clean and len(df) > 2000:
+            raise ValidationException(
+                f"GaussianProcess models are computationally prohibitive for datasets with >2000 rows (dataset has {len(df)} rows)."
+            )
+
     def validate_plan(
         self,
         plan: ExperimentPlan,

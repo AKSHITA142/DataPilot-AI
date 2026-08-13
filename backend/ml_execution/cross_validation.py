@@ -44,15 +44,28 @@ class CrossValidationRunner:
 
         scores: List[float] = []
 
+        from sklearn.preprocessing import LabelEncoder
+
         for train_idx, val_idx in cv.split(X, y):
             X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
             y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
+
+            if task_type == "classification":
+                le_fold = LabelEncoder()
+                y_train = pd.Series(le_fold.fit_transform(y_train), index=y_train.index)
+                known_classes = set(le_fold.classes_)
+                y_val_clean = y_val.map(lambda v: v if v in known_classes else le_fold.classes_[0])
+                y_val = pd.Series(le_fold.transform(y_val_clean), index=y_val.index)
 
             pipeline.fit(X_train, y_train)
             score = pipeline.score(X_val, y_val)
             scores.append(float(score))
 
         # Final fit on full dataset
+        if task_type == "classification":
+            le_full = LabelEncoder()
+            y = pd.Series(le_full.fit_transform(y), index=y.index)
+
         pipeline.fit(X, y)
         return scores, pipeline
 
