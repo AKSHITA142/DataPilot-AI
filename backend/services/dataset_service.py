@@ -34,6 +34,7 @@ class DatasetService:
         owner_id: str = "user_default",
         target_column: Optional[str] = None,
         mission_brief: Optional[str] = None,
+        task_type: str = "general",
     ) -> DatasetModel:
         """
         Validates, saves binary file to disk, computes checksum, runs ProfilingEngine,
@@ -96,8 +97,15 @@ class DatasetService:
         # Execute ProfilingEngine to generate SemanticProfile
         rows, cols = 0, 0
         try:
-            profile, _ = ProfilingEngine.profile_file(file_path, target_column=target_column)
+            profile, _ = ProfilingEngine.profile_file(
+                file_path,
+                target_column=target_column,
+                user_mission=mission_brief or "",
+                user_task_type=task_type,
+            )
             profile_dict = profile.model_dump()
+            # Store user's task_type selection in profile for downstream graph nodes
+            profile_dict["user_task_type"] = task_type
             summary = profile_dict.get("dataset_summary", {})
             rows = summary.get("rows", 0)
             cols = summary.get("columns", 0)

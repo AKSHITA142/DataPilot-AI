@@ -33,13 +33,18 @@ async def upload_dataset(
     file: UploadFile = File(...),
     target_column: Optional[str] = Form(None),
     mission: Optional[str] = Form(None),
+    task_type: Optional[str] = Form("general"),
     db: Session = Depends(get_db),
 ):
     """
     Uploads a raw CSV/Parquet dataset file, runs automated profiling, and registers dataset.
+    task_type: One of 'classification', 'regression', or 'general' (auto-detect).
     """
     service = DatasetService(db)
-    dataset_record = service.upload_dataset(file=file, target_column=target_column, mission_brief=mission)
+    dataset_record = service.upload_dataset(
+        file=file, target_column=target_column,
+        mission_brief=mission, task_type=task_type or "general",
+    )
 
     return SuccessResponse(
         data=_dataset_to_frontend(dataset_record),

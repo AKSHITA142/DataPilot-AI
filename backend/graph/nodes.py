@@ -107,6 +107,11 @@ def planning_node(state: WorkflowStateDict) -> WorkflowStateDict:
         target_info = dataset_summary.get("target", {})
         task_type = target_info.get("task_type") or "classification"
 
+        # If user explicitly selected classification/regression, override auto-detection
+        user_task_type = profile_dict.get("user_task_type", "general")
+        if user_task_type in ("classification", "regression"):
+            task_type = user_task_type
+
         # Dynamic experiment budget based on dataset size:
         # Small (< 5,000 rows): 6 models
         # Medium (5,000 - 50,000 rows): 5 models
@@ -154,6 +159,11 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
     target_info = dataset_summary.get("target", {})
     target_col = target_info.get("target_column") or "target"
     task_type = target_info.get("task_type") or "classification"
+
+    # If user explicitly selected classification/regression, override auto-detection
+    user_task_type = profile_dict.get("user_task_type", "general")
+    if user_task_type in ("classification", "regression"):
+        task_type = user_task_type
 
     if not plan_dict or not file_path or not os.path.exists(file_path):
         return {

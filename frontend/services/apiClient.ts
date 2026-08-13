@@ -84,14 +84,15 @@ async function request<T>(
 
 export async function uploadDataset(
   file: File,
-  mission: string
+  mission: string,
+  taskType: string = "general"
 ): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append("file", file);
-  // Send target_column if provided as mission, otherwise send as mission field
   if (mission) {
     formData.append("mission", mission);
   }
+  formData.append("task_type", taskType);
 
   const res = await fetch(`${BASE_URL}/upload`, {
     method: "POST",

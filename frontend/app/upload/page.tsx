@@ -33,6 +33,7 @@ export default function UploadPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [mission, setMission] = useState("");
+  const [taskType, setTaskType] = useState<"classification" | "regression" | "general">("general");
   const [status, setStatus] = useState<"idle" | "uploading" | "starting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -67,7 +68,7 @@ export default function UploadPage() {
         setUploadProgress((p) => Math.min(p + 8, 85));
       }, 200);
 
-      const uploadResult = await uploadDataset(file, mission.trim());
+      const uploadResult = await uploadDataset(file, mission.trim(), taskType);
       clearInterval(progressInterval);
       setUploadProgress(90);
 
@@ -309,6 +310,83 @@ export default function UploadPage() {
                 </button>
               ))}
             </div>
+          </div>
+        </motion.div>
+
+        {/* Task Type Selector */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.4 }}
+          className="w-full mb-6"
+        >
+          <label className="text-sm font-semibold text-text flex items-center gap-1.5 mb-2">
+            <Sparkles className="w-4 h-4 text-brand-400" />
+            Problem Type / Machine Learning Task
+          </label>
+          <div className="grid grid-cols-3 gap-2.5">
+            {[
+              {
+                id: "general",
+                title: "General / Auto",
+                desc: "Auto-detect from dataset",
+                icon: "🔄",
+              },
+              {
+                id: "classification",
+                title: "Classification",
+                desc: "Predict categories / labels",
+                icon: "📊",
+              },
+              {
+                id: "regression",
+                title: "Regression",
+                desc: "Predict numeric values",
+                icon: "📈",
+              },
+            ].map((option) => {
+              const selected = taskType === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setTaskType(option.id as any)}
+                  disabled={status === "uploading" || status === "starting"}
+                  className={`
+                    p-3 rounded-lg border text-left transition-all duration-200 flex flex-col justify-between
+                    ${
+                      selected
+                        ? "bg-brand-500/10 border-brand-400 text-brand-400 ring-1 ring-brand-400/50"
+                        : "bg-surface-2 hover:bg-surface-3 border-border text-text-muted hover:text-text"
+                    }
+                    disabled:opacity-50
+                  `}
+                >
+                  <div className="flex items-center justify-between w-full mb-1">
+                    <span className="text-base">{option.icon}</span>
+                    <span
+                      className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                        selected
+                          ? "border-brand-400 bg-brand-400"
+                          : "border-border bg-surface-3"
+                      }`}
+                    >
+                      {selected && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-background" />
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <p className={`text-xs font-semibold ${selected ? "text-brand-400" : "text-text"}`}>
+                      {option.title}
+                    </p>
+                    <p className="text-[10px] text-text-muted mt-0.5 leading-tight">
+                      {option.desc}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </motion.div>
 

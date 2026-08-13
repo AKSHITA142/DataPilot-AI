@@ -8,21 +8,21 @@ from backend.agents.base import BaseAgent
 
 
 try:
-    import xgboost
+    import xgboost  # type: ignore # noqa: F401
     HAS_XGBOOST = True
-except ImportError:
+except (ImportError, Exception):
     HAS_XGBOOST = False
 
 try:
-    import lightgbm
+    import lightgbm  # type: ignore # noqa: F401
     HAS_LIGHTGBM = True
-except ImportError:
+except (ImportError, Exception):
     HAS_LIGHTGBM = False
 
 try:
-    import catboost
+    import catboost  # type: ignore # noqa: F401
     HAS_CATBOOST = True
-except ImportError:
+except (ImportError, Exception):
     HAS_CATBOOST = False
 
 
@@ -39,19 +39,45 @@ class StrategyPlannerAgent(BaseAgent):
 
     def format_prompt(self, inputs: Dict[str, Any]) -> str:
         profile: Optional[SemanticProfile] = inputs.get("semantic_profile")
-        mission: Optional[MissionBrief] = inputs.get("mission_brief")
+        mission: Any = inputs.get("mission_brief")
         budget: int = inputs.get("experiment_budget", 3)
+        task_type: str = inputs.get("task_type", "classification")
+
+        objective = getattr(mission, "objective", "Tabular Optimization") if mission else "Tabular Optimization"
+
+        if task_type == "regression":
+            allowed_models = (
+                "RandomForestRegressor, LinearRegression, Ridge, HistGradientBoostingRegressor, "
+                "XGBRegressor, LGBMRegressor, CatBoostRegressor, SVR, ExtraTreesRegressor, KNeighborsRegressor"
+            )
+            strict_instruction = (
+                "CRITICAL REQUIREMENT: The user's problem type is strictly REGRESSION. "
+                "You MUST ONLY select regression models (ending in Regressor, or LinearRegression/Ridge/SVR). "
+                "Do NOT include classification models (like RandomForestClassifier, LogisticRegression, or SVC)."
+            )
+        else:
+            allowed_models = (
+                "RandomForestClassifier, LogisticRegression, RidgeClassifier, HistGradientBoostingClassifier, "
+                "XGBClassifier, LGBMClassifier, CatBoostClassifier, SVC, ExtraTreesClassifier, KNeighborsClassifier"
+            )
+            strict_instruction = (
+                "CRITICAL REQUIREMENT: The user's problem type is strictly CLASSIFICATION. "
+                "You MUST ONLY select classification models (ending in Classifier, or LogisticRegression/RidgeClassifier/SVC). "
+                "Do NOT include regression models (like LinearRegression, SVR, or RandomForestRegressor)."
+            )
 
         return (
             f"Generate a batch of {budget} diverse ML experiment specifications.\n"
-            f"Mission Objective: {mission.objective if mission else 'Classification'}\n"
-            f"Select from supported models (RandomForest, LogisticRegression, XGBoost, LightGBM, CatBoost, SVC, LinearRegression, Ridge) "
-            f"and transformers (imputation: median/mean/constant, encoding: onehot/ordinal/frequency, scaling: standard/robust/minmax)."
+            f"Mission Objective: {objective}\n"
+            f"Task Type: {task_type.upper()}\n"
+            f"{strict_instruction}\n"
+            f"Allowed Models: {allowed_models}\n"
+            f"Select transformers from: imputation (median/mean/constant), encoding (onehot/ordinal/frequency), scaling (standard/robust/minmax)."
         )
 
     def get_fallback_data(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
-        mission: Optional[MissionBrief] = inputs.get("mission_brief")
-        obj_text = mission.objective if mission else "Tabular Optimization"
+        mission: Any = inputs.get("mission_brief")
+        obj_text = getattr(mission, "objective", "Tabular Optimization") if mission else "Tabular Optimization"
         budget: int = inputs.get("experiment_budget", 3)
 
         # Parse profile for row_count and task_type
@@ -149,6 +175,12 @@ class StrategyPlannerAgent(BaseAgent):
             if name and scale_rec:
                 col_scalings[name] = scale_rec
 
+        # Remove target column from preprocessing configs — target must never be in X's pipeline
+        target_col = target_info.get("target_column")
+        if target_col:
+            col_encodings.pop(target_col, None)
+            col_scalings.pop(target_col, None)
+
         imputations = ["median", "mean", "median", "mean", "constant"]
         encodings = ["onehot", "ordinal", "frequency", "onehot", "ordinal"]
         scalings = ["standard", "robust", "minmax", "standard", "robust"]
@@ -178,3 +210,60 @@ class StrategyPlannerAgent(BaseAgent):
             "experiment_budget": budget,
             "experiments": experiments,
         }
+
+    def run(self, inputs: Dict[str, Any]) -> ExperimentPlan:
+        plan: ExperimentPlan = super().run(inputs)
+        task_type = inputs.get("task_type", "classification")
+
+        MODEL_REG_MAP = {
+            "RandomForestClassifier": "RandomForestRegressor",
+            "LogisticRegression": "LinearRegression",
+            "RidgeClassifier": "Ridge",
+            "HistGradientBoostingClassifier": "HistGradientBoostingRegressor",
+            "GradientBoostingClassifier": "GradientBoostingRegressor",
+            "XGBClassifier": "XGBRegressor",
+            "LGBMClassifier": "LGBMRegressor",
+            "CatBoostClassifier": "CatBoostRegressor",
+            "SVC": "SVR",
+            "ExtraTreesClassifier": "ExtraTreesRegressor",
+            "KNeighborsClassifier": "KNeighborsRegressor",
+            "MLPClassifier": "MLPRegressor",
+            "AdaBoostClassifier": "AdaBoostRegressor",
+            "DecisionTreeClassifier": "DecisionTreeRegressor",
+            "GaussianNB": "LinearRegression",
+            "LinearDiscriminantAnalysis": "Ridge",
+        }
+
+        MODEL_CLF_MAP = {
+            "RandomForestRegressor": "RandomForestClassifier",
+            "LinearRegression": "LogisticRegression",
+            "Ridge": "RidgeClassifier",
+            "HistGradientBoostingRegressor": "HistGradientBoostingClassifier",
+            "GradientBoostingRegressor": "GradientBoostingClassifier",
+            "XGBRegressor": "XGBClassifier",
+            "LGBMRegressor": "LGBMClassifier",
+            "CatBoostRegressor": "CatBoostClassifier",
+            "SVR": "SVC",
+            "ExtraTreesRegressor": "ExtraTreesClassifier",
+            "KNeighborsRegressor": "KNeighborsClassifier",
+            "MLPRegressor": "MLPClassifier",
+            "AdaBoostRegressor": "AdaBoostClassifier",
+            "DecisionTreeRegressor": "DecisionTreeClassifier",
+            "GaussianProcessRegressor": "RandomForestClassifier",
+        }
+
+        # Strict post-processing: enforce 100% task_type compliance for every experiment spec
+        for exp in plan.experiments:
+            m_name = exp.model_name
+            if task_type == "regression":
+                if m_name in MODEL_REG_MAP:
+                    exp.model_name = MODEL_REG_MAP[m_name]
+                elif m_name.endswith("Classifier"):
+                    exp.model_name = m_name[:-10] + "Regressor"
+            else:
+                if m_name in MODEL_CLF_MAP:
+                    exp.model_name = MODEL_CLF_MAP[m_name]
+                elif m_name.endswith("Regressor"):
+                    exp.model_name = m_name[:-9] + "Classifier"
+
+        return plan

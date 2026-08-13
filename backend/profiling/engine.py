@@ -24,20 +24,29 @@ class ProfilingEngine:
     def profile_file(
         cls,
         file_path: str,
-        target_column: Optional[str] = None
+        target_column: Optional[str] = None,
+        user_mission: str = "",
+        user_task_type: str = "general",
     ) -> Tuple[SemanticProfile, ExecutionHints]:
         """
         Profiles a dataset file (CSV/Parquet) and returns (SemanticProfile, ExecutionHints).
         """
         df, file_meta = DataLoader.load_data(file_path)
-        return cls.profile_dataframe(df, file_meta, target_column=target_column)
+        return cls.profile_dataframe(
+            df, file_meta,
+            target_column=target_column,
+            user_mission=user_mission,
+            user_task_type=user_task_type,
+        )
 
     @classmethod
     def profile_dataframe(
         cls,
         df: pd.DataFrame,
         file_meta: Optional[Dict[str, Any]] = None,
-        target_column: Optional[str] = None
+        target_column: Optional[str] = None,
+        user_mission: str = "",
+        user_task_type: str = "general",
     ) -> Tuple[SemanticProfile, ExecutionHints]:
         """
         Profiles an in-memory DataFrame and returns (SemanticProfile, ExecutionHints).
@@ -70,7 +79,11 @@ class ProfilingEngine:
         outlier_result = OutlierAnalyzer.analyze_outliers(df)
 
         # 7. Target Analysis
-        target_result = TargetAnalyzer.analyze_target(df, target_column, column_types)
+        target_result = TargetAnalyzer.analyze_target(
+            df, target_column, column_types,
+            user_mission=user_mission,
+            user_task_type=user_task_type,
+        )
 
         # 8. Resource Analysis & Execution Hints
         resource_prof, exec_hints = ResourceAnalyzer.analyze_resources(

@@ -27,6 +27,7 @@ class MetricEngine:
         y_proba: Any = None,
         task_type: str = "classification",
         cv_scores: list = None,
+        train_score: float = None,
     ) -> MetricsResult:
         """Calculates evaluation metrics dictionary and wraps in MetricsResult."""
         cv_scores = cv_scores or []
@@ -78,10 +79,19 @@ class MetricEngine:
             metrics["cv_mean"] = round(cv_mean, 4)
             metrics["cv_std"] = round(cv_std, 4)
             metrics["test_score"] = round(primary, 4)
-            metrics["train_test_gap"] = round(abs(cv_mean - primary), 4)
+
+        # Honest train_test_gap: |train_score - test_score|
+        # Measures actual overfitting (how much better model does on training data vs unseen test data)
+        if train_score is not None:
+            metrics["train_score"] = round(train_score, 4)
+            metrics["train_test_gap"] = round(abs(train_score - primary), 4)
+        elif cv_scores:
+            # Fallback if train_score not provided
+            metrics["train_test_gap"] = round(abs(float(np.mean(cv_scores)) - primary), 4)
 
         return MetricsResult(
             primary_metric=round(primary, 4),
             metrics=metrics,
             cv_scores=[round(s, 4) for s in cv_scores],
         )
+

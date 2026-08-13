@@ -54,6 +54,11 @@ class MLExecutionEngine:
                 meta_cols.append(col)
             elif df[col].dtype == object and df[col].nunique() == n_rows and n_rows > 5:
                 meta_cols.append(col)
+            # High-cardinality text columns (near-unique strings) are metadata/noise, not features
+            elif df[col].dtype == object and n_rows > 3:
+                unique_ratio = df[col].nunique() / n_rows
+                if unique_ratio > 0.7:
+                    meta_cols.append(col)
 
         meta_df = df[meta_cols].copy()
         feature_cols = [c for c in df.columns if c not in meta_cols and c != target_column]
@@ -83,11 +88,12 @@ class MLExecutionEngine:
             meta_df, X = self._extract_meta_and_features(df_cleaned, target_column)
             y = df_cleaned[target_column]
 
-            # Fit LabelEncoder on target y for classification tasks to convert string/raw targets to integers
+            # Single LabelEncoder for classification: encode ONCE before splitting
+            # This guarantees consistent integer labels [0..K-1] across train and test.
             if task_type == "classification":
                 from sklearn.preprocessing import LabelEncoder
-                le_full = LabelEncoder()
-                y = pd.Series(le_full.fit_transform(y.astype(str)), index=y.index)
+                le = LabelEncoder()
+                y = pd.Series(le.fit_transform(y.astype(str)), index=y.index)
 
             # 1b. Perform 80/20 train/test split BEFORE fitting or CV
             from sklearn.model_selection import train_test_split
@@ -114,13 +120,7 @@ class MLExecutionEngine:
                     stratify=None,
                 )
 
-            # Ensure y_train has contiguous integer labels [0..K-1] post-split for estimators like XGBoost
-            if task_type == "classification":
-                le_train = LabelEncoder()
-                y_train = pd.Series(le_train.fit_transform(y_train), index=y_train.index)
-                known_classes = set(le_train.classes_)
-                y_test_clean = y_test.map(lambda v: v if v in known_classes else le_train.classes_[0])
-                y_test = pd.Series(le_train.transform(y_test_clean), index=y_test.index)
+            # Labels are already [0..K-1] from the single LabelEncoder above — no re-encoding needed.
 
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(
@@ -149,6 +149,9 @@ class MLExecutionEngine:
                 except Exception:
                     pass
 
+            # Compute actual training score for honest train_test_gap
+            train_score = float(fitted_pipeline.score(X_train, y_train))
+
             # 5. Compute Metrics on held-out test split with CV scores
             metrics_result = MetricEngine.compute_metrics(
                 y_true=y_test,
@@ -156,19 +159,35 @@ class MLExecutionEngine:
                 y_proba=y_proba_test,
                 task_type=task_type,
                 cv_scores=cv_scores,
+                train_score=train_score,
             )
 
-            # 6. Extract Feature Importances if available
+            # 6. Extract Feature Importances with real column names
             feature_importance: Optional[Dict[str, float]] = None
             try:
+                # Get real feature names from the preprocessing pipeline output
+                feature_names = None
+                try:
+                    preproc_steps = Pipeline(fitted_pipeline.steps[:-1])
+                    X_sample = preproc_steps.transform(X_train.iloc[:1])
+                    if isinstance(X_sample, pd.DataFrame):
+                        feature_names = list(X_sample.columns)
+                except Exception:
+                    pass
+
                 model_step = fitted_pipeline.named_steps.get("model")
                 if hasattr(model_step, "feature_importances_"):
-                    # Use feature names from previous steps if available
                     importances = model_step.feature_importances_
-                    feature_importance = {f"feature_{i}": float(val) for i, val in enumerate(importances)}
+                    if feature_names and len(feature_names) == len(importances):
+                        feature_importance = {str(name): float(val) for name, val in zip(feature_names, importances)}
+                    else:
+                        feature_importance = {f"feature_{i}": float(val) for i, val in enumerate(importances)}
                 elif hasattr(model_step, "coef_"):
                     coefs = np.abs(model_step.coef_).flatten()
-                    feature_importance = {f"feature_{i}": float(val) for i, val in enumerate(coefs)}
+                    if feature_names and len(feature_names) == len(coefs):
+                        feature_importance = {str(name): float(val) for name, val in zip(feature_names, coefs)}
+                    else:
+                        feature_importance = {f"feature_{i}": float(val) for i, val in enumerate(coefs)}
             except Exception:
                 pass
 
