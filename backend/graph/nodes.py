@@ -103,14 +103,26 @@ def planning_node(state: WorkflowStateDict) -> WorkflowStateDict:
         mission = MissionBrief(**mission_dict)
 
         dataset_summary = profile_dict.get("dataset_summary", {})
+        row_count = dataset_summary.get("row_count") or 1000
         target_info = dataset_summary.get("target", {})
         task_type = target_info.get("task_type") or "classification"
+
+        # Dynamic experiment budget based on dataset size:
+        # Small (< 5,000 rows): 6 models
+        # Medium (5,000 - 50,000 rows): 5 models
+        # Large (> 50,000 rows): 3 fast models
+        if row_count < 5000:
+            budget = 6
+        elif row_count < 50000:
+            budget = 5
+        else:
+            budget = 3
 
         planner = StrategyPlannerAgent()
         plan = planner.run({
             "semantic_profile": profile,
             "mission_brief": mission,
-            "experiment_budget": 2,
+            "experiment_budget": budget,
             "task_type": task_type,
         })
 

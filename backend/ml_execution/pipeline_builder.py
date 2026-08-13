@@ -63,6 +63,7 @@ class PipelineBuilder:
             steps.append(("default_imputer", ImputerTransformer(strategy="median")))
 
         # 2. Categorical Encoding step
+        col_encs = {}
         if "encoding" in ops_by_type:
             enc_op = ops_by_type["encoding"]
             col_encs = enc_op.params.get("column_encodings", {}) if enc_op.params else {}
@@ -74,7 +75,7 @@ class PipelineBuilder:
         if "scaling" in ops_by_type:
             scale_op = ops_by_type["scaling"]
             col_scales = scale_op.params.get("column_scalings", {}) if scale_op.params else {}
-            steps.append(("scaler", FeatureScalerTransformer(method=scale_op.method, column_scalings=col_scales)))
+            steps.append(("scaler", FeatureScalerTransformer(method=scale_op.method, column_scalings=col_scales, column_encodings=col_encs)))
 
         # 4. Feature Engineering step
         if "feature_engineering" in ops_by_type:

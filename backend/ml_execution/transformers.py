@@ -75,7 +75,9 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
 
     def fit(self, X: Union[pd.DataFrame, np.ndarray], y=None):
         X_df = pd.DataFrame(X)
-        categorical_cols = list(X_df.select_dtypes(include=["object", "category"]).columns)
+        obj_cols = set(X_df.select_dtypes(include=["object", "category"]).columns)
+        enc_keys = set(self.column_encodings.keys()) if self.column_encodings else set()
+        categorical_cols = [c for c in list(X_df.columns) if c in obj_cols or c in enc_keys]
 
         if not categorical_cols:
             return self
@@ -106,7 +108,9 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
 
     def transform(self, X: Union[pd.DataFrame, np.ndarray]) -> pd.DataFrame:
         X_df = pd.DataFrame(X).copy()
-        categorical_cols = list(X_df.select_dtypes(include=["object", "category"]).columns)
+        obj_cols = set(X_df.select_dtypes(include=["object", "category"]).columns)
+        enc_keys = set(self.encoders_.keys())
+        categorical_cols = [c for c in list(X_df.columns) if c in obj_cols or c in enc_keys]
 
         if not categorical_cols:
             return X_df
@@ -146,21 +150,46 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
 class FeatureScalerTransformer(BaseEstimator, TransformerMixin):
     """Custom scaler supporting standard, minmax, and robust scaling per column."""
 
-    def __init__(self, method: str = "standard", column_scalings: Optional[Dict[str, str]] = None):
+    def __init__(
+        self,
+        method: str = "standard",
+        column_scalings: Optional[Dict[str, str]] = None,
+        column_encodings: Optional[Dict[str, str]] = None,
+    ):
         self.method = method
         self.column_scalings = column_scalings or {}
+        self.column_encodings = column_encodings or {}
         self.scalers_: Dict[str, Any] = {}
         self.numeric_cols_: List[str] = []
 
     def fit(self, X: Union[pd.DataFrame, np.ndarray], y=None):
         X_df = pd.DataFrame(X)
-        self.numeric_cols_ = list(X_df.select_dtypes(include=[np.number]).columns)
+        all_numeric = list(X_df.select_dtypes(include=[np.number]).columns)
+
+        if not all_numeric:
+            return self
+
+        encoded_cols = set(self.column_encodings.keys())
+
+        self.numeric_cols_ = []
+        for col in all_numeric:
+            col_str = str(col)
+            # Skip categorical columns and one-hot generated dummy columns
+            if col_str in encoded_cols:
+                continue
+            if any(col_str.startswith(f"{enc_c}_") for enc_c in encoded_cols):
+                continue
+            # If explicit column_scalings map exists, only scale columns explicitly listed in column_scalings!
+            if self.column_scalings and col_str not in self.column_scalings:
+                continue
+
+            self.numeric_cols_.append(col)
 
         if not self.numeric_cols_:
             return self
 
         for col in self.numeric_cols_:
-            col_method = self.column_scalings.get(col, self.method)
+            col_method = self.column_scalings.get(str(col), self.method)
             if col_method == "robust":
                 scaler = RobustScaler()
             elif col_method == "minmax":
@@ -175,7 +204,9 @@ class FeatureScalerTransformer(BaseEstimator, TransformerMixin):
 
     def transform(self, X: Union[pd.DataFrame, np.ndarray]) -> pd.DataFrame:
         X_df = pd.DataFrame(X).copy()
-        for col, scaler in self.scalers_.items():
+        for col in self.numeric_cols_:
             if col in X_df.columns and pd.api.types.is_numeric_dtype(X_df[col]):
-                X_df[[col]] = scaler.transform(X_df[[col]])
+                scaler = self.scalers_.get(col)
+                if scaler:
+                    X_df[[col]] = scaler.transform(X_df[[col]])
         return X_df
