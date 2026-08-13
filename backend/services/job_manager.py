@@ -230,6 +230,7 @@ class JobManager:
             # 5. Persist final report to database
             final_report_dict = final_state.get("final_report") or {}
             winning_id = final_report_dict.get("winning_experiment_id") or "exp_1"
+            html_report_path = final_report_dict.get("report_html_path") or f"storage/reports/{job_id}/report.html"
             
             existing_report = report_repo.get_by_job(job_id)
             if not existing_report:
@@ -238,10 +239,15 @@ class JobManager:
                         id=f"rep_{job_id}",
                         job_id=job_id,
                         winning_experiment_id=winning_id,
-                        report_file_path=f"storage/reports/{job_id}/report.md",
+                        report_file_path=html_report_path,
                         summary=final_report_dict.get("summary") or "Final research report completed.",
                     )
                 )
+            else:
+                existing_report.winning_experiment_id = winning_id
+                existing_report.report_file_path = html_report_path
+                existing_report.summary = final_report_dict.get("summary") or existing_report.summary
+                db.commit()
 
             await cls._broadcast_log(job_id, "Final report generated successfully.",
                                      stage="reporting", level="success")

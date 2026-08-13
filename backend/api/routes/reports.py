@@ -158,6 +158,34 @@ def download_report(
     return PlainTextResponse(content=content, media_type="text/markdown")
 
 
+@router.get("/{job_id}/html")
+def get_report_html(job_id: str, db: Session = Depends(get_db)):
+    """
+    Returns the standalone HTML report string for direct rendering in frontend iframe/preview.
+    """
+    from backend.repositories.report_repository import ReportRepository
+    repo = ReportRepository(db)
+    report_record = repo.get_by_job(job_id) or repo.get_by_id(job_id)
+
+    if report_record and report_record.report_file_path and os.path.isfile(report_record.report_file_path):
+        with open(report_record.report_file_path, "r", encoding="utf-8") as f:
+            return PlainTextResponse(content=f.read(), media_type="text/html")
+
+    html_candidate = f"storage/reports/{job_id}/report.html"
+    if os.path.isfile(html_candidate):
+        with open(html_candidate, "r", encoding="utf-8") as f:
+            return PlainTextResponse(content=f.read(), media_type="text/html")
+
+    fallback_html = f"""<!DOCTYPE html>
+<html>
+<body style="background:#0f172a;color:#f8fafc;font-family:sans-serif;padding:20px;">
+    <h2>DataPilot-AI Report</h2>
+    <p>Report is being generated or finalized for job <code>{job_id}</code>...</p>
+</body>
+</html>"""
+    return PlainTextResponse(content=fallback_html, media_type="text/html")
+
+
 @router.get("/{job_id}/download-dataset")
 def download_preprocessed_dataset(
     job_id: str,

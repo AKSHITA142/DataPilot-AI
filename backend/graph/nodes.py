@@ -270,7 +270,7 @@ def decision_node(state: WorkflowStateDict) -> WorkflowStateDict:
 
 
 def reporting_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Invokes Phase 7 ReportGeneratorAgent to create final recommendation."""
+    """Invokes Phase 7 ReportGeneratorAgent and generates HTML & Markdown reports."""
     if state.get("job_status") == JobStatus.FAILED.value:
         return state
 
@@ -283,13 +283,63 @@ def reporting_node(state: WorkflowStateDict) -> WorkflowStateDict:
         }
 
     try:
+        from backend.reports.html_generator import HTMLReportGenerator
+        from backend.reports.markdown_generator import MarkdownReportGenerator
+        from backend.schemas.semantic_profile import SemanticProfile
+
         eval_report = EvaluationReport(**eval_report_dict)
         reporter = ReportGeneratorAgent()
-        final_rec = reporter.run({"evaluation_report": eval_report})
+        final_rec = reporter.run({
+            "evaluation_report": eval_report,
+            "experiment_results": state.get("experiment_results", []),
+            "semantic_profile": state.get("semantic_profile"),
+        })
+
+        job_id = state.get("job_id", "job_default")
+        out_dir = os.path.join("storage", "reports", job_id)
+        os.makedirs(out_dir, exist_ok=True)
+
+        sem_prof = None
+        raw_prof = state.get("semantic_profile")
+        if isinstance(raw_prof, dict):
+            try:
+                sem_prof = SemanticProfile(**raw_prof)
+            except Exception:
+                sem_prof = None
+        elif isinstance(raw_prof, SemanticProfile):
+            sem_prof = raw_prof
+
+        html_content = HTMLReportGenerator.generate_html(
+            recommendation=final_rec,
+            evaluation_report=eval_report,
+            profile=sem_prof or raw_prof,
+            mission_brief_str=state.get("mission_brief"),
+            experiment_results=state.get("experiment_results", []),
+        )
+
+        md_content = MarkdownReportGenerator.generate_markdown(
+            recommendation=final_rec,
+            evaluation_report=eval_report,
+            profile=sem_prof,
+        )
+
+        html_path = os.path.join(out_dir, "report.html")
+        md_path = os.path.join(out_dir, "report.md")
+
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write(html_content)
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(md_content)
+
+        rec_dict = final_rec.model_dump()
+        rec_dict["report_html_path"] = html_path
+        rec_dict["report_md_path"] = md_path
+        rec_dict["html_content"] = html_content
+        rec_dict["md_content"] = md_content
 
         return {
             **state,
-            "final_report": final_rec.model_dump(),
+            "final_report": rec_dict,
             "job_status": JobStatus.COMPLETED.value,
         }
     except Exception as e:

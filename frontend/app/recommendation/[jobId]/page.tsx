@@ -400,17 +400,42 @@ export default function RecommendationPage({
             </motion.div>
           )}
 
-          {/* ── 7. DOWNLOAD & EXPORT ACTIONS ── */}
+          {/* ── 7. LIVE HTML AUDIT REPORT IFRAME ── */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
+            className="mb-8"
+          >
+            <div className="card p-6 border border-border">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-brand-400 uppercase tracking-widest font-semibold flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Technical Audit & Validation Report (HTML Output)
+                </p>
+                <span className="text-[10px] text-text-muted font-mono">Real-Time Generated Audit Report</span>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-border bg-slate-950 shadow-inner h-[600px] w-full">
+                <iframe
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/api/v1/reports/${jobId}/html`}
+                  className="w-full h-full border-0"
+                  title="DataPilot-AI HTML Research Report"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── 8. DOWNLOAD & EXPORT ACTIONS ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
             className="card p-6 flex flex-col sm:flex-row items-center justify-between gap-4"
           >
             <div>
-              <p className="text-sm font-bold text-text mb-0.5">Export Production Report</p>
+              <p className="text-sm font-bold text-text mb-0.5">Export Production Report & Dataset</p>
               <p className="text-xs text-text-muted">
-                Download full standalone HTML or Markdown research summary for your team.
+                Download full standalone HTML/Markdown research summary or preprocessed CSV artifact.
               </p>
             </div>
             <div className="flex flex-wrap gap-2.5 shrink-0">
@@ -429,6 +454,14 @@ export default function RecommendationPage({
                 onClick={() => handleDownload("markdown")}
               >
                 Markdown Report
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Download className="w-3.5 h-3.5" />}
+                onClick={handleDownloadDataset}
+              >
+                Cleaned CSV
               </Button>
             </div>
           </motion.div>
