@@ -20,6 +20,7 @@ from backend.ml_execution.pipeline_builder import PipelineBuilder
 from backend.ml_execution.cross_validation import CrossValidationRunner
 from backend.ml_execution.metrics import MetricEngine
 from backend.ml_execution.logger import ExperimentLogger
+from backend.ml_execution.pre_cleaner import DataPreCleaner
 
 logger = logging.getLogger("datapilot.ml_execution.executor")
 
@@ -75,18 +76,12 @@ class MLExecutionEngine:
         df_copy = df.copy()
 
         try:
-            # 1. Validation
-            self.validator.validate_spec(spec, df_copy, target_column, mission_brief)
+            # 0. Leakage-Safe Data Pre-Cleaning (Deduplication, target nulls, >75% missing cols, >50% sparse rows)
+            df_cleaned, cleaning_audit = DataPreCleaner.clean_raw_dataset(df_copy, target_column)
 
-            # Separate metadata (id, name), features X, and target y
-            meta_df, X = self._extract_meta_and_features(df_copy, target_column)
-            y = df_copy[target_column]
-
-            # Clean NaNs in target y
-            valid_mask = y.notna()
-            meta_df = meta_df[valid_mask]
-            X = X[valid_mask]
-            y = y[valid_mask]
+            # Separate metadata (id, name), features X, and target y from pre-cleaned data
+            meta_df, X = self._extract_meta_and_features(df_cleaned, target_column)
+            y = df_cleaned[target_column]
 
             # Fit LabelEncoder on target y for classification tasks to convert string/raw targets to integers
             if task_type == "classification":
@@ -206,6 +201,7 @@ class MLExecutionEngine:
             artifacts = Artifacts(
                 processed_dataset_path=processed_csv_path,
                 feature_importance=feature_importance,
+                cleaning_audit=cleaning_audit.to_dict() if 'cleaning_audit' in locals() else None,
             )
             runtime = logger_inst.finish(status="completed", metrics=metrics_result.metrics)
 

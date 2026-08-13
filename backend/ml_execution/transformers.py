@@ -31,33 +31,52 @@ class ColumnSelectorTransformer(BaseEstimator, TransformerMixin):
 
 
 class ImputerTransformer(BaseEstimator, TransformerMixin):
-    """Custom scikit-learn compatible Imputer supporting mean, median, mode, constant."""
+    """Custom scikit-learn compatible Imputer supporting mean, median, mode, constant with MissingIndicators."""
 
-    def __init__(self, strategy: str = "mean", fill_value: Optional[Any] = None):
+    def __init__(self, strategy: str = "median", fill_value: Optional[Any] = None, add_missing_indicator: bool = True):
         self.strategy = strategy
         self.fill_value = fill_value
+        self.add_missing_indicator = add_missing_indicator
         self.imputers_: Dict[str, Any] = {}
+        self.missing_indicator_cols_: List[str] = []
 
     def fit(self, X: Union[pd.DataFrame, np.ndarray], y=None):
         X_df = pd.DataFrame(X)
+        self.imputers_ = {}
+        self.missing_indicator_cols_ = []
+
         for col in X_df.columns:
-            if self.strategy == "mean" and pd.api.types.is_numeric_dtype(X_df[col]):
-                val = X_df[col].mean()
-            elif self.strategy == "median" and pd.api.types.is_numeric_dtype(X_df[col]):
-                val = X_df[col].median()
+            has_nulls = X_df[col].isnull().any()
+            is_num = pd.api.types.is_numeric_dtype(X_df[col])
+
+            if self.add_missing_indicator and is_num and has_nulls:
+                self.missing_indicator_cols_.append(str(col))
+
+            if self.strategy == "mean" and is_num:
+                val = X_df[col].mean() if not X_df[col].dropna().empty else 0.0
+            elif self.strategy == "median" and is_num:
+                val = X_df[col].median() if not X_df[col].dropna().empty else 0.0
             elif self.strategy == "mode":
                 mode_res = X_df[col].mode()
-                val = mode_res.iloc[0] if not mode_res.empty else (self.fill_value or 0)
+                val = mode_res.iloc[0] if not mode_res.empty else (self.fill_value or (0.0 if is_num else "missing"))
             elif self.strategy == "constant":
-                val = self.fill_value if self.fill_value is not None else 0
+                val = self.fill_value if self.fill_value is not None else (0.0 if is_num else "missing")
             else:
-                val = X_df[col].median() if pd.api.types.is_numeric_dtype(X_df[col]) else "missing"
+                val = (X_df[col].median() if not X_df[col].dropna().empty else 0.0) if is_num else "missing"
 
-            self.imputers_[col] = val
+            self.imputers_[str(col)] = val
         return self
 
     def transform(self, X: Union[pd.DataFrame, np.ndarray]) -> pd.DataFrame:
         X_df = pd.DataFrame(X).copy()
+
+        # Add missing indicator binary flags for numeric features that had nulls in X_train
+        if self.add_missing_indicator:
+            for col in self.missing_indicator_cols_:
+                if col in X_df.columns:
+                    X_df[f"{col}_isnan"] = X_df[col].isnull().astype(float)
+
+        # Impute fit values
         for col, val in self.imputers_.items():
             if col in X_df.columns:
                 X_df[col] = X_df[col].fillna(val)

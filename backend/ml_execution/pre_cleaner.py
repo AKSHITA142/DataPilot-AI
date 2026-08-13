@@ -1,0 +1,119 @@
+from typing import List, Tuple, Dict, Any, Optional
+import pandas as pd
+import numpy as np
+from pydantic import BaseModel, Field
+
+
+class CleaningAudit(BaseModel):
+    """Audit metadata tracking raw dataset pre-cleaning operations."""
+    initial_rows: int = 0
+    final_rows: int = 0
+    initial_cols: int = 0
+    final_cols: int = 0
+    target_nulls_dropped: int = 0
+    duplicates_removed: int = 0
+    extreme_cols_dropped: List[str] = Field(default_factory=list)
+    sparse_rows_dropped: int = 0
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.model_dump()
+
+
+class DataPreCleaner:
+    """
+    Leakage-safe raw data pre-cleaner.
+    Executes deduplication, target null handling, extreme column dropping (>75% missing),
+    and sparse row dropping (>50% missing features) PRIOR to 80/20 train/test splitting and CV.
+    """
+
+    @staticmethod
+    def _is_metadata_column(col: str, n_rows: int, series: pd.Series) -> bool:
+        col_lower = str(col).lower().strip()
+        if col_lower in ("id", "name", "uuid", "row_id", "user_id", "customer_id", "index", "unnamed: 0"):
+            return True
+        if col_lower.endswith("_id") or col_lower.startswith("id_"):
+            return True
+        if series.dtype == object and series.nunique() == n_rows and n_rows > 5:
+            return True
+        return False
+
+    @classmethod
+    def clean_raw_dataset(
+        cls,
+        df: pd.DataFrame,
+        target_column: str,
+        extreme_missing_threshold: float = 75.0,
+        sparse_row_threshold: float = 0.50,
+    ) -> Tuple[pd.DataFrame, CleaningAudit]:
+        """
+        Executes pre-cleaning on a raw dataset copy.
+        Returns cleaned DataFrame and a structured CleaningAudit record.
+        """
+        audit = CleaningAudit(
+            initial_rows=len(df),
+            initial_cols=len(df.columns),
+        )
+
+        if len(df) == 0 or target_column not in df.columns:
+            audit.final_rows = len(df)
+            audit.final_cols = len(df.columns)
+            return df.copy(), audit
+
+        cleaned_df = df.copy()
+
+        # 1. Drop rows with missing target column values (100% Drop Rule)
+        target_series = cleaned_df[target_column]
+        valid_target_mask = target_series.notna()
+        audit.target_nulls_dropped = int((~valid_target_mask).sum())
+        cleaned_df = cleaned_df[valid_target_mask].copy()
+
+        if len(cleaned_df) == 0:
+            audit.final_rows = 0
+            audit.final_cols = len(cleaned_df.columns)
+            return cleaned_df, audit
+
+        # Identify metadata vs feature columns
+        n_rows = len(cleaned_df)
+        feature_cols = [
+            c for c in cleaned_df.columns
+            if c != target_column and not cls._is_metadata_column(c, n_rows, cleaned_df[c])
+        ]
+
+        # 2. Duplicate Row Removal (Feature-level deduplication to prevent data leakage)
+        if feature_cols:
+            duplicate_mask = cleaned_df.duplicated(subset=feature_cols, keep="first")
+            audit.duplicates_removed = int(duplicate_mask.sum())
+            cleaned_df = cleaned_df[~duplicate_mask].copy()
+        else:
+            duplicate_mask = cleaned_df.duplicated(keep="first")
+            audit.duplicates_removed = int(duplicate_mask.sum())
+            cleaned_df = cleaned_df[~duplicate_mask].copy()
+
+        if len(cleaned_df) == 0:
+            audit.final_rows = 0
+            audit.final_cols = len(cleaned_df.columns)
+            return cleaned_df, audit
+
+        # 3. Extreme Missing Column Dropping (>75% missing features)
+        extreme_cols = []
+        for col in feature_cols:
+            missing_pct = (cleaned_df[col].isnull().sum() / len(cleaned_df)) * 100.0
+            if missing_pct >= extreme_missing_threshold:
+                extreme_cols.append(col)
+
+        if extreme_cols:
+            cleaned_df = cleaned_df.drop(columns=extreme_cols).copy()
+            audit.extreme_cols_dropped = extreme_cols
+            feature_cols = [c for c in feature_cols if c not in extreme_cols]
+
+        # 4. Sparse Row Removal (>50% missing feature values in a single row)
+        if feature_cols and len(cleaned_df) > 0:
+            row_missing_ratio = cleaned_df[feature_cols].isnull().mean(axis=1)
+            sparse_mask = row_missing_ratio > sparse_row_threshold
+            audit.sparse_rows_dropped = int(sparse_mask.sum())
+            cleaned_df = cleaned_df[~sparse_mask].copy()
+
+        audit.final_rows = len(cleaned_df)
+        audit.final_cols = len(cleaned_df.columns)
+
+        return cleaned_df, audit

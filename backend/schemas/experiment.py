@@ -46,6 +46,7 @@ class Artifacts(BaseSchema):
     feature_importance: Optional[Dict[str, float]] = None
     confusion_matrix: Optional[List[List[int]]] = None
     plots: Dict[str, str] = Field(default_factory=dict)
+    cleaning_audit: Optional[Dict[str, Any]] = None
 
 
 
