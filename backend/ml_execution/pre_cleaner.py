@@ -29,12 +29,16 @@ class DataPreCleaner:
     @staticmethod
     def _is_metadata_column(col: str, n_rows: int, series: pd.Series) -> bool:
         col_lower = str(col).lower().strip()
-        if col_lower in ("id", "name", "uuid", "row_id", "user_id", "customer_id", "index", "unnamed: 0"):
+        meta_keywords = (
+            "id", "name", "full_name", "first_name", "last_name", "email", "address",
+            "phone", "ssn", "code", "hash", "token", "uuid", "row_id", "user_id",
+            "customer_id", "index", "unnamed: 0"
+        )
+        if col_lower in meta_keywords or col_lower.endswith("_id") or col_lower.startswith("id_") or any(kw in col_lower for kw in ("name", "email", "ssn", "token", "hash")):
             return True
-        if col_lower.endswith("_id") or col_lower.startswith("id_"):
-            return True
-        if series.dtype == object and series.nunique() == n_rows and n_rows > 5:
-            return True
+        if n_rows > 5 and (series.dtype == object or str(series.dtype) in ("category", "string")):
+            if (series.nunique() / float(n_rows)) >= 0.80:
+                return True
         return False
 
     @classmethod

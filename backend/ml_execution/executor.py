@@ -39,25 +39,29 @@ class MLExecutionEngine:
     @staticmethod
     def _extract_meta_and_features(df: pd.DataFrame, target_column: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
-        Separates non-predictive identifier/metadata columns (id, name, uuid, *_id)
-        from ML feature columns X to prevent target memorization and preserve ID columns in export.
+        Separates non-predictive identifier/metadata columns (id, name, email, uuid, high-cardinality text)
+        from ML feature columns X to prevent target memorization, feature explosion, and preserve metadata in export.
         """
         meta_cols = []
         n_rows = len(df)
+        meta_keywords = (
+            "id", "name", "full_name", "first_name", "last_name", "email", "address",
+            "phone", "ssn", "code", "hash", "token", "uuid", "row_id", "user_id",
+            "customer_id", "index", "unnamed: 0"
+        )
         for col in df.columns:
             if col == target_column:
                 continue
-            col_lower = col.lower().strip()
-            if col_lower in ("id", "name", "uuid", "row_id", "user_id", "customer_id", "index"):
+            col_lower = str(col).lower().strip()
+            # 1. Match metadata keywords or id patterns
+            if col_lower in meta_keywords or col_lower.endswith("_id") or col_lower.startswith("id_") or any(kw in col_lower for kw in ("name", "email", "ssn", "token", "hash")):
                 meta_cols.append(col)
-            elif col_lower.endswith("_id") or col_lower.startswith("id_"):
-                meta_cols.append(col)
-            elif df[col].dtype == object and df[col].nunique() == n_rows and n_rows > 5:
-                meta_cols.append(col)
-            # High-cardinality text columns (near-unique strings) are metadata/noise, not features
-            elif df[col].dtype == object and n_rows > 3:
-                unique_ratio = df[col].nunique() / n_rows
-                if unique_ratio > 0.7:
+                continue
+
+            # 2. High-cardinality string/object text columns (unique_ratio >= 0.70)
+            if n_rows > 3 and (df[col].dtype == object or str(df[col].dtype) in ("category", "string")):
+                unique_ratio = df[col].nunique() / float(n_rows)
+                if unique_ratio >= 0.70:
                     meta_cols.append(col)
 
         meta_df = df[meta_cols].copy()
