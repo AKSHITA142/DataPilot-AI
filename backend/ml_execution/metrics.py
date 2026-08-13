@@ -72,6 +72,14 @@ class MetricEngine:
 
             primary = metrics.get("r2", -mae)
 
+        if cv_scores:
+            cv_mean = float(np.mean(cv_scores))
+            cv_std = float(np.std(cv_scores))
+            metrics["cv_mean"] = round(cv_mean, 4)
+            metrics["cv_std"] = round(cv_std, 4)
+            metrics["test_score"] = round(primary, 4)
+            metrics["train_test_gap"] = round(abs(cv_mean - primary), 4)
+
         return MetricsResult(
             primary_metric=round(primary, 4),
             metrics=metrics,

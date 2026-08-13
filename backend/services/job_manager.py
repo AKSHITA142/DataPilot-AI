@@ -153,34 +153,58 @@ class JobManager:
             final_state = accumulated_state
 
             # 3. Persist executed experiments to database
+            import uuid
             exp_results = final_state.get("experiment_results") or []
             await cls._broadcast_log(job_id, f"Persisting {len(exp_results)} experiment results...",
                                      stage="evaluating")
             for idx, exp_dict in enumerate(exp_results):
-                exp_id = exp_dict.get("experiment_id") or f"exp_{job_id}_{idx}"
-                existing_exp = exp_repo.get_by_code(job_id, exp_id)
-                if not existing_exp:
-                    exp_repo.create(
-                        ExperimentModel(
-                            id=f"exp_db_{job_id}_{idx}",
-                            job_id=job_id,
-                            experiment_id_code=exp_id,
-                            pipeline=exp_dict.get("pipeline", {}),
-                            model_name=exp_dict.get("model", "xgboost"),
-                            metrics=exp_dict.get("metrics", {}),
-                            runtime_seconds=exp_dict.get("runtime"),
-                            status=exp_dict.get("status", "completed"),
-                            artifact_paths=exp_dict.get("artifacts", {}),
+                raw_status = exp_dict.get("status", "completed")
+                err_msg = exp_dict.get("error_message")
+                exp_code = exp_dict.get("experiment_id") or f"exp_{job_id}_{idx}_{uuid.uuid4().hex[:6]}"
+                db_id = f"exp_db_{job_id}_{idx}_{uuid.uuid4().hex[:6]}"
+
+                final_exp_status = "failed" if (raw_status == "failed" or err_msg) else "completed"
+
+                try:
+                    existing_exp = exp_repo.get_by_code(job_id, exp_code)
+                    if not existing_exp:
+                        metrics_payload = dict(exp_dict.get("metrics", {}) or {})
+                        if err_msg:
+                            metrics_payload["error"] = err_msg
+
+                        exp_repo.create(
+                            ExperimentModel(
+                                id=db_id,
+                                job_id=job_id,
+                                experiment_id_code=exp_code,
+                                pipeline=exp_dict.get("pipeline", {}),
+                                model_name=exp_dict.get("model", "unknown"),
+                                metrics=metrics_payload,
+                                runtime_seconds=exp_dict.get("runtime"),
+                                status=final_exp_status,
+                                artifact_paths=exp_dict.get("artifacts", {}),
+                            )
                         )
-                    )
-                # Broadcast individual experiment completion
-                await cls._broadcast(job_id, {
-                    "event": "experiment.completed",
-                    "experiment_id": exp_id,
-                    "message": f"Experiment {exp_id} completed ({exp_dict.get('model', 'unknown')})",
-                    "stage": "evaluating",
-                    "level": "success",
-                })
+
+                    event_type = "experiment.failed" if final_exp_status == "failed" else "experiment.completed"
+                    event_level = "error" if final_exp_status == "failed" else "success"
+                    event_msg = f"Experiment {exp_code} failed: {err_msg}" if final_exp_status == "failed" else f"Experiment {exp_code} completed ({exp_dict.get('model', 'unknown')})"
+
+                    await cls._broadcast(job_id, {
+                        "event": event_type,
+                        "experiment_id": exp_code,
+                        "message": event_msg,
+                        "stage": "evaluating",
+                        "level": event_level,
+                        "status": final_exp_status,
+                        "error": err_msg,
+                    })
+                except Exception as exp_err:
+                    logger.error(f"Error persisting experiment {exp_code}: {exp_err}", exc_info=True)
+                    try:
+                        db.rollback()
+                    except Exception:
+                        pass
 
             # 4. Persist knowledge base findings to database
             kb_findings = final_state.get("knowledge_base") or []

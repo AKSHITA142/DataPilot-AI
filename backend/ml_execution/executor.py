@@ -82,17 +82,46 @@ class MLExecutionEngine:
             meta_df, X = self._extract_meta_and_features(df_copy, target_column)
             y = df_copy[target_column]
 
-            # For classification, clean NaNs in y and encode string targets
-            if task_type == "classification":
-                from sklearn.preprocessing import LabelEncoder
-                valid_mask = y.notna()
-                meta_df = meta_df[valid_mask]
-                X = X[valid_mask]
-                y = y[valid_mask]
+            # Clean NaNs in target y
+            valid_mask = y.notna()
+            meta_df = meta_df[valid_mask]
+            X = X[valid_mask]
+            y = y[valid_mask]
 
-                if y.dtype == object or isinstance(y.iloc[0], str) or str(y.dtype) in ("category", "string"):
+            # 1b. Perform 80/20 train/test split BEFORE fitting or CV
+            from sklearn.model_selection import train_test_split
+            from sklearn.preprocessing import LabelEncoder
+
+            stratify_target = None
+            if task_type == "classification" and len(y) >= 10:
+                class_counts = pd.Series(y).value_counts()
+                if len(class_counts) > 1 and class_counts.min() >= 2:
+                    stratify_target = y
+
+            try:
+                X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
+                    X, y, meta_df,
+                    test_size=0.2,
+                    random_state=self.random_state,
+                    stratify=stratify_target,
+                )
+            except Exception:
+                # Fallback to non-stratified split if sample size or class distribution prevents stratification
+                X_train, X_test, y_train, y_test, meta_train, meta_test = train_test_split(
+                    X, y, meta_df,
+                    test_size=0.2,
+                    random_state=self.random_state,
+                    stratify=None,
+                )
+
+            # Fit LabelEncoder ONLY on training target rows y_train
+            if task_type == "classification":
+                if y_train.dtype == object or isinstance(y_train.iloc[0], str) or str(y_train.dtype) in ("category", "string"):
                     le = LabelEncoder()
-                    y = pd.Series(le.fit_transform(y.astype(str)), index=y.index)
+                    y_train = pd.Series(le.fit_transform(y_train.astype(str)), index=y_train.index)
+                    known_classes = set(le.classes_)
+                    y_test_str = y_test.astype(str).map(lambda v: v if v in known_classes else le.classes_[0])
+                    y_test = pd.Series(le.transform(y_test_str), index=y_test.index)
 
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(
@@ -101,28 +130,31 @@ class MLExecutionEngine:
                 random_state=self.random_state,
             )
 
-            # 3. Cross-Validation & Fit
+            # 3. Cross-Validation on training split X_train, y_train only
             cv_scores, fitted_pipeline = self.cv_runner.run_cv(
                 pipeline=pipeline,
-                X=X,
-                y=y,
+                X=X_train,
+                y=y_train,
                 task_type=task_type,
             )
 
-            # 4. Predict for metric calculation
-            y_pred = fitted_pipeline.predict(X)
-            y_proba = None
+            # Refit pipeline on full training set
+            fitted_pipeline.fit(X_train, y_train)
+
+            # 4. Predict & evaluate ONCE on held-out test split (X_test, y_test)
+            y_pred_test = fitted_pipeline.predict(X_test)
+            y_proba_test = None
             if task_type == "classification" and hasattr(fitted_pipeline, "predict_proba"):
                 try:
-                    y_proba = fitted_pipeline.predict_proba(X)
+                    y_proba_test = fitted_pipeline.predict_proba(X_test)
                 except Exception:
                     pass
 
-            # 5. Compute Metrics
+            # 5. Compute Metrics on held-out test split with CV scores
             metrics_result = MetricEngine.compute_metrics(
-                y_true=y,
-                y_pred=y_pred,
-                y_proba=y_proba,
+                y_true=y_test,
+                y_pred=y_pred_test,
+                y_proba=y_proba_test,
                 task_type=task_type,
                 cv_scores=cv_scores,
             )
