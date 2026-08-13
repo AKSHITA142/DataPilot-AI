@@ -79,14 +79,20 @@ export function DatasetOverview({ dataset, className = "" }: DatasetOverviewProp
           </div>
         </GlassCard>
 
-        <GlassCard className="p-4 flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400">
+        <GlassCard className="p-4 flex items-center gap-3 border-l-4 border-indigo-500">
+          <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
             <BarChart2 className="w-5 h-5" />
           </div>
-          <div>
-            <div className="text-xs text-gray-400">Target & Task</div>
-            <div className="text-sm font-semibold text-gray-100 truncate">
-              {targetCol !== "N/A" ? `${targetCol} (${taskType})` : "Unspecified"}
+          <div className="overflow-hidden">
+            <div className="text-xs text-gray-400 flex items-center gap-1.5">
+              <span>Target & Task</span>
+              <span className="px-1.5 py-0.2 text-[9px] font-mono bg-indigo-500/20 text-indigo-300 rounded border border-indigo-500/30">
+                AUTO-DETECTED
+              </span>
+            </div>
+            <div className="text-sm font-semibold text-gray-100 truncate flex items-center gap-1.5 mt-0.5">
+              <span className="text-indigo-400 font-mono">{targetCol}</span>
+              <span className="text-xs text-gray-400 font-normal">({taskType})</span>
             </div>
           </div>
         </GlassCard>
