@@ -30,7 +30,8 @@ export interface Dataset {
   column_count: number;
   upload_timestamp: string;
   status: "uploaded" | "profiled" | "processing";
-  profile?: SemanticProfile;
+  mission_brief?: string;
+  profile?: SemanticProfile | Record<string, any>;
 }
 
 export interface ColumnProfile {

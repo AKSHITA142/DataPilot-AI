@@ -210,11 +210,21 @@ export default function TimelinePage({
                   </div>
                 </div>
 
-                {/* Mission Card */}
+                {/* Mission Card & Dataset Overview Link */}
                 <GlassCard padding="sm" hover={false} className="mb-4">
-                  <p className="text-[11px] text-text-muted uppercase tracking-wider mb-1 flex items-center gap-1.5 font-semibold">
-                    <FlaskConical className="w-3 h-3 text-brand-400" /> Research Mission
-                  </p>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[11px] text-text-muted uppercase tracking-wider flex items-center gap-1.5 font-semibold">
+                      <FlaskConical className="w-3 h-3 text-brand-400" /> Research Mission
+                    </p>
+                    {job.dataset_id && (
+                      <button
+                        onClick={() => router.push(`/overview/${job.dataset_id}`)}
+                        className="text-[11px] font-semibold text-brand-400 hover:text-brand-300 underline"
+                      >
+                        View Dataset Overview →
+                      </button>
+                    )}
+                  </div>
                   <p className="text-xs sm:text-sm text-text leading-relaxed font-normal">{job.mission}</p>
                 </GlassCard>
 

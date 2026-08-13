@@ -19,6 +19,7 @@ def _dataset_to_frontend(ds) -> dict:
         "column_count": ds.column_count or 0,
         "upload_timestamp": ds.created_at.isoformat() if ds.created_at else None,
         "status": "profiled" if ds.semantic_profile else "uploaded",
+        "mission_brief": getattr(ds, "mission_brief", None),
         "profile": ds.semantic_profile,
         "file_path": ds.file_path,
         "checksum": ds.checksum,

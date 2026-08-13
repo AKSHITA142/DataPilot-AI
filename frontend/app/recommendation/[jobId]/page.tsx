@@ -310,7 +310,7 @@ export default function RecommendationPage({
                   Dataset Quality Alerts ({qualityWarnings.length})
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {qualityWarnings.map((w, idx) => (
+                  {qualityWarnings.map((w: any, idx: number) => (
                     <div key={idx} className="p-3 rounded-lg bg-surface-3 border border-border-subtle text-xs">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-text font-mono">{w.column ?? "Dataset"}</span>

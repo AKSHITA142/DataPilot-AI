@@ -32,7 +32,8 @@ class DatasetService:
         self,
         file: UploadFile,
         owner_id: str = "user_default",
-        target_column: Optional[str] = None
+        target_column: Optional[str] = None,
+        mission_brief: Optional[str] = None,
     ) -> DatasetModel:
         """
         Validates, saves binary file to disk, computes checksum, runs ProfilingEngine,
@@ -82,6 +83,11 @@ class DatasetService:
         # Check if checksum already exists (deduplication check)
         existing = self.repository.get_by_checksum(checksum)
         if existing:
+            # Update existing mission_brief if provided
+            if mission_brief and not existing.mission_brief:
+                existing.mission_brief = mission_brief
+                self.db.commit()
+
             # Clean up duplicate file
             os.remove(file_path)
             os.rmdir(dest_dir)
@@ -110,6 +116,7 @@ class DatasetService:
                 row_count=rows,
                 column_count=cols,
                 checksum=checksum,
+                mission_brief=mission_brief,
                 semantic_profile=profile_dict,
             )
         )
