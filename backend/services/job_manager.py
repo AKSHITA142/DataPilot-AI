@@ -33,18 +33,28 @@ class JobManager:
 
     @classmethod
     async def _broadcast(cls, job_id: str, payload: Dict[str, Any]):
-        """Broadcasts a WebSocket event with mandatory timestamp and job_id fields."""
-        payload.setdefault("job_id", job_id)
-        payload.setdefault("timestamp", _now_iso())
-        # Ensure data sub-object exists for frontend WSEvent.data mapping
-        if "data" not in payload:
-            data_fields = {}
-            for key in ("status", "stage", "progress_percent", "message", "level",
-                        "experiment_id", "finding", "report", "error"):
-                if key in payload:
-                    data_fields[key] = payload[key]
-            payload["data"] = data_fields
-        await ws_manager.broadcast_to_job(job_id, payload)
+        """
+        Broadcasts a WebSocket event structured cleanly according to WSEvent schema:
+        { "event": ..., "job_id": ..., "timestamp": ..., "data": { ... } }
+        """
+        event_name = payload.get("event", "log.message")
+        timestamp = payload.get("timestamp") or _now_iso()
+
+        if "data" in payload and isinstance(payload["data"], dict):
+            data_content = payload["data"]
+        else:
+            data_content = {
+                k: v for k, v in payload.items()
+                if k not in ("event", "job_id", "timestamp")
+            }
+
+        formatted_payload = {
+            "event": event_name,
+            "job_id": job_id,
+            "timestamp": timestamp,
+            "data": data_content,
+        }
+        await ws_manager.broadcast_to_job(job_id, formatted_payload)
 
     @classmethod
     async def _broadcast_log(cls, job_id: str, message: str, stage: Optional[str] = None,

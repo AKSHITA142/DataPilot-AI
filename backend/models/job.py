@@ -1,9 +1,10 @@
 from typing import Any, Optional, Dict
-from sqlalchemy import String, Float, ForeignKey
+from sqlalchemy import String, Float, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.database.base import Base, TimestampMixin, generate_uuid
 from backend.models.base_model import JSONType
+from backend.schemas.enums import JobStatus
 
 
 class JobModel(Base, TimestampMixin):
@@ -12,7 +13,12 @@ class JobModel(Base, TimestampMixin):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
     dataset_id: Mapped[str] = mapped_column(String(36), ForeignKey("datasets.id"), nullable=False, index=True)
-    status: Mapped[str] = mapped_column(String(50), nullable=False, default="queued", index=True)
+    status: Mapped[str] = mapped_column(
+        Enum(JobStatus, name="jobstatus", native_enum=False, create_constraint=True),
+        nullable=False,
+        default=JobStatus.QUEUED.value,
+        index=True
+    )
     objective: Mapped[Optional[str]] = mapped_column(String(1024), nullable=True)
     mission_brief: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONType, nullable=True)
     progress_pct: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
