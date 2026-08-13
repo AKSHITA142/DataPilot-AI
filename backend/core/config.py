@@ -45,10 +45,25 @@ class Settings(BaseSettings):
     )
 
     def get_cors_origins_list(self) -> List[str]:
-        """Parse CORS origins if passed as a comma-separated string."""
+        """
+        Parse CORS origins. Allows wildcard '*' ONLY when ENVIRONMENT is explicitly 'development' or 'dev'.
+        In non-development environments, wildcard origins are filtered out and explicit origins (or frontend_url) are required.
+        """
+        raw_list: List[str] = []
         if isinstance(self.cors_origins, str):
-            return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
-        return self.cors_origins
+            raw_list = [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        elif isinstance(self.cors_origins, list):
+            raw_list = [str(origin).strip() for origin in self.cors_origins if str(origin).strip()]
+
+        is_dev = str(self.environment).strip().lower() in ("development", "dev", "local")
+        if is_dev:
+            return raw_list if raw_list else ["*"]
+
+        # Non-development environment: Filter out wildcard "*" and enforce explicit allow-list
+        filtered = [origin for origin in raw_list if origin != "*"]
+        if not filtered:
+            return [self.frontend_url]
+        return filtered
 
 
 @lru_cache()

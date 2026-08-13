@@ -124,8 +124,8 @@ export async function getDataset(datasetId: string): Promise<Dataset> {
   return request<Dataset>(`/datasets/${datasetId}`);
 }
 
-export async function listDatasets(): Promise<Dataset[]> {
-  return request<Dataset[]>("/datasets");
+export async function listDatasets(skip = 0, limit = 50): Promise<Dataset[]> {
+  return request<Dataset[]>(`/datasets?skip=${skip}&limit=${limit}`);
 }
 
 // ── Job APIs ──────────────────────────────────────────────────────────

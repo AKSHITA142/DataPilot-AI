@@ -26,16 +26,23 @@ def _dataset_to_frontend(ds) -> dict:
     }
 
 
+from fastapi import APIRouter, Depends, Query
+
 @router.get("", response_model=SuccessResponse)
-def list_datasets(db: Session = Depends(get_db)):
+def list_datasets(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+):
     """
-    Lists all uploaded datasets.
-    Frontend calls GET /api/v1/datasets.
+    Lists uploaded datasets with pagination.
+    Frontend calls GET /api/v1/datasets?skip=0&limit=50.
     """
     repo = DatasetRepository(db)
-    datasets = repo.list(skip=0, limit=200)
+    datasets = repo.list(skip=skip, limit=limit)
     return SuccessResponse(
         data=[_dataset_to_frontend(ds) for ds in datasets],
+        meta={"skip": skip, "limit": limit, "count": len(datasets)},
         message=f"Retrieved {len(datasets)} datasets.",
     )
 

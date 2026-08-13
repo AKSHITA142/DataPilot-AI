@@ -120,10 +120,10 @@ export function useDashboard() {
 }
 
 // ── useDatasets — full list for the datasets table ───────────────────
-export function useDatasets() {
+export function useDatasets(skip = 0, limit = 50) {
   return useQuery({
-    queryKey: ["datasets"],
-    queryFn: listDatasets,
+    queryKey: ["datasets", skip, limit],
+    queryFn: () => listDatasets(skip, limit),
     staleTime: 60_000,
   });
 }
