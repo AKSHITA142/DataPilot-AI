@@ -37,24 +37,40 @@ class MLExecutionEngine:
         self.cv_runner = CrossValidationRunner(n_splits=self.n_splits, random_state=self.random_state)
 
     @staticmethod
+    def _is_subtoken_metadata(col_name: str) -> bool:
+        """
+        Splits column header by delimiters (_, -, space, dot) to check if any token
+        matches metadata keywords (name, patient_name, doctor_id, client_email, etc.).
+        """
+        import re
+        col_str = str(col_name).lower().strip()
+        meta_root_tokens = {
+            "id", "name", "email", "ssn", "token", "hash", "uuid", "address",
+            "phone", "code", "index", "rowid", "guid", "number"
+        }
+        tokens = [t for t in re.split(r"[_\-\s\.]+", col_str) if t]
+        for token in tokens:
+            if token in meta_root_tokens or token.endswith("id"):
+                return True
+            for root in meta_root_tokens:
+                if root in token:
+                    return True
+        return False
+
+    @staticmethod
     def _extract_meta_and_features(df: pd.DataFrame, target_column: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
-        Separates non-predictive identifier/metadata columns (id, name, email, uuid, high-cardinality text)
+        Separates non-predictive identifier/metadata columns (id, patient_name, doctor_id, email, etc.)
         from ML feature columns X to prevent target memorization, feature explosion, and preserve metadata in export.
         """
         meta_cols = []
         n_rows = len(df)
-        meta_keywords = (
-            "id", "name", "full_name", "first_name", "last_name", "email", "address",
-            "phone", "ssn", "code", "hash", "token", "uuid", "row_id", "user_id",
-            "customer_id", "index", "unnamed: 0"
-        )
         for col in df.columns:
             if col == target_column:
                 continue
-            col_lower = str(col).lower().strip()
-            # 1. Match metadata keywords or id patterns
-            if col_lower in meta_keywords or col_lower.endswith("_id") or col_lower.startswith("id_") or any(kw in col_lower for kw in ("name", "email", "ssn", "token", "hash")):
+
+            # 1. Sub-token pattern matching (patient_name, doctor_id, client_email, etc.)
+            if MLExecutionEngine._is_subtoken_metadata(col):
                 meta_cols.append(col)
                 continue
 
@@ -211,13 +227,27 @@ class MLExecutionEngine:
                 else:
                     clean_features_df = X.copy()
 
-                # Re-attach metadata columns (id, name, etc.) and target column
-                clean_df = pd.concat([meta_df.reset_index(drop=True), clean_features_df.reset_index(drop=True)], axis=1)
-                clean_df[target_column] = y.values
-
                 os.makedirs("storage/artifacts", exist_ok=True)
-                processed_csv_path = f"storage/artifacts/{spec.experiment_id}_cleaned.csv"
-                clean_df.to_csv(processed_csv_path, index=False)
+
+                # Format 1: Business Action CSV (IDs, Names, Transformed Features, Target, Predictions)
+                business_df = pd.concat([meta_df.reset_index(drop=True), clean_features_df.reset_index(drop=True)], axis=1)
+                business_df[target_column] = y.values
+
+                business_csv_path = f"storage/artifacts/{spec.experiment_id}_business_action.csv"
+                business_df.to_csv(business_csv_path, index=False)
+
+                # Format 2: ML-Ready Feature Matrix CSV (Pure engineered numeric X and target y)
+                ml_df = clean_features_df.copy().reset_index(drop=True)
+                ml_df[target_column] = y.values
+
+                ml_ready_csv_path = f"storage/artifacts/{spec.experiment_id}_ml_ready.csv"
+                ml_df.to_csv(ml_ready_csv_path, index=False)
+
+                # Legacy fallback compatibility
+                legacy_csv_path = f"storage/artifacts/{spec.experiment_id}_cleaned.csv"
+                business_df.to_csv(legacy_csv_path, index=False)
+
+                processed_csv_path = business_csv_path
             except Exception as pe:
                 logger.warning(f"Could not export preprocessed dataset CSV: {pe}")
 

@@ -90,12 +90,21 @@ export default function RecommendationPage({
     }
   };
 
-  const handleDownloadDataset = () => {
+  const handleDownloadBusinessDataset = () => {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
-    const downloadUrl = `${backendUrl}/api/v1/reports/${jobId}/download-dataset`;
+    const downloadUrl = `${backendUrl}/api/v1/reports/${jobId}/download-business-dataset`;
     const a = document.createElement("a");
     a.href = downloadUrl;
-    a.download = `preprocessed_${jobId}.csv`;
+    a.download = `business_action_${jobId}.csv`;
+    a.click();
+  };
+
+  const handleDownloadMLMatrix = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const downloadUrl = `${backendUrl}/api/v1/reports/${jobId}/download-ml-feature-matrix`;
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = `ml_ready_matrix_${jobId}.csv`;
     a.click();
   };
 
@@ -129,9 +138,17 @@ export default function RecommendationPage({
             variant="secondary"
             size="sm"
             icon={<Download className="w-3.5 h-3.5" />}
-            onClick={() => handleDownloadDataset()}
+            onClick={() => handleDownloadBusinessDataset()}
           >
-            Export Cleaned CSV
+            Business Action CSV
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<Download className="w-3.5 h-3.5" />}
+            onClick={() => handleDownloadMLMatrix()}
+          >
+            ML-Ready Feature Matrix
           </Button>
           <Button
             variant="primary"
@@ -310,7 +327,7 @@ export default function RecommendationPage({
                   Dataset Quality Alerts ({qualityWarnings.length})
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {qualityWarnings.map((w: any, idx: number) => (
+                  {qualityWarnings.map((w: { column?: string; severity?: string; message?: string }, idx: number) => (
                     <div key={idx} className="p-3 rounded-lg bg-surface-3 border border-border-subtle text-xs">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-text font-mono">{w.column ?? "Dataset"}</span>
@@ -459,9 +476,17 @@ export default function RecommendationPage({
                 variant="secondary"
                 size="sm"
                 icon={<Download className="w-3.5 h-3.5" />}
-                onClick={handleDownloadDataset}
+                onClick={handleDownloadBusinessDataset}
               >
-                Cleaned CSV
+                Business Action CSV
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<Download className="w-3.5 h-3.5" />}
+                onClick={handleDownloadMLMatrix}
+              >
+                ML-Ready Matrix
               </Button>
             </div>
           </motion.div>

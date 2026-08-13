@@ -207,13 +207,16 @@ def download_preprocessed_dataset(
     report = report_repo.get_by_job(job_id) if job else None
 
     if report and report.winning_experiment_id:
-        candidate = f"storage/artifacts/{report.winning_experiment_id}_cleaned.csv"
-        if os.path.isfile(candidate):
-            cleaned_csv_path = candidate
+        candidate_biz = f"storage/artifacts/{report.winning_experiment_id}_business_action.csv"
+        candidate_legacy = f"storage/artifacts/{report.winning_experiment_id}_cleaned.csv"
+        if os.path.isfile(candidate_biz):
+            cleaned_csv_path = candidate_biz
+        elif os.path.isfile(candidate_legacy):
+            cleaned_csv_path = candidate_legacy
 
     if not cleaned_csv_path and os.path.isdir("storage/artifacts"):
         for fname in os.listdir("storage/artifacts"):
-            if fname.endswith("_cleaned.csv"):
+            if fname.endswith("_business_action.csv") or fname.endswith("_cleaned.csv"):
                 cleaned_csv_path = os.path.join("storage/artifacts", fname)
                 break
 
@@ -226,11 +229,65 @@ def download_preprocessed_dataset(
     if not cleaned_csv_path or not os.path.isfile(cleaned_csv_path):
         raise NotFoundException(f"No preprocessed dataset CSV artifact found for job '{job_id}'.")
 
-    filename = f"preprocessed_dataset_{job_id}.csv"
+    filename = f"business_action_dataset_{job_id}.csv"
     return FileResponse(
         path=cleaned_csv_path,
         media_type="text/csv",
         filename=filename,
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
+
+
+@router.get("/{job_id}/download-business-dataset")
+def download_business_action_dataset(
+    job_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Downloads Business Action CSV (IDs, Names, Clean Features, Target, Predictions).
+    """
+    return download_preprocessed_dataset(job_id=job_id, db=db)
+
+
+@router.get("/{job_id}/download-ml-feature-matrix")
+def download_ml_feature_matrix(
+    job_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Downloads ML-Ready Feature Matrix CSV (Pure engineered numerical features X and target y).
+    """
+    from backend.repositories.job_repository import JobRepository
+    from backend.repositories.report_repository import ReportRepository
+
+    job_repo = JobRepository(db)
+    job = job_repo.get_by_id(job_id)
+
+    ml_csv_path = None
+    report_repo = ReportRepository(db)
+    report = report_repo.get_by_job(job_id) if job else None
+
+    if report and report.winning_experiment_id:
+        candidate = f"storage/artifacts/{report.winning_experiment_id}_ml_ready.csv"
+        if os.path.isfile(candidate):
+            ml_csv_path = candidate
+
+    if not ml_csv_path and os.path.isdir("storage/artifacts"):
+        for fname in os.listdir("storage/artifacts"):
+            if fname.endswith("_ml_ready.csv"):
+                ml_csv_path = os.path.join("storage/artifacts", fname)
+                break
+
+    # Fallback to standard preprocessed dataset if ml_ready artifact doesn't exist
+    if not ml_csv_path:
+        return download_preprocessed_dataset(job_id=job_id, db=db)
+
+    filename = f"ml_ready_matrix_{job_id}.csv"
+    return FileResponse(
+        path=ml_csv_path,
+        media_type="text/csv",
+        filename=filename,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
 
