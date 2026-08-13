@@ -65,14 +65,16 @@ class PipelineBuilder:
         # 2. Categorical Encoding step
         if "encoding" in ops_by_type:
             enc_op = ops_by_type["encoding"]
-            steps.append(("encoder", CategoricalEncoderTransformer(method=enc_op.method)))
+            col_encs = enc_op.params.get("column_encodings", {}) if enc_op.params else {}
+            steps.append(("encoder", CategoricalEncoderTransformer(method=enc_op.method, column_encodings=col_encs)))
         else:
             steps.append(("default_encoder", CategoricalEncoderTransformer(method="onehot")))
 
         # 3. Feature Scaling step
         if "scaling" in ops_by_type:
             scale_op = ops_by_type["scaling"]
-            steps.append(("scaler", FeatureScalerTransformer(method=scale_op.method)))
+            col_scales = scale_op.params.get("column_scalings", {}) if scale_op.params else {}
+            steps.append(("scaler", FeatureScalerTransformer(method=scale_op.method, column_scalings=col_scales)))
 
         # 4. Feature Engineering step
         if "feature_engineering" in ops_by_type:

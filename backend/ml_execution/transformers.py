@@ -65,13 +65,13 @@ class ImputerTransformer(BaseEstimator, TransformerMixin):
 
 
 class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
-    """Custom encoder supporting onehot, ordinal, frequency, and target encoding."""
+    """Custom encoder supporting onehot, ordinal, frequency, and target encoding per column."""
 
-    def __init__(self, method: str = "onehot"):
+    def __init__(self, method: str = "onehot", column_encodings: Optional[Dict[str, str]] = None):
         self.method = method
-        self.encoder_: Optional[Any] = None
+        self.column_encodings = column_encodings or {}
+        self.encoders_: Dict[str, Tuple[str, Any]] = {}
         self.freq_maps_: Dict[str, Dict[Any, float]] = {}
-        self.encoded_columns_: List[str] = []
 
     def fit(self, X: Union[pd.DataFrame, np.ndarray], y=None):
         X_df = pd.DataFrame(X)
@@ -82,16 +82,25 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
 
         X_cat = X_df[categorical_cols].astype(str)
 
-        if self.method == "onehot":
-            self.encoder_ = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
-            self.encoder_.fit(X_cat)
-        elif self.method == "ordinal":
-            self.encoder_ = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-            self.encoder_.fit(X_cat)
-        elif self.method == "frequency":
-            for col in categorical_cols:
+        for col in categorical_cols:
+            col_method = self.column_encodings.get(col, self.method)
+            col_series = X_cat[[col]]
+            if col_method == "onehot":
+                enc = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
+                enc.fit(col_series)
+                self.encoders_[col] = ("onehot", enc)
+            elif col_method == "ordinal":
+                enc = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
+                enc.fit(col_series)
+                self.encoders_[col] = ("ordinal", enc)
+            elif col_method == "frequency":
                 freqs = X_cat[col].value_counts(normalize=True).to_dict()
                 self.freq_maps_[col] = freqs
+                self.encoders_[col] = ("frequency", None)
+            else:
+                enc = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
+                enc.fit(col_series)
+                self.encoders_[col] = ("onehot", enc)
 
         return self
 
@@ -104,34 +113,43 @@ class CategoricalEncoderTransformer(BaseEstimator, TransformerMixin):
 
         X_cat = X_df[categorical_cols].astype(str)
 
-        if self.method == "onehot" and self.encoder_:
-            encoded_arr = self.encoder_.transform(X_cat)
-            encoded_cols = self.encoder_.get_feature_names_out(categorical_cols)
-            encoded_df = pd.DataFrame(encoded_arr, columns=encoded_cols, index=X_df.index)
+        cols_to_drop = []
+        new_dfs = []
 
-            numeric_df = X_df.drop(columns=categorical_cols)
-            return pd.concat([numeric_df, encoded_df], axis=1)
+        for col in categorical_cols:
+            if col not in self.encoders_:
+                continue
 
-        elif self.method == "ordinal" and self.encoder_:
-            encoded_arr = self.encoder_.transform(X_cat)
-            X_df[categorical_cols] = encoded_arr
-            return X_df
-
-        elif self.method == "frequency":
-            for col in categorical_cols:
+            method_type, enc = self.encoders_[col]
+            if method_type == "onehot" and enc:
+                encoded_arr = enc.transform(X_cat[[col]])
+                encoded_cols = enc.get_feature_names_out([col])
+                encoded_df = pd.DataFrame(encoded_arr, columns=encoded_cols, index=X_df.index)
+                new_dfs.append(encoded_df)
+                cols_to_drop.append(col)
+            elif method_type == "ordinal" and enc:
+                encoded_arr = enc.transform(X_cat[[col]])
+                X_df[col] = encoded_arr
+            elif method_type == "frequency":
                 freq_map = self.freq_maps_.get(col, {})
                 X_df[col] = X_cat[col].map(freq_map).fillna(0.0)
-            return X_df
+
+        if cols_to_drop:
+            numeric_df = X_df.drop(columns=cols_to_drop)
+            if new_dfs:
+                return pd.concat([numeric_df] + new_dfs, axis=1)
+            return numeric_df
 
         return X_df
 
 
 class FeatureScalerTransformer(BaseEstimator, TransformerMixin):
-    """Custom scaler supporting standard, minmax, and robust scaling on numeric columns."""
+    """Custom scaler supporting standard, minmax, and robust scaling per column."""
 
-    def __init__(self, method: str = "standard"):
+    def __init__(self, method: str = "standard", column_scalings: Optional[Dict[str, str]] = None):
         self.method = method
-        self.scaler_: Optional[Any] = None
+        self.column_scalings = column_scalings or {}
+        self.scalers_: Dict[str, Any] = {}
         self.numeric_cols_: List[str] = []
 
     def fit(self, X: Union[pd.DataFrame, np.ndarray], y=None):
@@ -141,22 +159,23 @@ class FeatureScalerTransformer(BaseEstimator, TransformerMixin):
         if not self.numeric_cols_:
             return self
 
-        if self.method == "standard":
-            self.scaler_ = StandardScaler()
-        elif self.method == "minmax":
-            self.scaler_ = MinMaxScaler()
-        elif self.method == "robust":
-            self.scaler_ = RobustScaler()
-        else:
-            self.scaler_ = StandardScaler()
+        for col in self.numeric_cols_:
+            col_method = self.column_scalings.get(col, self.method)
+            if col_method == "robust":
+                scaler = RobustScaler()
+            elif col_method == "minmax":
+                scaler = MinMaxScaler()
+            else:
+                scaler = StandardScaler()
 
-        self.scaler_.fit(X_df[self.numeric_cols_])
+            scaler.fit(X_df[[col]])
+            self.scalers_[col] = scaler
+
         return self
 
     def transform(self, X: Union[pd.DataFrame, np.ndarray]) -> pd.DataFrame:
         X_df = pd.DataFrame(X).copy()
-        if self.scaler_ and self.numeric_cols_:
-            valid_cols = [c for c in self.numeric_cols_ if c in X_df.columns]
-            if valid_cols:
-                X_df[valid_cols] = self.scaler_.transform(X_df[valid_cols])
+        for col, scaler in self.scalers_.items():
+            if col in X_df.columns and pd.api.types.is_numeric_dtype(X_df[col]):
+                X_df[[col]] = scaler.transform(X_df[[col]])
         return X_df

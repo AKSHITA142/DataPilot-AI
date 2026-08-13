@@ -137,6 +137,18 @@ class StrategyPlannerAgent(BaseAgent):
         # Select budget number of distinct models
         selected_models = candidate_models[:budget]
 
+        col_profiles = prof_dict.get("column_profiles", [])
+        col_encodings = {}
+        col_scalings = {}
+        for cp in col_profiles:
+            name = cp.get("name") if isinstance(cp, dict) else getattr(cp, "name", None)
+            enc_rec = cp.get("encoding_recommendation") if isinstance(cp, dict) else getattr(cp, "encoding_recommendation", None)
+            scale_rec = cp.get("scaling_recommendation") if isinstance(cp, dict) else getattr(cp, "scaling_recommendation", None)
+            if name and enc_rec:
+                col_encodings[name] = enc_rec
+            if name and scale_rec:
+                col_scalings[name] = scale_rec
+
         imputations = ["median", "mean", "median", "mean", "constant"]
         encodings = ["onehot", "ordinal", "frequency", "onehot", "ordinal"]
         scalings = ["standard", "robust", "minmax", "standard", "robust"]
@@ -155,8 +167,8 @@ class StrategyPlannerAgent(BaseAgent):
                 "experiment_id": f"EXP_{idx + 1:03d}",
                 "operations": [
                     {"type": "imputation", "method": imp},
-                    {"type": "encoding", "method": enc},
-                    {"type": "scaling", "method": scale},
+                    {"type": "encoding", "method": enc, "params": {"column_encodings": col_encodings}},
+                    {"type": "scaling", "method": scale, "params": {"column_scalings": col_scalings}},
                 ],
                 "model_name": model_name,
             })
