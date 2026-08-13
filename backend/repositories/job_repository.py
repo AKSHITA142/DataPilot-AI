@@ -44,6 +44,10 @@ class JobRepository(BaseRepository[JobModel]):
         
         status_val = status.value if hasattr(status, "value") else str(status)
         job.status = status_val
+        if job.started_at is None and status_val.lower() != "queued":
+            from datetime import datetime, timezone
+            job.started_at = datetime.now(timezone.utc)
+
         if progress_pct is not None:
             job.progress_pct = progress_pct
         if error_message is not None:

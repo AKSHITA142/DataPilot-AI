@@ -100,26 +100,57 @@ class JobManager:
 
             config = {"configurable": {"thread_id": f"thread_{job_id}"}}
 
-            await cls._broadcast_log(job_id, "Compiled research graph. Invoking pipeline...",
+            await cls._broadcast_log(job_id, "Compiled research graph. Streaming execution stages...",
                                      stage="profiling", level="info")
 
-            # Run compiled graph
-            final_state = await asyncio.to_thread(app.invoke, initial_state, config)
+            stage_configs = {
+                "profiling": {"stage": "profiling", "progress": 20.0, "status": JobStatus.PROFILING, "msg": "Completed dataset profiling."},
+                "understanding": {"stage": "understanding", "progress": 35.0, "status": JobStatus.PLANNING, "msg": "Semantic dataset understanding completed."},
+                "planning": {"stage": "planning", "progress": 50.0, "status": JobStatus.EXECUTING, "msg": "Formulated prioritized experiment plan."},
+                "execution": {"stage": "executing", "progress": 70.0, "status": JobStatus.EVALUATING, "msg": "Executed ML pipeline experiments."},
+                "evaluation": {"stage": "evaluating", "progress": 85.0, "status": JobStatus.EVALUATING, "msg": "Evaluated & ranked experiment results."},
+                "directing": {"stage": "decision", "progress": 90.0, "status": JobStatus.EVALUATING, "msg": "Research Director decision rendered."},
+                "reporting": {"stage": "reporting", "progress": 95.0, "status": JobStatus.COMPLETED, "msg": "Synthesized final recommendation report."},
+            }
 
-            # Check execution outcome
-            final_status = final_state.get("job_status")
-            if final_status == JobStatus.FAILED.value or final_state.get("error_message"):
-                err = final_state.get("error_message") or "Unknown orchestration error."
-                job_repo.update_status(job_id, JobStatus.FAILED, error_message=err)
-                await cls._broadcast(job_id, {
-                    "event": "job.failed",
-                    "status": "failed",
-                    "message": err,
-                    "level": "error",
-                    "error": err,
-                })
-                await cls._broadcast_log(job_id, f"Job failed: {err}", level="error")
-                return
+            accumulated_state: Dict[str, Any] = dict(initial_state)
+
+            async for chunk in app.astream(initial_state, config):
+                for node_name, node_output in chunk.items():
+                    if isinstance(node_output, dict):
+                        accumulated_state.update(node_output)
+
+                    # Check for node failure
+                    node_status = node_output.get("job_status") if isinstance(node_output, dict) else None
+                    err = node_output.get("error_message") if isinstance(node_output, dict) else None
+
+                    if node_status == JobStatus.FAILED.value or err:
+                        error_msg = err or f"Stage '{node_name}' failed."
+                        job_repo.update_status(job_id, JobStatus.FAILED, error_message=error_msg)
+                        await cls._broadcast(job_id, {
+                            "event": "job.failed",
+                            "status": "failed",
+                            "message": error_msg,
+                            "level": "error",
+                            "error": error_msg,
+                        })
+                        await cls._broadcast_log(job_id, f"Job failed at stage '{node_name}': {error_msg}", level="error")
+                        return
+
+                    # Update status & broadcast stage transition
+                    stg_cfg = stage_configs.get(node_name, {"stage": node_name, "progress": 50.0, "status": JobStatus.EXECUTING, "msg": f"Stage {node_name} finished."})
+                    job_repo.update_status(job_id, stg_cfg["status"], progress_pct=stg_cfg["progress"])
+
+                    await cls._broadcast(job_id, {
+                        "event": "job.status_changed",
+                        "status": stg_cfg["status"].value if hasattr(stg_cfg["status"], "value") else str(stg_cfg["status"]),
+                        "stage": stg_cfg["stage"],
+                        "progress_percent": stg_cfg["progress"],
+                    })
+                    await cls._broadcast_log(job_id, stg_cfg["msg"], stage=stg_cfg["stage"], level="info")
+                    await ws_manager.ping_heartbeat(job_id)
+
+            final_state = accumulated_state
 
             # 3. Persist executed experiments to database
             exp_results = final_state.get("experiment_results") or []

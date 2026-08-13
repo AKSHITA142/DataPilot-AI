@@ -1,5 +1,6 @@
+from datetime import datetime
 from typing import Any, Optional, Dict
-from sqlalchemy import String, Float, ForeignKey, Enum
+from sqlalchemy import String, Float, ForeignKey, Enum, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.database.base import Base, TimestampMixin, generate_uuid
@@ -23,6 +24,7 @@ class JobModel(Base, TimestampMixin):
     mission_brief: Mapped[Optional[Dict[str, Any]]] = mapped_column(JSONType, nullable=True)
     progress_pct: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     error_message: Mapped[Optional[str]] = mapped_column(String(2048), nullable=True)
+    started_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     dataset = relationship("DatasetModel", back_populates="jobs")
