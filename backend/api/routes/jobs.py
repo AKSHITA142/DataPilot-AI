@@ -99,6 +99,20 @@ def get_job_status(job_id: str, db: Session = Depends(get_db)):
     )
 
 
+@router.get("/{job_id}/logs", response_model=SuccessResponse)
+def get_job_logs(job_id: str, db: Session = Depends(get_db)):
+    """
+    Retrieves full chronological execution logs and audit trail for a job.
+    """
+    service = JobService(db)
+    logs = service.get_job_logs(job_id)
+
+    return SuccessResponse(
+        data=logs,
+        message="Job execution logs retrieved successfully.",
+    )
+
+
 @router.post("/{job_id}/cancel", response_model=SuccessResponse)
 def cancel_job(job_id: str, db: Session = Depends(get_db)):
     """

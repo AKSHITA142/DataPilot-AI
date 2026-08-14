@@ -88,6 +88,14 @@ export interface Job {
   error_message?: string;
 }
 
+export interface JobLogEntry {
+  id: string;
+  timestamp: string;
+  level: "info" | "warning" | "error" | "success";
+  message: string;
+  stage?: PipelineStage | string;
+}
+
 // ── Experiment ────────────────────────────────
 export interface ExperimentResult {
   experiment_id: string;

@@ -1,6 +1,7 @@
 import type {
   Dataset,
   Job,
+  JobLogEntry,
   StartJobResponse,
   UploadResponse,
   ExperimentResult,
@@ -145,6 +146,10 @@ export async function startJob(
 
 export async function getJob(jobId: string): Promise<Job> {
   return request<Job>(`/jobs/${jobId}`);
+}
+
+export async function getJobLogs(jobId: string): Promise<JobLogEntry[]> {
+  return request<JobLogEntry[]>(`/jobs/${jobId}/logs`);
 }
 
 export async function cancelJob(jobId: string): Promise<void> {
