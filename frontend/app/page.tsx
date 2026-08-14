@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -13,7 +14,8 @@ import {
   Database,
   RefreshCw,
   Upload,
-
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { MetricCard } from "@/components/cards/MetricCard";
 import { Badge } from "@/components/badges/Badge";
@@ -125,10 +127,80 @@ function RecentJobRow({ job, index }: { job: Job; index: number }) {
   );
 }
 
+/* ── Table Pagination Controls ────────────────────────────── */
+function TablePagination({
+  currentPage,
+  totalPages,
+  totalItems,
+  pageSize,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}) {
+  if (totalItems <= pageSize) return null;
+
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  return (
+    <div className="flex items-center justify-between px-4 py-3 border-t border-border-subtle bg-surface-2/60 text-xs">
+      <span className="text-text-muted">
+        Showing <span className="font-medium text-text">{startItem}–{endItem}</span> of{" "}
+        <span className="font-medium text-text">{totalItems}</span>
+      </span>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage <= 1}
+          className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-3 text-text disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1 cursor-pointer"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" /> Previous
+        </button>
+        <span className="text-text-muted px-1 font-mono">
+          <span className="font-medium text-text">{currentPage}</span> /{" "}
+          <span className="font-medium text-text">{totalPages}</span>
+        </span>
+        <button
+          onClick={() => onPageChange(currentPage >= totalPages ? currentPage : currentPage + 1)}
+          disabled={currentPage >= totalPages}
+          className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-3 text-text disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1 cursor-pointer"
+        >
+          Next <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main dashboard page ─────────────────────────────────── */
 export default function DashboardPage() {
   const { data: dash, isLoading: dashLoading, error: dashError, refetch } = useDashboard();
   const { data: datasets, isLoading: datasetsLoading } = useDatasets();
+
+  const [jobsPage, setJobsPage] = useState(1);
+  const [datasetsPage, setDatasetsPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 5;
+
+  const recentJobs = dash?.recent_jobs ?? [];
+  const totalJobsPages = Math.max(1, Math.ceil(recentJobs.length / ITEMS_PER_PAGE));
+  const safeJobsPage = Math.min(jobsPage, totalJobsPages);
+  const paginatedJobs = recentJobs.slice(
+    (safeJobsPage - 1) * ITEMS_PER_PAGE,
+    safeJobsPage * ITEMS_PER_PAGE
+  );
+
+  const datasetList = datasets ?? [];
+  const totalDatasetsPages = Math.max(1, Math.ceil(datasetList.length / ITEMS_PER_PAGE));
+  const safeDatasetsPage = Math.min(datasetsPage, totalDatasetsPages);
+  const paginatedDatasets = datasetList.slice(
+    (safeDatasetsPage - 1) * ITEMS_PER_PAGE,
+    safeDatasetsPage * ITEMS_PER_PAGE
+  );
 
   /* Derived: success rate */
   const successRate =
@@ -297,15 +369,28 @@ export default function DashboardPage() {
                 }
               />
             ) : (
-              <motion.div
-                variants={stagger.container}
-                initial="hidden"
-                animate="show"
-              >
-                {dash.recent_jobs.map((job, i) => (
-                  <RecentJobRow key={job.job_id} job={job} index={i} />
-                ))}
-              </motion.div>
+              <>
+                <motion.div
+                  variants={stagger.container}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {paginatedJobs.map((job, i) => (
+                    <RecentJobRow
+                      key={job.job_id}
+                      job={job}
+                      index={(safeJobsPage - 1) * ITEMS_PER_PAGE + i}
+                    />
+                  ))}
+                </motion.div>
+                <TablePagination
+                  currentPage={safeJobsPage}
+                  totalPages={totalJobsPages}
+                  totalItems={recentJobs.length}
+                  pageSize={ITEMS_PER_PAGE}
+                  onPageChange={(page) => setJobsPage(page)}
+                />
+              </>
             )}
           </div>
         </div>
@@ -409,7 +494,7 @@ export default function DashboardPage() {
                 animate="show"
                 className="divide-y divide-border-subtle"
               >
-                {datasets.map((ds) => (
+                {paginatedDatasets.map((ds) => (
                   <motion.div
                     key={ds.dataset_id}
                     variants={stagger.item}
@@ -461,6 +546,13 @@ export default function DashboardPage() {
                   </motion.div>
                 ))}
               </motion.div>
+              <TablePagination
+                currentPage={safeDatasetsPage}
+                totalPages={totalDatasetsPages}
+                totalItems={datasetList.length}
+                pageSize={ITEMS_PER_PAGE}
+                onPageChange={(page) => setDatasetsPage(page)}
+              />
             </>
           )}
         </div>
