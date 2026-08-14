@@ -18,24 +18,32 @@ class KnowledgeGenerator:
 
         # Group metrics by model family
         model_scores = defaultdict(list)
+        model_gaps = defaultdict(list)
         operation_scores = defaultdict(list)
 
         for r in completed:
             score = float(r.metrics.primary_metric)
+            metrics_dict = r.metrics.metrics or {}
+            gap = float(metrics_dict.get("train_test_gap", 0.0))
+
             model_scores[r.model].append(score)
+            model_gaps[r.model].append(gap)
 
             if r.pipeline:
                 for op in r.pipeline.operations:
                     key = f"{op.type}:{op.method}"
                     operation_scores[key].append(score)
 
-        # 1. Evaluate top performing model family
+        # 1. Evaluate top performing model family with generalization health
         best_model = max(model_scores.keys(), key=lambda m: sum(model_scores[m]) / len(model_scores[m]))
         avg_score = round(sum(model_scores[best_model]) / len(model_scores[best_model]), 4)
+        avg_gap = round(sum(model_gaps[best_model]) / len(model_gaps[best_model]), 4)
+
+        gap_desc = "low overfitting risk" if avg_gap <= 0.15 else "moderate overfitting - regularization recommended"
 
         findings.append(
             KnowledgeFinding(
-                finding=f"Model family '{best_model}' consistently achieved high primary metric performance (avg: {avg_score}).",
+                finding=f"Model family '{best_model}' achieved top performance with avg test score {avg_score} and avg train-test gap {avg_gap} ({gap_desc}).",
                 confidence=0.88,
                 supporting_experiments=[r.experiment_id for r in completed if r.model == best_model],
             )
@@ -49,7 +57,7 @@ class KnowledgeGenerator:
 
             findings.append(
                 KnowledgeFinding(
-                    finding=f"Preprocessing strategy '{op_method}' ({op_type}) demonstrated positive impact across experiments (avg: {op_avg}).",
+                    finding=f"Preprocessing strategy '{op_method}' ({op_type}) demonstrated positive impact across experiments (avg test score: {op_avg}).",
                     confidence=0.85,
                     supporting_experiments=[
                         r.experiment_id for r in completed
