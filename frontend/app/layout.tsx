@@ -32,6 +32,11 @@ export const metadata: Metadata = {
     "data analysis",
   ],
   authors: [{ name: "DataPilot-AI Team" }],
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     title: "DataPilot-AI — Autonomous Data Science Research Engine",
     description:

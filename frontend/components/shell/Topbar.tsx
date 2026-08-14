@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Brain } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { HamburgerButton, MobileDrawer } from "./Sidebar";
 
@@ -54,9 +54,13 @@ export function Topbar() {
 
           {/* Mobile logo (visible only when sidebar is hidden) */}
           <Link href="/" className="md:hidden flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-brand-500 flex items-center justify-center">
-              <Brain className="w-3.5 h-3.5 text-white" />
-            </div>
+            <Image
+              src="/icon.svg"
+              alt="DataPilot-AI"
+              width={24}
+              height={24}
+              className="w-6 h-6 rounded-md shrink-0 shadow-sm"
+            />
           </Link>
 
           <h1 className="font-semibold text-sm text-text tracking-tight">

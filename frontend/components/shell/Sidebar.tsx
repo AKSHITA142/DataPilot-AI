@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Brain,
   Upload,
   Activity,
   FlaskConical,
@@ -207,9 +207,14 @@ export function Sidebar() {
         {/* Logo & Expand Toggle Header */}
         <div className="flex items-center justify-between px-3.5 py-4 border-b border-border-subtle h-14 shrink-0">
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shrink-0 shadow-md shadow-brand-500/20">
-              <Brain className="w-4 h-4 text-[#052620]" />
-            </div>
+            <Image
+              src="/icon.svg"
+              alt="DataPilot-AI"
+              width={28}
+              height={28}
+              priority
+              className="w-7 h-7 rounded-lg shrink-0 shadow-md shadow-brand-500/20"
+            />
             <AnimatePresence>
               {!collapsed && (
                 <motion.span
@@ -417,9 +422,13 @@ export function MobileDrawer({
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b border-border-subtle h-14 shrink-0">
               <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center">
-                  <Brain className="w-4 h-4 text-[#052620]" />
-                </div>
+                <Image
+                  src="/icon.svg"
+                  alt="DataPilot-AI"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 rounded-lg shrink-0 shadow-sm"
+                />
                 <span className="font-bold text-sm text-text">
                   DataPilot<span className="text-brand-400">-AI</span>
                 </span>

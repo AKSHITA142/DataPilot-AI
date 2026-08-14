@@ -1,3 +1,4 @@
+import os
 import asyncio
 import logging
 from datetime import datetime, timezone
@@ -278,6 +279,7 @@ class JobManager:
                 existing_report.winning_experiment_id = winning_id
                 existing_report.report_file_path = html_report_path
                 existing_report.summary = final_report_dict.get("summary") or existing_report.summary
+                db.commit()
             # Upload generated HTML report to Supabase Cloud Storage
             settings = get_settings()
             if settings.storage_backend.lower() == "supabase":
