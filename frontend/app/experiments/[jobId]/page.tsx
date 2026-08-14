@@ -79,8 +79,8 @@ function ExperimentTableRow({
 
         {/* Model */}
         <td className="px-4 py-3.5">
-          <div>
-            <p className="text-sm font-semibold text-text">{exp.model_name}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-text break-words leading-tight">{exp.model_name}</p>
             <p className="text-xs text-text-muted mt-0.5">{snakeToTitle(exp.model_type)}</p>
           </div>
         </td>
@@ -252,8 +252,8 @@ function ExperimentCardItem({
           ) : (
             <span className="text-xs font-mono text-text-muted w-5">#{rank}</span>
           )}
-          <div>
-            <p className="text-sm font-semibold text-text">{exp.model_name}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-text break-words leading-tight">{exp.model_name}</p>
             <p className="text-xs text-text-muted">{snakeToTitle(exp.model_type)}</p>
           </div>
         </div>

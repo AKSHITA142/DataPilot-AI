@@ -138,10 +138,22 @@ export function HorizontalBarChart({
   );
 }
 
+// Semantic Job Status Color Palette
+export const STATUS_COLORS: Record<string, string> = {
+  completed: "#10b981", // Emerald 500
+  success: "#10b981",
+  running: "#3b82f6",   // Blue 500
+  queued: "#f59e0b",    // Amber 500
+  failed: "#ef4444",    // Rose 500
+  error: "#ef4444",
+  cancelled: "#6b7280", // Slate 500
+};
+
 // ── Pie / Donut Chart ─────────────────────────
 interface PieItem {
   name: string;
   value: number;
+  color?: string;
 }
 
 interface AppPieChartProps {
@@ -152,35 +164,35 @@ interface AppPieChartProps {
 
 export function AppPieChart({
   data,
-  height = 240,
-  innerRadius = 60,
+  height = 220,
+  innerRadius = 55,
 }: AppPieChartProps) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <PieChart>
+      <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
         <Pie
           data={data}
           cx="50%"
           cy="50%"
           innerRadius={innerRadius}
-          outerRadius={innerRadius + 40}
-          paddingAngle={3}
+          outerRadius={innerRadius + 32}
+          paddingAngle={4}
           dataKey="value"
+          stroke="var(--surface-2)"
+          strokeWidth={2}
         >
-          {data.map((_, i) => (
-            <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
-          ))}
+          {data.map((entry, i) => {
+            const key = entry.name.toLowerCase();
+            const fill = entry.color || STATUS_COLORS[key] || CHART_COLORS[i % CHART_COLORS.length];
+            return <Cell key={i} fill={fill} />;
+          })}
         </Pie>
         <Tooltip
           contentStyle={tooltipStyle}
-          formatter={(v: TooltipValue) => [formatVal(v), ""]}
-        />
-        <Legend
-          iconType="circle"
-          iconSize={8}
-          formatter={(value: string) => (
-            <span style={{ color: "#a6a6a2", fontSize: 11 }}>{value}</span>
-          )}
+          formatter={(v: TooltipValue, name: TooltipName) => [
+            `${v} jobs`,
+            String(name).charAt(0).toUpperCase() + String(name).slice(1),
+          ]}
         />
       </PieChart>
     </ResponsiveContainer>

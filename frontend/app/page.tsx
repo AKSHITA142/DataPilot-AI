@@ -395,37 +395,82 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Status breakdown donut — 1/3 width */}
+        {/* Status breakdown donut & distribution — 1/3 width */}
         <div>
-          <SectionLabel>Status Breakdown</SectionLabel>
-          <div className="card p-5">
+          <SectionLabel>Mission Status Breakdown</SectionLabel>
+          <div className="card p-6 flex flex-col justify-between min-h-[380px]">
             {dashLoading ? (
-              <div className="flex items-center justify-center h-52">
-                <Skeleton className="w-36 h-36 rounded-full" />
+              <div className="flex flex-col items-center justify-center h-64 space-y-4">
+                <Skeleton className="w-40 h-40 rounded-full" />
+                <Skeleton className="h-4 w-32 rounded" />
               </div>
             ) : pieData.length === 0 ? (
-              <EmptyState
-                icon={Clock}
-                title="No data yet"
-                description="Status breakdown appears once you have research jobs."
-              />
+              <div className="py-8">
+                <EmptyState
+                  icon={Clock}
+                  title="No research jobs yet"
+                  description="Status distribution appears as soon as you run automated research missions."
+                />
+              </div>
             ) : (
-              <>
-                <AppPieChart data={pieData} height={200} innerRadius={52} />
-                <div className="mt-3 space-y-1.5 border-t border-border-subtle pt-3">
-                  {Object.entries(jobStatusCounts).map(([status, count]) => (
-                    <div
-                      key={status}
-                      className="flex items-center justify-between text-xs"
-                    >
-                      <span className="text-text-muted capitalize">{status}</span>
-                      <span className="font-semibold tabular-nums text-text">
-                        {count}
-                      </span>
-                    </div>
-                  ))}
+              <div className="space-y-5">
+                {/* Donut Chart with Centered Total / Success Metric */}
+                <div className="relative flex items-center justify-center">
+                  <AppPieChart data={pieData} height={210} innerRadius={58} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-2xl font-bold text-text tabular-nums">
+                      {dash?.total_jobs ?? 0}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-text-muted">
+                      Total Jobs
+                    </span>
+                  </div>
                 </div>
-              </>
+
+                {/* Structured Breakdown List with Progress Indicators */}
+                <div className="space-y-2.5 border-t border-border-subtle pt-4">
+                  {Object.entries(jobStatusCounts).map(([status, count]) => {
+                    const total = dash?.total_jobs || 1;
+                    const pct = Math.round((count / total) * 100);
+                    const colorMap: Record<string, { dot: string; bar: string; text: string }> = {
+                      completed: { dot: "bg-emerald-500", bar: "bg-emerald-500", text: "text-emerald-400" },
+                      running: { dot: "bg-blue-500 animate-pulse", bar: "bg-blue-500", text: "text-blue-400" },
+                      failed: { dot: "bg-rose-500", bar: "bg-rose-500", text: "text-rose-400" },
+                      queued: { dot: "bg-amber-500", bar: "bg-amber-500", text: "text-amber-400" },
+                      cancelled: { dot: "bg-slate-500", bar: "bg-slate-500", text: "text-slate-400" },
+                    };
+                    const styling = colorMap[status.toLowerCase()] || {
+                      dot: "bg-brand-500",
+                      bar: "bg-brand-500",
+                      text: "text-brand-400",
+                    };
+
+                    return (
+                      <div key={status} className="space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${styling.dot}`} />
+                            <span className="text-text-secondary capitalize font-medium truncate">
+                              {status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0 font-mono">
+                            <span className="font-semibold text-text tabular-nums">{count}</span>
+                            <span className="text-text-muted text-[11px]">({pct}%)</span>
+                          </div>
+                        </div>
+                        {/* Progress track */}
+                        <div className="w-full h-1.5 bg-surface-4 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${styling.bar}`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>

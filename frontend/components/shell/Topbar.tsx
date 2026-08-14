@@ -64,18 +64,6 @@ export function Topbar() {
           </h1>
         </div>
 
-        {/* Right: status pill — real, no fake notifications */}
-        <div className="flex items-center gap-2">
-          <span className="
-            hidden sm:inline-flex items-center gap-1.5
-            px-2.5 py-1 rounded-full
-            bg-surface-3 border border-border-subtle
-            text-xs text-text-muted font-medium
-          ">
-            <span className="w-1.5 h-1.5 rounded-full bg-success-500 animate-pulse-soft" />
-            API Online
-          </span>
-        </div>
       </header>
 
       {/* Mobile drawer */}
