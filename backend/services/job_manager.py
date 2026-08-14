@@ -192,6 +192,13 @@ class JobManager:
                         if err_msg:
                             metrics_payload["error"] = err_msg
 
+                        hyperparams = (
+                            exp_dict.get("hyperparameters")
+                            or exp_dict.get("params")
+                            or (exp_dict.get("pipeline", {}).get("params") if isinstance(exp_dict.get("pipeline"), dict) else {})
+                            or {}
+                        )
+
                         exp_repo.create(
                             ExperimentModel(
                                 id=db_id,
@@ -199,6 +206,7 @@ class JobManager:
                                 experiment_id_code=exp_code,
                                 pipeline=exp_dict.get("pipeline", {}),
                                 model_name=exp_dict.get("model", "unknown"),
+                                hyperparameters=hyperparams,
                                 metrics=metrics_payload,
                                 runtime_seconds=exp_dict.get("runtime"),
                                 status=final_exp_status,

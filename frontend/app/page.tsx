@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -78,6 +79,7 @@ function MetricSkeleton() {
 
 /* ── Recent Job row ──────────────────────────────────────── */
 function RecentJobRow({ job, index }: { job: Job; index: number }) {
+  const router = useRouter();
   const isTerminal =
     job.status === "completed" ||
     job.status === "failed" ||
@@ -95,7 +97,7 @@ function RecentJobRow({ job, index }: { job: Job; index: number }) {
         border-b border-border-subtle last:border-0
         hover:bg-surface-3 transition-colors group cursor-pointer
       "
-      onClick={() => { window.location.href = dest; }}
+      onClick={() => { router.push(dest); }}
     >
       <div className="flex items-start gap-3 min-w-0">
         <span className="text-xs font-mono text-text-muted shrink-0 pt-0.5 w-5 text-right">

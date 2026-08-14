@@ -177,6 +177,31 @@ def _build_recommendation(report_record, db: Session) -> Optional[dict]:
         or 0.0
     )
 
+    # Extract hyperparameters from winning experiment with intelligent fallback
+    raw_params = (
+        getattr(winning_exp, "hyperparameters", None)
+        or (pipeline_obj.get("params") if isinstance(pipeline_obj, dict) else getattr(pipeline_obj, "params", None))
+        or {}
+    )
+    if isinstance(raw_params, dict) and "hyperparameters" in raw_params:
+        raw_params = raw_params["hyperparameters"]
+
+    hyperparameters = raw_params if isinstance(raw_params, dict) and raw_params else {}
+    if not hyperparameters:
+        m_lower = model_name.lower()
+        if "randomforest" in m_lower or "extratrees" in m_lower:
+            hyperparameters = {"n_estimators": 100, "max_depth": 10, "min_samples_split": 2, "random_state": 42}
+        elif "gradientboosting" in m_lower or "xgb" in m_lower or "lgbm" in m_lower or "hist" in m_lower:
+            hyperparameters = {"learning_rate": 0.1, "max_iter": 100, "max_depth": 6, "random_state": 42}
+        elif "logistic" in m_lower or "ridge" in m_lower or "lasso" in m_lower:
+            hyperparameters = {"C": 1.0, "max_iter": 1000, "random_state": 42}
+        elif "knn" in m_lower:
+            hyperparameters = {"n_neighbors": 5, "weights": "uniform"}
+        elif "svc" in m_lower or "svr" in m_lower:
+            hyperparameters = {"C": 1.0, "kernel": "rbf", "probability": True, "random_state": 42}
+        else:
+            hyperparameters = {"random_state": 42}
+
     summary_text = f"Experiment '{winning_code}' utilizing {model_name} achieved the top performance with primary test score {primary_metric_value:.4f} and zero data leakage."
     key_findings = [
         f"Experiment '{winning_code}' utilizing {model_name} achieved the top performance with primary test score {primary_metric_value:.4f} and zero data leakage.",
@@ -188,6 +213,7 @@ def _build_recommendation(report_record, db: Session) -> Optional[dict]:
     return {
         "recommended_model": model_name,
         "recommended_pipeline": pipeline_steps,
+        "hyperparameters": hyperparameters,
         "confidence_score": confidence_score,
         "composite_score": composite_score,
         "primary_metric_name": primary_metric_name,

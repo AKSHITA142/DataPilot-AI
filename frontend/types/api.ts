@@ -31,7 +31,7 @@ export interface Dataset {
   upload_timestamp: string;
   status: "uploaded" | "profiled" | "processing";
   mission_brief?: string;
-  profile?: SemanticProfile | Record<string, any>;
+  profile?: SemanticProfile | Record<string, unknown>;
 }
 
 export interface ColumnProfile {
@@ -132,6 +132,7 @@ export interface KnowledgeFinding {
 export interface FinalRecommendation {
   recommended_model: string;
   recommended_pipeline: string[];
+  hyperparameters?: Record<string, string | number | boolean | null | undefined | Record<string, unknown> | unknown[]>;
   confidence_score: number;
   composite_score: number;
   primary_metric_name: string;
