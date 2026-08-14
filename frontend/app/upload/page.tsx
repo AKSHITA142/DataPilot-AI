@@ -73,7 +73,7 @@ export default function UploadPage() {
       setUploadProgress(90);
 
       setStatus("starting");
-      const jobResult = await startJob(uploadResult.dataset_id, mission.trim());
+      const jobResult = await startJob(uploadResult.dataset_id, mission.trim(), taskType);
       setUploadProgress(100);
 
       // Small delay for UX

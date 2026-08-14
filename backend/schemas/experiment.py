@@ -35,7 +35,8 @@ class PipelineDefinition(BaseSchema):
 class MetricsResult(BaseSchema):
     """Evaluated metric outputs for an experiment."""
     primary_metric: float = 0.0
-    metrics: Dict[str, float] = Field(default_factory=dict)
+    primary_metric_name: Optional[str] = None
+    metrics: Dict[str, Any] = Field(default_factory=dict)
     cv_scores: List[float] = Field(default_factory=list)
 
 

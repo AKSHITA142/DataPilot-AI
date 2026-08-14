@@ -53,6 +53,7 @@ class StartJobRequest(BaseModel):
     user_goal: Optional[str] = None
     # Accept `mission` as an alias so the frontend can send either field name
     mission: Optional[str] = None
+    task_type: Optional[str] = "general"
 
 
 # ── Route handlers ─────────────────────────────────────────────────────
@@ -74,6 +75,7 @@ def start_research_job(
     job_record = service.start_job(
         dataset_id=payload.dataset_id,
         user_goal=effective_goal,
+        task_type=payload.task_type or "general",
         background_tasks=background_tasks,
     )
 

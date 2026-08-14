@@ -37,10 +37,26 @@ def profiling_node(state: WorkflowStateDict) -> WorkflowStateDict:
         }
 
     try:
-        profile, hints = ProfilingEngine.profile_file(file_path)
+        user_task_type = state.get("user_task_type") or "general"
+        user_goal = state.get("user_goal") or ""
+
+        profile, hints = ProfilingEngine.profile_file(
+            file_path,
+            user_mission=user_goal,
+            user_task_type=user_task_type,
+        )
+        profile_dict = profile.model_dump()
+        profile_dict["user_task_type"] = user_task_type
+
+        # Ensure user_task_type override is explicitly honored in target summary
+        if user_task_type in ("classification", "regression"):
+            if "dataset_summary" in profile_dict and "target" in profile_dict["dataset_summary"]:
+                profile_dict["dataset_summary"]["target"]["task_type"] = user_task_type
+
         return {
             **state,
-            "semantic_profile": profile.model_dump(),
+            "semantic_profile": profile_dict,
+            "user_task_type": user_task_type,
             "job_status": JobStatus.PROFILING.value,
         }
     except Exception as e:
@@ -108,7 +124,7 @@ def planning_node(state: WorkflowStateDict) -> WorkflowStateDict:
         task_type = target_info.get("task_type") or "classification"
 
         # If user explicitly selected classification/regression, override auto-detection
-        user_task_type = profile_dict.get("user_task_type", "general")
+        user_task_type = state.get("user_task_type") or profile_dict.get("user_task_type") or "general"
         if user_task_type in ("classification", "regression"):
             task_type = user_task_type
 

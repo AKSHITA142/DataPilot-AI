@@ -24,6 +24,36 @@ class ReportGeneratorAgent(BaseAgent):
             f"Include pipeline steps, performance metrics, key findings, and deployment caveats."
         )
 
+    def run(self, inputs: Dict[str, Any]) -> FinalRecommendation:
+        rec: FinalRecommendation = super().run(inputs)
+
+        # Enforce exact match with EvaluationReport winner & actual top ExperimentResult
+        eval_report = inputs.get("evaluation_report")
+        results = inputs.get("experiment_results", [])
+
+        winner_id = None
+        if isinstance(eval_report, EvaluationReport):
+            winner_id = eval_report.winner
+        elif isinstance(eval_report, dict):
+            winner_id = eval_report.get("winner")
+
+        if winner_id and results:
+            winning_res = None
+            for r in results:
+                r_id = r.get("experiment_id") if isinstance(r, dict) else getattr(r, "experiment_id", None)
+                if r_id == winner_id:
+                    winning_res = r
+                    break
+
+            if winning_res:
+                rec.winning_experiment_id = winner_id
+                if isinstance(winning_res, dict):
+                    rec.model = winning_res.get("model") or winning_res.get("model_name") or rec.model
+                else:
+                    rec.model = getattr(winning_res, "model", rec.model)
+
+        return rec
+
     def get_fallback_data(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         eval_report = inputs.get("evaluation_report")
         results = inputs.get("experiment_results", [])

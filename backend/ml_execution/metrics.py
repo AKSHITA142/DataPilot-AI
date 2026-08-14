@@ -61,7 +61,13 @@ class MetricEngine:
                 except Exception:
                     pass
 
-            primary = metrics.get("f1", acc)
+            from backend.evaluation.domain_metric_resolver import DomainMetricResolver
+            metric_key, metric_name, rationale = DomainMetricResolver.resolve_primary_metric(
+                task_type="classification",
+                user_goal=str(y_true.name) if hasattr(y_true, "name") else "",
+            )
+            primary = metrics.get(metric_key, metrics.get("f1_score", metrics.get("f1", acc)))
+            metrics["primary_metric_name"] = metric_name
 
         else:
             mae = abs(float(mean_absolute_error(y_true, y_pred)))
@@ -75,6 +81,7 @@ class MetricEngine:
             metrics["explained_variance"] = round(evs, 4)
 
             primary = metrics.get("rmse", rmse)
+            metrics["primary_metric_name"] = "RMSE"
 
         if cv_scores:
             cv_mean = float(np.mean(cv_scores))
@@ -94,6 +101,7 @@ class MetricEngine:
 
         return MetricsResult(
             primary_metric=round(primary, 4),
+            primary_metric_name=str(metrics.get("primary_metric_name", "Primary Metric")),
             metrics=metrics,
             cv_scores=[round(s, 4) for s in cv_scores],
         )

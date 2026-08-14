@@ -48,9 +48,12 @@ class SmartTargetDetector:
         df: pd.DataFrame,
         user_mission: str = "",
         user_target: Optional[str] = None,
+        user_task_type: str = "general",
     ) -> Optional[str]:
         """Detects the best target column using hybrid scoring."""
-        target, _ = cls.detect_target_with_confidence(df, user_mission=user_mission, user_target=user_target)
+        target, _ = cls.detect_target_with_confidence(
+            df, user_mission=user_mission, user_target=user_target, user_task_type=user_task_type
+        )
         return target
 
     @classmethod
@@ -59,6 +62,7 @@ class SmartTargetDetector:
         df: pd.DataFrame,
         user_mission: str = "",
         user_target: Optional[str] = None,
+        user_task_type: str = "general",
     ) -> Tuple[Optional[str], float]:
         """Detects best target column and returns (column_name, confidence_score)."""
         if df.empty or len(df.columns) == 0:
@@ -106,6 +110,12 @@ class SmartTargetDetector:
 
         for c in columns:
             score = 0.0
+            c_lower = c.lower().strip()
+            nunique = df[c].nunique()
+            is_numeric = pd.api.types.is_numeric_dtype(df[c])
+            is_float = df[c].dtype in (np.float64, np.float32, float)
+            is_string = str(df[c].dtype) in ("object", "string", "category")
+
             # LLM Signal
             if llm_target and c == llm_target:
                 score += 0.45 * llm_confidence
@@ -116,13 +126,26 @@ class SmartTargetDetector:
             if math_target and c == math_target:
                 score += 0.25 * math_score
             # Common Name Bonus (+0.10)
-            if c.lower().strip() in cls.COMMON_TARGET_NAMES:
+            if c_lower in cls.COMMON_TARGET_NAMES:
                 score += 0.10
 
-            # Penalty for ID columns (-0.50)
-            c_lower = c.lower().strip()
-            if c_lower in ("id", "uuid", "name", "index", "row_id", "user_id"):
-                score -= 0.50
+            # Task-type specific target affinity
+            if user_task_type == "classification":
+                if is_string or (is_numeric and nunique <= 15):
+                    score += 0.35
+                if c_lower.endswith(("_category", "_class", "_label", "_type", "_status", "_group")):
+                    score += 0.40
+                if is_float and nunique > 15:
+                    score -= 0.60
+            elif user_task_type == "regression":
+                if is_numeric and nunique > 15:
+                    score += 0.35
+                if is_string:
+                    score -= 0.60
+
+            # Penalty for ID & timestamp columns (-0.80)
+            if c_lower in ("id", "uuid", "name", "index", "row_id", "user_id", "timestamp", "time", "date", "datetime"):
+                score -= 0.80
 
             composite_scores[c] = round(score, 4)
 

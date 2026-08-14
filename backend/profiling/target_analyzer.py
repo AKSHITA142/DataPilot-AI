@@ -26,7 +26,7 @@ class TargetAnalyzer:
         """
         # --- Smart target column detection ---
         target_column = SmartTargetDetector.detect_target(
-            df, user_mission=user_mission, user_target=target_column
+            df, user_mission=user_mission, user_target=target_column, user_task_type=user_task_type
         )
 
         if not target_column or target_column not in df.columns:

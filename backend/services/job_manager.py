@@ -69,7 +69,14 @@ class JobManager:
         })
 
     @classmethod
-    async def run_job_async(cls, job_id: str, dataset_id: str, file_path: str, user_goal: Optional[str] = None):
+    async def run_job_async(
+        cls,
+        job_id: str,
+        dataset_id: str,
+        file_path: str,
+        user_goal: Optional[str] = None,
+        task_type: str = "general",
+    ):
         """Asynchronous worker executing the compiled LangGraph state machine."""
         db: Session = SessionLocal()
         job_repo = JobRepository(db)
@@ -95,6 +102,7 @@ class JobManager:
                 job_id=job_id,
                 file_path=file_path,
                 user_goal=user_goal,
+                user_task_type=task_type,
                 max_iterations=3,
             )
 

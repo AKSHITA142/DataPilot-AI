@@ -133,12 +133,13 @@ export async function listDatasets(skip = 0, limit = 50): Promise<Dataset[]> {
 
 export async function startJob(
   datasetId: string,
-  mission: string
+  mission: string,
+  taskType: string = "general"
 ): Promise<StartJobResponse> {
   return request<StartJobResponse>("/jobs/start", {
     method: "POST",
-    // Send both user_goal and mission so the backend accepts either field
-    body: JSON.stringify({ dataset_id: datasetId, user_goal: mission, mission }),
+    // Send user_goal, mission, and task_type so backend receives explicit task_type selection
+    body: JSON.stringify({ dataset_id: datasetId, user_goal: mission, mission, task_type: taskType }),
   });
 }
 

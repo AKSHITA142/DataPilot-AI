@@ -15,7 +15,13 @@ from backend.services.job_manager import JobManager
 logger = logging.getLogger("datapilot.services.job_service")
 
 
-def _run_job_in_background(job_id: str, dataset_id: str, file_path: str, user_goal: Optional[str] = None):
+def _run_job_in_background(
+    job_id: str,
+    dataset_id: str,
+    file_path: str,
+    user_goal: Optional[str] = None,
+    task_type: str = "general",
+):
     """
     Sync wrapper that safely schedules the async JobManager coroutine
     onto the already-running FastAPI event loop.
@@ -31,6 +37,7 @@ def _run_job_in_background(job_id: str, dataset_id: str, file_path: str, user_go
                 dataset_id=dataset_id,
                 file_path=file_path,
                 user_goal=user_goal,
+                task_type=task_type,
             )
         )
     except RuntimeError:
@@ -42,6 +49,7 @@ def _run_job_in_background(job_id: str, dataset_id: str, file_path: str, user_go
                 dataset_id=dataset_id,
                 file_path=file_path,
                 user_goal=user_goal,
+                task_type=task_type,
             )
         )
 
@@ -58,6 +66,7 @@ class JobService:
         self,
         dataset_id: str,
         user_goal: Optional[str] = None,
+        task_type: str = "general",
         background_tasks: Optional[BackgroundTasks] = None
     ) -> JobModel:
         """
@@ -66,6 +75,11 @@ class JobService:
         dataset = self.dataset_repository.get_by_id(dataset_id)
         if not dataset:
             raise NotFoundException(f"Dataset with ID '{dataset_id}' not found.")
+
+        # If task_type is default "general", check if dataset profile stored user's explicit choice
+        if task_type == "general" and dataset.semantic_profile:
+            prof_dict = dataset.semantic_profile if isinstance(dataset.semantic_profile, dict) else {}
+            task_type = prof_dict.get("user_task_type") or "general"
 
         job_id = f"job_{uuid.uuid4().hex[:8]}"
 
@@ -88,6 +102,7 @@ class JobService:
                 dataset_id=dataset_id,
                 file_path=dataset.file_path,
                 user_goal=user_goal,
+                task_type=task_type,
             )
         else:
             # Direct dispatch on running event loop
@@ -96,6 +111,7 @@ class JobService:
                 dataset_id=dataset_id,
                 file_path=dataset.file_path,
                 user_goal=user_goal,
+                task_type=task_type,
             )
 
         return job_record

@@ -32,26 +32,11 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
     instead of a nested `metrics: {}` object.
     """
     metrics = exp.metrics or {}
-    # Extract nested metrics (could be {primary_metric, metrics: {acc, f1}, cv_scores}
-    # or flat {accuracy, f1_score, ...})
     inner_metrics = metrics.get("metrics", metrics) if isinstance(metrics, dict) else {}
 
-    # Compute composite_score as the average of available classification metrics
-    available_scores = []
-    for key in ("accuracy", "f1", "f1_score", "roc_auc", "precision", "recall"):
-        val = inner_metrics.get(key) if isinstance(inner_metrics, dict) else None
-        if isinstance(val, (int, float)) and not math.isnan(val) and not math.isinf(val):
-            available_scores.append(val)
-    composite_score = (sum(available_scores) / len(available_scores)) if available_scores else None
-
-    # Determine primary metric
-    primary_metric_value = (metrics.get("primary_metric") if isinstance(metrics, dict) else None) or (available_scores[0] if available_scores else None)
-    primary_metric_name = None
-    if isinstance(inner_metrics, dict):
-        if inner_metrics.get("accuracy") is not None:
-            primary_metric_name = "Accuracy"
-        elif inner_metrics.get("rmse") is not None:
-            primary_metric_name = "RMSE"
+    from backend.api.routes.reports import compute_composite_and_confidence
+    composite_score, confidence_score, primary_metric_name = compute_composite_and_confidence(inner_metrics)
+    primary_metric_value = (metrics.get("primary_metric") if isinstance(metrics, dict) else None) or inner_metrics.get("rmse") or inner_metrics.get("f1") or 0.0
 
     # Build pipeline name from operations or model name
     pipeline_ops = exp.pipeline or {}
