@@ -11,6 +11,8 @@ from backend.schemas.evaluation import EvaluationReport, ResearchDirectorDecisio
 from backend.schemas.report import FinalRecommendation
 
 from backend.profiling import ProfilingEngine
+from backend.profiling.loader import DataLoader
+from backend.core.config import get_settings
 from backend.ml_execution.executor import MLExecutionEngine
 from backend.evaluation.evaluator import EvaluationEngine
 
@@ -189,7 +191,8 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
         }
 
     try:
-        df = pd.read_csv(file_path)
+        settings = get_settings()
+        df, _, is_sampled = DataLoader.load_lazy_sample(file_path, max_sample_rows=settings.max_ml_sample_rows)
         plan = ExperimentPlan(**plan_dict)
 
         job_id = state.get("job_id") or "job"

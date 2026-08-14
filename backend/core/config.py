@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     # File Storage
     storage_dir: str = Field(default="./storage", alias="STORAGE_DIR")
     max_upload_size_mb: int = Field(default=500, alias="MAX_UPLOAD_SIZE_MB")
+    storage_backend: str = Field(default="local", alias="STORAGE_BACKEND")  # 'supabase' or 'local'
+    supabase_url: Optional[str] = Field(default=None, alias="SUPABASE_URL")
+    supabase_key: Optional[str] = Field(default=None, alias="SUPABASE_KEY")
+    supabase_bucket: str = Field(default="datasets", alias="SUPABASE_BUCKET")
+    max_ml_sample_rows: int = Field(default=50000, alias="MAX_ML_SAMPLE_ROWS")
     
     # Server Parameters
     server_host: str = Field(default="127.0.0.1", alias="SERVER_HOST")

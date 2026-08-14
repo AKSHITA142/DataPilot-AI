@@ -79,6 +79,9 @@ class ImputerTransformer(BaseEstimator, TransformerMixin):
         # Impute fit values
         for col, val in self.imputers_.items():
             if col in X_df.columns:
+                if str(X_df[col].dtype) == "category":
+                    if val not in X_df[col].cat.categories:
+                        X_df[col] = X_df[col].cat.add_categories([val])
                 X_df[col] = X_df[col].fillna(val)
         return X_df
 

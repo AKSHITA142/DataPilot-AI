@@ -54,6 +54,7 @@ class DataPreCleaner:
         target_column: str,
         extreme_missing_threshold: float = 75.0,
         sparse_row_threshold: float = 0.50,
+        max_sample_rows: Optional[int] = None,
     ) -> Tuple[pd.DataFrame, CleaningAudit]:
         """
         Executes pre-cleaning on a raw dataset copy.
@@ -122,6 +123,21 @@ class DataPreCleaner:
             sparse_mask = row_missing_ratio > sparse_row_threshold
             audit.sparse_rows_dropped = int(sparse_mask.sum())
             cleaned_df = cleaned_df[~sparse_mask].copy()
+
+        # 5. Smart Sampling for Memory Safety during ML Search
+        if max_sample_rows and len(cleaned_df) > max_sample_rows:
+            try:
+                # Try stratified sampling if classification target with reasonable class counts
+                if target_column in cleaned_df.columns and cleaned_df[target_column].nunique() < 50:
+                    frac = min(1.0, max_sample_rows / len(cleaned_df))
+                    cleaned_df = cleaned_df.groupby(target_column, group_keys=False).sample(frac=frac, random_state=42).reset_index(drop=True)
+                else:
+                    cleaned_df = cleaned_df.sample(n=max_sample_rows, random_state=42).reset_index(drop=True)
+            except Exception:
+                cleaned_df = cleaned_df.sample(n=min(len(cleaned_df), max_sample_rows), random_state=42).reset_index(drop=True)
+
+        from backend.profiling.loader import DataLoader
+        cleaned_df = DataLoader.optimize_dtypes(cleaned_df)
 
         audit.final_rows = len(cleaned_df)
         audit.final_cols = len(cleaned_df.columns)

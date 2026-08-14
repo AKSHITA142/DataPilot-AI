@@ -12,6 +12,7 @@ from backend.repositories.dataset_repository import DatasetRepository
 from backend.models.dataset import DatasetModel
 from backend.profiling import ProfilingEngine
 from backend.schemas.semantic_profile import SemanticProfile
+from backend.services.storage.supabase_storage import SupabaseStorageService
 
 logger = logging.getLogger("datapilot.services.dataset_service")
 
@@ -94,6 +95,19 @@ class DatasetService:
             os.rmdir(dest_dir)
             return existing
 
+        # Upload to Supabase Storage if configured
+        remote_path = None
+        if settings.storage_backend.lower() == "supabase":
+            try:
+                storage_svc = SupabaseStorageService()
+                if storage_svc.is_configured:
+                    storage_svc.ensure_bucket_exists()
+                    remote_path = f"{dataset_id}/{filename}"
+                    storage_svc.upload_file(file_path, remote_path)
+                    logger.info(f"Dataset successfully uploaded to Supabase Storage: {remote_path}")
+            except Exception as se:
+                logger.warning(f"Supabase Storage upload failed, keeping local copy: {se}")
+
         # Execute ProfilingEngine to generate SemanticProfile
         rows, cols = 0, 0
         try:
@@ -104,8 +118,9 @@ class DatasetService:
                 user_task_type=task_type,
             )
             profile_dict = profile.model_dump()
-            # Store user's task_type selection in profile for downstream graph nodes
             profile_dict["user_task_type"] = task_type
+            if remote_path:
+                profile_dict["remote_storage_path"] = remote_path
             summary = profile_dict.get("dataset_summary", {})
             rows = summary.get("rows", 0)
             cols = summary.get("columns", 0)
@@ -136,4 +151,36 @@ class DatasetService:
         if not dataset:
             raise NotFoundException(f"Dataset with ID '{dataset_id}' not found.")
         return dataset
+
+    def ensure_local_file(self, dataset: DatasetModel) -> str:
+        """
+        Ensures the dataset file is available locally on disk.
+        If file is missing locally but exists on Supabase Storage, downloads it to local cache.
+        """
+        if os.path.exists(dataset.file_path):
+            return dataset.file_path
+
+        cache_dir = os.path.join(self.storage_dir, "cache", dataset.id)
+        local_dest = os.path.join(cache_dir, dataset.filename)
+
+        if os.path.exists(local_dest):
+            return local_dest
+
+        # Attempt download from Supabase Storage
+        settings = get_settings()
+        remote_path = None
+        if dataset.semantic_profile and isinstance(dataset.semantic_profile, dict):
+            remote_path = dataset.semantic_profile.get("remote_storage_path")
+        if not remote_path:
+            remote_path = f"{dataset.id}/{dataset.filename}"
+
+        try:
+            storage_svc = SupabaseStorageService()
+            if storage_svc.is_configured:
+                logger.info(f"Downloading dataset {dataset.id} from Supabase Storage...")
+                return storage_svc.download_file(remote_path, local_dest)
+        except Exception as e:
+            logger.error(f"Failed to fetch dataset from Supabase Storage: {e}")
+
+        raise FileNotFoundError(f"Dataset file not found locally ({dataset.file_path}) or in cloud storage.")
 

@@ -30,8 +30,9 @@ class ProfilingEngine:
     ) -> Tuple[SemanticProfile, ExecutionHints]:
         """
         Profiles a dataset file (CSV/Parquet) and returns (SemanticProfile, ExecutionHints).
+        Uses lazy sampling on large datasets to keep profiling fast and RAM-safe.
         """
-        df, file_meta = DataLoader.load_data(file_path)
+        df, file_meta, is_sampled = DataLoader.load_lazy_sample(file_path)
         return cls.profile_dataframe(
             df, file_meta,
             target_column=target_column,
