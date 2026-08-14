@@ -15,6 +15,7 @@ class ExperimentValidator:
         "scaling", "scale",
         "feature_engineering", "engineer",
         "feature_selection", "select",
+        "model", "modeling", "estimator", "classification", "regression",
     }
 
     ALLOWED_IMPUTATION_METHODS = {"mean", "median", "mode", "constant", "knn"}

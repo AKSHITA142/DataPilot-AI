@@ -52,13 +52,17 @@ class CrossValidationRunner:
             X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
             y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
-            # Labels are already integers — no per-fold LabelEncoder needed.
+            if task_type == "classification":
+                from sklearn.preprocessing import LabelEncoder
+                fold_le = LabelEncoder()
+                y_train = pd.Series(fold_le.fit_transform(y_train), index=y_train.index)
+                known_classes = set(fold_le.classes_)
+                y_val = pd.Series(y_val.map(lambda c: fold_le.transform([c])[0] if c in known_classes else 0), index=y_val.index)
+
             pipeline.fit(X_train, y_train)
             score = pipeline.score(X_val, y_val)
             scores.append(float(score))
 
-        # Do NOT refit on full data here — the executor calls
-        # fitted_pipeline.fit(X_train, y_train) after this returns.
         return scores, pipeline
 
 

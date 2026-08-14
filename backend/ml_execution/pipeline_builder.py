@@ -52,6 +52,8 @@ class PipelineBuilder:
                 ops_by_type["scaling"] = op
             elif op_type in ("engineer", "feature_engineering"):
                 ops_by_type["feature_engineering"] = op
+            elif op_type in ("model", "modeling", "estimator", "classification", "regression"):
+                pass
             else:
                 ops_by_type[op_type] = op
 

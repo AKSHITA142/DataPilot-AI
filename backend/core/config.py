@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     gemini_api_key: Optional[str] = Field(default=None, alias="GEMINI_API_KEY")
     openai_api_key: Optional[str] = Field(default=None, alias="OPENAI_API_KEY")
     llm_model_name: Optional[str] = Field(default=None, alias="LLM_MODEL_NAME")
+    gemini_model_name: Optional[str] = Field(default=None, alias="GEMINI_MODEL_NAME")
 
 
     model_config = SettingsConfigDict(

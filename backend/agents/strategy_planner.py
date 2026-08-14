@@ -252,6 +252,18 @@ class StrategyPlannerAgent(BaseAgent):
             "GaussianProcessRegressor": "RandomForestClassifier",
         }
 
+        # Fallback check: ensure experiments is never empty
+        if not plan.experiments:
+            fallback_dict = self.get_fallback_data(inputs)
+            plan = ExperimentPlan.model_validate(fallback_dict)
+
+        # Filter out any redundant 'model' or 'estimator' operations from operations array
+        for exp in plan.experiments:
+            exp.operations = [
+                op for op in exp.operations 
+                if op.type.lower().strip() not in ("model", "modeling", "estimator", "classification", "regression")
+            ]
+
         # Strict post-processing: enforce 100% task_type compliance for every experiment spec
         for exp in plan.experiments:
             m_name = exp.model_name

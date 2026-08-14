@@ -176,6 +176,11 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
         df = pd.read_csv(file_path)
         plan = ExperimentPlan(**plan_dict)
 
+        job_id = state.get("job_id") or "job"
+        for spec in plan.experiments:
+            if not spec.experiment_id.startswith(f"{job_id}_"):
+                spec.experiment_id = f"{job_id}_{spec.experiment_id}"
+
         cpu_count = os.cpu_count() or 4
         budget = plan.experiment_budget or len(plan.experiments) or 4
         max_workers = max(1, min(cpu_count, budget, 8))

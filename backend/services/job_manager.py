@@ -105,9 +105,9 @@ class JobManager:
 
             stage_configs = {
                 "profiling": {"stage": "profiling", "progress": 20.0, "status": JobStatus.PROFILING, "msg": "Completed dataset profiling."},
-                "understanding": {"stage": "understanding", "progress": 35.0, "status": JobStatus.PLANNING, "msg": "Semantic dataset understanding completed."},
-                "planning": {"stage": "planning", "progress": 50.0, "status": JobStatus.EXECUTING, "msg": "Formulated prioritized experiment plan."},
-                "execution": {"stage": "executing", "progress": 70.0, "status": JobStatus.EVALUATING, "msg": "Executed ML pipeline experiments."},
+                "understanding": {"stage": "understanding", "progress": 30.0, "status": JobStatus.PLANNING, "msg": "Semantic dataset understanding completed."},
+                "planning": {"stage": "planning", "progress": 45.0, "status": JobStatus.PLANNING, "msg": "Formulated prioritized experiment plan."},
+                "execution": {"stage": "executing", "progress": 75.0, "status": JobStatus.EXECUTING, "msg": "Executed ML pipeline experiments."},
                 "evaluation": {"stage": "evaluating", "progress": 85.0, "status": JobStatus.EVALUATING, "msg": "Evaluated & ranked experiment results."},
                 "directing": {"stage": "decision", "progress": 90.0, "status": JobStatus.EVALUATING, "msg": "Research Director decision rendered."},
                 "reporting": {"stage": "reporting", "progress": 95.0, "status": JobStatus.COMPLETED, "msg": "Synthesized final recommendation report."},
@@ -148,6 +148,18 @@ class JobManager:
                         "progress_percent": stg_cfg["progress"],
                     })
                     await cls._broadcast_log(job_id, stg_cfg["msg"], stage=stg_cfg["stage"], level="info")
+
+                    # Smoothly transition stage indicator for the next node about to execute
+                    if node_name == "understanding":
+                        await cls._broadcast(job_id, {"event": "job.status_changed", "status": JobStatus.PLANNING.value, "stage": "planning", "progress_percent": 35.0})
+                        await cls._broadcast_log(job_id, "Starting research planning agent...", stage="planning", level="info")
+                    elif node_name == "planning":
+                        await cls._broadcast(job_id, {"event": "job.status_changed", "status": JobStatus.EXECUTING.value, "stage": "executing", "progress_percent": 50.0})
+                        await cls._broadcast_log(job_id, "Executing ML pipeline experiments across model configurations...", stage="executing", level="info")
+                    elif node_name == "execution":
+                        await cls._broadcast(job_id, {"event": "job.status_changed", "status": JobStatus.EVALUATING.value, "stage": "evaluating", "progress_percent": 80.0})
+                        await cls._broadcast_log(job_id, "Evaluating & ranking experiment results...", stage="evaluating", level="info")
+
                     await ws_manager.ping_heartbeat(job_id)
 
             final_state = accumulated_state
@@ -194,7 +206,7 @@ class JobManager:
                         "event": event_type,
                         "experiment_id": exp_code,
                         "message": event_msg,
-                        "stage": "evaluating",
+                        "stage": "executing",
                         "level": event_level,
                         "status": final_exp_status,
                         "error": err_msg,

@@ -207,17 +207,29 @@ def download_preprocessed_dataset(
     report = report_repo.get_by_job(job_id) if job else None
 
     if report and report.winning_experiment_id:
+        candidate_ml = f"storage/artifacts/{report.winning_experiment_id}_ml_ready.csv"
         candidate_biz = f"storage/artifacts/{report.winning_experiment_id}_business_action.csv"
-        candidate_legacy = f"storage/artifacts/{report.winning_experiment_id}_cleaned.csv"
-        if os.path.isfile(candidate_biz):
+        if os.path.isfile(candidate_ml):
+            cleaned_csv_path = candidate_ml
+        elif os.path.isfile(candidate_biz):
             cleaned_csv_path = candidate_biz
-        elif os.path.isfile(candidate_legacy):
-            cleaned_csv_path = candidate_legacy
 
-    if not cleaned_csv_path and os.path.isdir("storage/artifacts"):
-        for fname in os.listdir("storage/artifacts"):
-            if fname.endswith("_business_action.csv") or fname.endswith("_cleaned.csv"):
-                cleaned_csv_path = os.path.join("storage/artifacts", fname)
+    if not cleaned_csv_path and job:
+        from backend.models.experiment import ExperimentModel
+        job_exps = db.query(ExperimentModel).filter(ExperimentModel.job_id == job_id).all()
+        for exp in job_exps:
+            arts = exp.artifact_paths or {}
+            proc_path = arts.get("processed_dataset_path") if isinstance(arts, dict) else None
+            if proc_path and os.path.isfile(proc_path):
+                cleaned_csv_path = proc_path
+                break
+            cand_ml = f"storage/artifacts/{exp.experiment_id_code}_ml_ready.csv"
+            cand_biz = f"storage/artifacts/{exp.experiment_id_code}_business_action.csv"
+            if os.path.isfile(cand_ml):
+                cleaned_csv_path = cand_ml
+                break
+            elif os.path.isfile(cand_biz):
+                cleaned_csv_path = cand_biz
                 break
 
     if not cleaned_csv_path and job:

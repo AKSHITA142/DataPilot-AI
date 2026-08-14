@@ -45,7 +45,6 @@ def _clean_json_schema(schema: Any) -> Any:
     FORBIDDEN_KEYS = {
         "additionalProperties",
         "$schema",
-        "$defs",
         "exclusiveMinimum",
         "exclusiveMaximum",
         "minimum",
@@ -63,13 +62,21 @@ def _clean_json_schema(schema: Any) -> Any:
 
 
 class LLMClient:
-    """Unified LLM client interface for reasoning agents supporting dynamic model choices."""
+    """Unified LLM client interface for reasoning agents supporting dynamic model choices strictly loaded from .env settings."""
 
     def __init__(self, model_name: Optional[str] = None):
         settings = get_settings()
         self.model_name = model_name or settings.model_name or settings.llm_model_name
         if not self.model_name:
             raise ValueError("LLM model name is not set. Please define MODEL_NAME or LLM_MODEL_NAME in your .env file.")
+        
+        # Load secondary provider model name dynamically from .env settings
+        self.gemini_model_name = (
+            settings.gemini_model_name or 
+            settings.llm_model_name or 
+            "gemini-3.5-flash"
+        )
+        
         self.openrouter_key = settings.openrouter_api_key
         self.gemini_key = settings.gemini_api_key
         self.openai_key = settings.openai_api_key
@@ -97,57 +104,68 @@ class LLMClient:
             try:
                 logger.info(f"Invoking LLM model '{self.model_name}' for structured output {response_model.__name__}")
 
-                # 1. Handle OpenRouter if key configured
+                # 1. Handle OpenRouter if key configured (with 429 rate-limit retries)
                 if self.openrouter_key and not self.openrouter_key.startswith("your_"):
-                    try:
-                        import json
-                        import urllib.request
+                    import json
+                    import urllib.request
+                    import urllib.error
 
-                        url = "https://openrouter.ai/api/v1/chat/completions"
-                        headers = {
-                            "Authorization": f"Bearer {self.openrouter_key}",
-                            "Content-Type": "application/json",
-                            "HTTP-Referer": "http://localhost:8000",
-                            "X-Title": "DataPilot-AI",
-                        }
+                    url = "https://openrouter.ai/api/v1/chat/completions"
+                    headers = {
+                        "Authorization": f"Bearer {self.openrouter_key}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": "http://localhost:8000",
+                        "X-Title": "DataPilot-AI",
+                    }
 
-                        schema_json = json.dumps(_clean_json_schema(response_model.model_json_schema()), indent=2)
-                        schema_instruction = (
-                            f"{system_instruction or 'You are an expert AI Data Science assistant.'}\n"
-                            f"Output raw valid JSON object ONLY, strictly matching this target JSON Schema:\n{schema_json}"
-                        )
+                    schema_json = json.dumps(_clean_json_schema(response_model.model_json_schema()), indent=2)
+                    schema_instruction = (
+                        f"{system_instruction or 'You are an expert AI Data Science assistant.'}\n"
+                        f"Output raw valid JSON object ONLY, strictly matching this target JSON Schema:\n{schema_json}"
+                    )
 
-                        payload = {
-                            "model": self.model_name,
-                            "messages": [
-                                {"role": "system", "content": schema_instruction},
-                                {"role": "user", "content": prompt},
-                            ],
-                            "response_format": {"type": "json_object"},
-                        }
+                    payload = {
+                        "model": self.model_name,
+                        "messages": [
+                            {"role": "system", "content": schema_instruction},
+                            {"role": "user", "content": prompt},
+                        ],
+                        "response_format": {"type": "json_object"},
+                    }
 
-                        req = urllib.request.Request(
-                            url,
-                            data=json.dumps(payload).encode("utf-8"),
-                            headers=headers,
-                        )
+                    # Retry loop for OpenRouter 429 Rate Limits
+                    max_retries = 2
+                    for attempt in range(max_retries + 1):
+                        try:
+                            req = urllib.request.Request(
+                                url,
+                                data=json.dumps(payload).encode("utf-8"),
+                                headers=headers,
+                            )
+                            logger.info(f"Calling OpenRouter model '{self.model_name}' (attempt {attempt + 1}/{max_retries + 1})")
+                            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                                res_bytes = resp.read()
+                                res_json = json.loads(res_bytes.decode("utf-8"))
+                                raw_text = res_json["choices"][0]["message"]["content"].strip()
 
-                        logger.info(f"Calling OpenRouter model '{self.model_name}' (timeout={self.timeout}s)")
-                        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                            res_bytes = resp.read()
-                            res_json = json.loads(res_bytes.decode("utf-8"))
-                            raw_text = res_json["choices"][0]["message"]["content"].strip()
+                                if raw_text.startswith("```"):
+                                    raw_text = raw_text.split("```")[1]
+                                    if raw_text.startswith("json"):
+                                        raw_text = raw_text[4:]
+                                    raw_text = raw_text.strip()
 
-                            # Clean markdown if returned
-                            if raw_text.startswith("```"):
-                                raw_text = raw_text.split("```")[1]
-                                if raw_text.startswith("json"):
-                                    raw_text = raw_text[4:]
-                                raw_text = raw_text.strip()
+                                return response_model.model_validate_json(raw_text)
 
-                            return response_model.model_validate_json(raw_text)
-                    except Exception as ore:
-                        logger.warning(f"OpenRouter call failed ({type(ore).__name__}: {ore}); trying secondary providers")
+                        except urllib.error.HTTPError as he:
+                            if he.code == 429 and attempt < max_retries:
+                                logger.info(f"OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry ({attempt + 1}/{max_retries})...")
+                                time.sleep(2.5)
+                                continue
+                            logger.warning(f"OpenRouter call failed ({he}); trying secondary providers")
+                            break
+                        except Exception as ore:
+                            logger.warning(f"OpenRouter call failed ({ore}); trying secondary providers")
+                            break
 
                 # 2. Handle OpenAI if key configured
                 if self.openai_key and not self.openai_key.startswith("your_"):
@@ -184,9 +202,16 @@ class LLMClient:
 
                         cleaned_schema = _clean_json_schema(response_model.model_json_schema())
 
-                        logger.info(f"Calling Gemini model '{self.model_name}' (timeout={self.timeout}s)")
+                        # Dynamic resolution: use gemini_model_name from .env settings if model_name is an OpenRouter provider string
+                        gemini_target_model = (
+                            self.gemini_model_name 
+                            if ("/" in str(self.model_name) or ":" in str(self.model_name)) 
+                            else self.model_name
+                        )
+
+                        logger.info(f"Calling Gemini model '{gemini_target_model}' (timeout={self.timeout}s)")
                         resp = client.models.generate_content(
-                            model=self.model_name,
+                            model=gemini_target_model,
                             contents=prompt,
                             config=types_mod.GenerateContentConfig(
                                 system_instruction=system_instruction or "You are an expert AI Data Science assistant.",

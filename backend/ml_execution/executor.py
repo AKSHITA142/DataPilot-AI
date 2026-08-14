@@ -50,11 +50,8 @@ class MLExecutionEngine:
         }
         tokens = [t for t in re.split(r"[_\-\s\.]+", col_str) if t]
         for token in tokens:
-            if token in meta_root_tokens or token.endswith("id"):
+            if token in meta_root_tokens or (len(token) > 2 and (token.endswith("_id") or token.startswith("id_"))):
                 return True
-            for root in meta_root_tokens:
-                if root in token:
-                    return True
         return False
 
     @staticmethod
@@ -140,7 +137,12 @@ class MLExecutionEngine:
                     stratify=None,
                 )
 
-            # Labels are already [0..K-1] from the single LabelEncoder above — no re-encoding needed.
+            if task_type == "classification":
+                from sklearn.preprocessing import LabelEncoder
+                le_train = LabelEncoder()
+                y_train = pd.Series(le_train.fit_transform(y_train), index=y_train.index)
+                known_classes = set(le_train.classes_)
+                y_test = pd.Series(y_test.map(lambda c: le_train.transform([c])[0] if c in known_classes else 0), index=y_test.index)
 
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(
@@ -232,7 +234,13 @@ class MLExecutionEngine:
                 # Format 1: Business Action CSV (Original raw columns + Predictions, unscaled & unencoded for human readability)
                 business_df = df_cleaned.copy().reset_index(drop=True)
                 if 'y_pred_test' in locals() and y_pred_test is not None and len(y_pred_test) == len(business_df):
-                    business_df["predicted_" + str(target_column)] = y_pred_test
+                    if 'le' in locals() and hasattr(le, 'inverse_transform'):
+                        try:
+                            business_df["predicted_" + str(target_column)] = le.inverse_transform(y_pred_test)
+                        except Exception:
+                            business_df["predicted_" + str(target_column)] = y_pred_test
+                    else:
+                        business_df["predicted_" + str(target_column)] = y_pred_test
 
                 business_csv_path = f"storage/artifacts/{spec.experiment_id}_business_action.csv"
                 business_df.to_csv(business_csv_path, index=False)
@@ -248,7 +256,7 @@ class MLExecutionEngine:
                 legacy_csv_path = f"storage/artifacts/{spec.experiment_id}_cleaned.csv"
                 business_df.to_csv(legacy_csv_path, index=False)
 
-                processed_csv_path = business_csv_path
+                processed_csv_path = ml_ready_csv_path
             except Exception as pe:
                 logger.warning(f"Could not export preprocessed dataset CSV: {pe}")
 
