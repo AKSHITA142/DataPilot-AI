@@ -18,7 +18,6 @@ import {
   LayoutDashboard,
   Lock,
   AlertCircle,
-  Sparkles,
 } from "lucide-react";
 import { useDashboard } from "@/hooks/useResearch";
 
@@ -466,6 +465,28 @@ export function MobileDrawer({
                   />
                 </div>
               ))}
+              {/* Disabled Toast in Mobile Drawer */}
+              {disabledToast && (
+                <div className="mx-3 my-2 p-3 rounded-lg bg-surface-2 border border-warning-500/30 flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-warning-400 shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] text-text-muted leading-tight">{disabledToast}</p>
+                    <button
+                      onClick={() => {
+                        setDisabledToast(null);
+                        onClose();
+                        router.push("/upload");
+                      }}
+                      className="mt-2 text-[11px] font-bold text-brand-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <Upload className="w-3 h-3" /> Upload Dataset
+                    </button>
+                  </div>
+                  <button onClick={() => setDisabledToast(null)} className="text-text-muted hover:text-text cursor-pointer">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
             </nav>
           </motion.aside>
         </>

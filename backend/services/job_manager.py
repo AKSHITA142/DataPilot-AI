@@ -16,6 +16,8 @@ from backend.models.report import ReportModel
 from backend.models.knowledge import KnowledgeEntryModel
 from backend.graph import compile_graph, create_initial_state
 from backend.api.websocket_manager import ws_manager
+from backend.core.config import get_settings
+from backend.services.storage.supabase_storage import SupabaseStorageService
 
 logger = logging.getLogger("datapilot.services.job_manager")
 
@@ -276,7 +278,17 @@ class JobManager:
                 existing_report.winning_experiment_id = winning_id
                 existing_report.report_file_path = html_report_path
                 existing_report.summary = final_report_dict.get("summary") or existing_report.summary
-                db.commit()
+            # Upload generated HTML report to Supabase Cloud Storage
+            settings = get_settings()
+            if settings.storage_backend.lower() == "supabase":
+                try:
+                    storage_svc = SupabaseStorageService()
+                    if storage_svc.is_configured and os.path.exists(html_report_path):
+                        storage_svc.ensure_bucket_exists()
+                        storage_svc.upload_file(html_report_path, f"reports/{job_id}/report.html")
+                        logger.info(f"Report uploaded to Supabase Storage: reports/{job_id}/report.html")
+                except Exception as se:
+                    logger.warning(f"Could not upload report to Supabase Storage: {se}")
 
             await cls._broadcast_log(job_id, "Final report generated successfully.",
                                      stage="reporting", level="success")

@@ -280,6 +280,21 @@ def download_report(
 
     file_path = report_record.report_file_path
 
+    # If local file is missing, attempt to download from Supabase Cloud Storage
+    if not (file_path and os.path.isfile(file_path)):
+        try:
+            from backend.services.storage.supabase_storage import SupabaseStorageService
+            storage_svc = SupabaseStorageService()
+            if storage_svc.is_configured:
+                target_job_id = report_record.job_id or report_id
+                remote_path = f"reports/{target_job_id}/report.html"
+                local_dest = f"storage/reports/{target_job_id}/report.html"
+                storage_svc.download_file(remote_path, local_dest)
+                if os.path.isfile(local_dest):
+                    file_path = local_dest
+        except Exception:
+            pass
+
     if file_path and os.path.isfile(file_path):
         media_type = "text/html" if format == "html" else "text/markdown"
         return FileResponse(
@@ -318,6 +333,20 @@ def get_report_html(job_id: str, db: Session = Depends(get_db)):
     if os.path.isfile(html_candidate):
         with open(html_candidate, "r", encoding="utf-8") as f:
             return PlainTextResponse(content=f.read(), media_type="text/html")
+
+    # Cloud Storage fallback
+    try:
+        from backend.services.storage.supabase_storage import SupabaseStorageService
+        storage_svc = SupabaseStorageService()
+        if storage_svc.is_configured:
+            remote_path = f"reports/{job_id}/report.html"
+            local_dest = f"storage/reports/{job_id}/report.html"
+            storage_svc.download_file(remote_path, local_dest)
+            if os.path.isfile(local_dest):
+                with open(local_dest, "r", encoding="utf-8") as f:
+                    return PlainTextResponse(content=f.read(), media_type="text/html")
+    except Exception:
+        pass
 
     fallback_html = f"""<!DOCTYPE html>
 <html>

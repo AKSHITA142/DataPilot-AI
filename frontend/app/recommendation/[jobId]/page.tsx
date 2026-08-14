@@ -20,7 +20,6 @@ import {
   Sliders,
   Copy,
   Check,
-  Code2,
   Terminal,
 } from "lucide-react";
 import { Button } from "@/components/buttons/Button";
