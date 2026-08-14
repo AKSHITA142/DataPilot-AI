@@ -75,6 +75,35 @@ class StrategyPlannerAgent(BaseAgent):
             f"Select transformers from: imputation (median/mean/constant), encoding (onehot/ordinal/frequency), scaling (standard/robust/minmax)."
         )
 
+    @staticmethod
+    def _compute_dynamic_hyperparams(model_name: str, row_count: int, col_count: int = 10) -> Dict[str, Any]:
+        """Calculates continuous mathematical hyperparameter scaling functions based on dataset sample size N and feature dimension P."""
+        import numpy as np
+        params: Dict[str, Any] = {}
+        m = model_name.lower()
+        N = max(1, row_count)
+        P = max(1, col_count)
+
+        if "randomforest" in m or "extratrees" in m:
+            params["n_estimators"] = int(np.clip(30 + 25 * np.log2(max(2, N / 10)), 30, 300))
+            params["max_depth"] = int(np.clip(np.log2(max(4, N / 10)), 3, 14))
+            params["min_samples_split"] = max(2, int(np.clip(N * 0.005, 2, 20)))
+        elif "gradientboosting" in m or "xgb" in m or "lgbm" in m or "catboost" in m:
+            params["n_estimators"] = int(np.clip(40 + 20 * np.log2(max(2, N / 10)), 40, 250))
+            params["max_depth"] = int(np.clip(np.log2(max(4, N / 20)), 3, 10))
+            params["learning_rate"] = round(float(np.clip(0.3 / np.log10(max(10, N)), 0.01, 0.2)), 4)
+        elif "logistic" in m or "ridge" in m or "lasso" in m:
+            params["C"] = round(float(np.clip(np.sqrt(max(1, N)) / max(1, P), 0.01, 50.0)), 4)
+        elif "knn" in m:
+            params["n_neighbors"] = int(np.clip(np.sqrt(max(1, N)), 3, 25))
+        elif "svc" in m or "svr" in m:
+            params["C"] = round(float(np.clip(np.sqrt(max(1, N)) / 10.0, 0.1, 20.0)), 4)
+            params["probability"] = True
+        elif "decisiontree" in m:
+            params["max_depth"] = int(np.clip(np.log2(max(4, N / 10)), 3, 8))
+
+        return params
+
     def get_fallback_data(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         mission: Any = inputs.get("mission_brief")
         obj_text = getattr(mission, "objective", "Tabular Optimization") if mission else "Tabular Optimization"
@@ -195,6 +224,8 @@ class StrategyPlannerAgent(BaseAgent):
             if "mlp" in model_name.lower() or "svc" in model_name.lower() or "svr" in model_name.lower() or "knn" in model_name.lower():
                 scale = "standard"
 
+            dyn_params = self._compute_dynamic_hyperparams(model_name, row_count, len(col_profiles))
+
             experiments.append({
                 "experiment_id": f"EXP_{idx + 1:03d}",
                 "operations": [
@@ -203,6 +234,7 @@ class StrategyPlannerAgent(BaseAgent):
                     {"type": "scaling", "method": scale, "params": {"column_scalings": col_scalings}},
                 ],
                 "model_name": model_name,
+                "params": dyn_params,
             })
 
         return {
