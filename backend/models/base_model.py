@@ -18,12 +18,23 @@ class JSONType(TypeDecorator):
         else:
             return dialect.type_descriptor(TEXT())
 
+    def _clean_nan(self, obj: Any) -> Any:
+        import math
+        if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+            return None
+        elif isinstance(obj, dict):
+            return {k: self._clean_nan(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._clean_nan(v) for v in obj]
+        return obj
+
     def process_bind_param(self, value: Any, dialect: Any) -> Any:
         if value is None:
             return None
+        cleaned = self._clean_nan(value)
         if dialect.name == "postgresql":
-            return value
-        return json.dumps(value)
+            return cleaned
+        return json.dumps(cleaned)
 
     def process_result_value(self, value: Any, dialect: Any) -> Any:
         if value is None:

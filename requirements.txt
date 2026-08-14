@@ -30,3 +30,6 @@ google-genai>=1.0.0
 supabase>=2.3.0
 storage3>=0.7.0
 
+# Cloud PostgreSQL Database Driver
+psycopg2-binary>=2.9.9
+
