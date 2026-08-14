@@ -72,6 +72,7 @@ class Settings(BaseSettings):
         return filtered
 
 
+@lru_cache()
 def get_settings() -> Settings:
     """Returns application Settings instance loaded from environment and .env."""
     return Settings()
