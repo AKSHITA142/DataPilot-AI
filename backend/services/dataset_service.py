@@ -82,6 +82,18 @@ class DatasetService:
         checksum = hasher.hexdigest()
         logger.info(f"Dataset '{filename}' saved ({file_size} bytes, SHA256={checksum[:12]}...)")
 
+        # Upload to Supabase Storage if configured
+        remote_path = f"{dataset_id}/{filename}"
+        if settings.storage_backend.lower() == "supabase":
+            try:
+                storage_svc = SupabaseStorageService()
+                if storage_svc.is_configured:
+                    storage_svc.ensure_bucket_exists()
+                    storage_svc.upload_file(file_path, remote_path)
+                    logger.info(f"Dataset successfully uploaded to Supabase Storage: {remote_path}")
+            except Exception as se:
+                logger.warning(f"Supabase Storage upload failed, keeping local copy: {se}")
+
         # Check if checksum already exists (deduplication check)
         existing = self.repository.get_by_checksum(checksum)
         if existing:
@@ -90,23 +102,10 @@ class DatasetService:
                 existing.mission_brief = mission_brief
                 self.db.commit()
 
-            # Clean up duplicate file
+            # Clean up duplicate local file
             os.remove(file_path)
             os.rmdir(dest_dir)
             return existing
-
-        # Upload to Supabase Storage if configured
-        remote_path = None
-        if settings.storage_backend.lower() == "supabase":
-            try:
-                storage_svc = SupabaseStorageService()
-                if storage_svc.is_configured:
-                    storage_svc.ensure_bucket_exists()
-                    remote_path = f"{dataset_id}/{filename}"
-                    storage_svc.upload_file(file_path, remote_path)
-                    logger.info(f"Dataset successfully uploaded to Supabase Storage: {remote_path}")
-            except Exception as se:
-                logger.warning(f"Supabase Storage upload failed, keeping local copy: {se}")
 
         # Execute ProfilingEngine to generate SemanticProfile
         rows, cols = 0, 0

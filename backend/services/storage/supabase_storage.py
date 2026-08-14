@@ -31,10 +31,15 @@ class SupabaseStorageService:
         self.bucket_name = bucket_name or settings.supabase_bucket or "datasets"
         self._client: Optional[Client] = None
 
+        if self.url:
+            self.url = self.url.strip().rstrip("/")
+            if self.url.endswith("/rest/v1"):
+                self.url = self.url[:-8].rstrip("/")
+
         if self.url and self.key:
             try:
                 self._client = create_client(self.url, self.key)
-                logger.info(f"Supabase Storage initialized for bucket: {self.bucket_name}")
+                logger.info(f"Supabase Storage initialized ({self.url}) for bucket: {self.bucket_name}")
             except Exception as e:
                 logger.warning(f"Failed to initialize Supabase client: {e}")
 
