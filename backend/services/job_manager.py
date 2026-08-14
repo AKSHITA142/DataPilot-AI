@@ -249,7 +249,8 @@ class JobManager:
 
             # 5. Persist final report to database
             final_report_dict = final_state.get("final_report") or {}
-            winning_id = final_report_dict.get("winning_experiment_id") or "exp_1"
+            eval_report_dict = final_state.get("evaluation_report") or {}
+            winning_id = eval_report_dict.get("winner") or final_report_dict.get("winning_experiment_id") or "exp_1"
             html_report_path = final_report_dict.get("report_html_path") or f"storage/reports/{job_id}/report.html"
             
             existing_report = report_repo.get_by_job(job_id)

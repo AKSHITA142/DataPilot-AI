@@ -1,7 +1,12 @@
 import os
 import logging
 from typing import Optional, Dict, Any, Union
-from supabase import create_client, Client
+
+try:
+    from supabase import create_client, Client  # type: ignore # pyrefly: ignore
+except ImportError:
+    create_client = None
+    Client = Any
 
 from backend.core.config import get_settings
 
