@@ -18,6 +18,7 @@ try {
 }
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   async rewrites() {
     return [
       {

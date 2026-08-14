@@ -331,15 +331,15 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Two-column: recent jobs + breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      {/* Two-column: recent jobs + breakdown — matched equal height */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 items-stretch">
 
         {/* Recent Jobs — 2/3 width */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 flex flex-col">
           <SectionLabel>Recent Research Jobs</SectionLabel>
-          <div className="card overflow-hidden">
+          <div className="card flex-1 flex flex-col justify-between overflow-hidden min-h-[380px]">
             {dashLoading ? (
-              <div className="p-4 space-y-3">
+              <div className="p-5 space-y-4 flex-1 flex flex-col justify-center">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <Skeleton className="h-4 w-4 rounded" />
@@ -352,28 +352,31 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : !dash || dash.recent_jobs.length === 0 ? (
-              <EmptyState
-                icon={Briefcase}
-                title="No research jobs yet"
-                description="Upload a CSV dataset and define a mission to start your first automated ML research run."
-                action={
-                  <Link href="/upload">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      icon={<Upload className="w-3.5 h-3.5" />}
-                    >
-                      Start First Run
-                    </Button>
-                  </Link>
-                }
-              />
+              <div className="flex-1 flex items-center justify-center p-6">
+                <EmptyState
+                  icon={Briefcase}
+                  title="No research jobs yet"
+                  description="Upload a CSV dataset and define a mission to start your first automated ML research run."
+                  action={
+                    <Link href="/upload">
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        icon={<Upload className="w-3.5 h-3.5" />}
+                      >
+                        Start First Run
+                      </Button>
+                    </Link>
+                  }
+                />
+              </div>
             ) : (
               <>
                 <motion.div
                   variants={stagger.container}
                   initial="hidden"
                   animate="show"
+                  className="flex-1 divide-y divide-border-subtle"
                 >
                   {paginatedJobs.map((job, i) => (
                     <RecentJobRow
@@ -396,16 +399,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Status breakdown donut & distribution — 1/3 width */}
-        <div>
+        <div className="flex flex-col">
           <SectionLabel>Mission Status Breakdown</SectionLabel>
-          <div className="card p-6 flex flex-col justify-between min-h-[380px]">
+          <div className="card p-6 flex-1 flex flex-col justify-between min-h-[380px]">
             {dashLoading ? (
-              <div className="flex flex-col items-center justify-center h-64 space-y-4">
+              <div className="flex flex-col items-center justify-center flex-1 h-64 space-y-4">
                 <Skeleton className="w-40 h-40 rounded-full" />
                 <Skeleton className="h-4 w-32 rounded" />
               </div>
             ) : pieData.length === 0 ? (
-              <div className="py-8">
+              <div className="flex-1 flex items-center justify-center p-6">
                 <EmptyState
                   icon={Clock}
                   title="No research jobs yet"

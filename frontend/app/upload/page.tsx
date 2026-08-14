@@ -13,6 +13,10 @@ import {
   Zap,
   Target,
   ArrowRight,
+  Layers,
+  TrendingUp,
+  Sliders,
+  CheckCircle2,
 } from "lucide-react";
 
 import { Button } from "@/components/buttons/Button";
@@ -313,76 +317,101 @@ export default function UploadPage() {
           </div>
         </motion.div>
 
-        {/* Task Type Selector */}
+        {/* Task Type Selector — Modern Interactive Checkbox Cards */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.4 }}
           className="w-full mb-6"
         >
-          <label className="text-sm font-semibold text-text flex items-center gap-1.5 mb-2">
-            <Sparkles className="w-4 h-4 text-brand-400" />
-            Problem Type / Machine Learning Task
-          </label>
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-sm font-semibold text-text flex items-center gap-1.5">
+              <Sliders className="w-4 h-4 text-brand-400" />
+              Machine Learning Problem Type
+            </label>
+            <span className="text-[11px] text-text-muted">Select task objective</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               {
-                id: "general",
+                id: "general" as const,
                 title: "General / Auto",
-                desc: "Auto-detect from dataset",
-                icon: "🔄",
+                desc: "Auto-detects target & metrics",
+                badge: "Smart Auto",
+                icon: Sparkles,
+                activeColor: "border-brand-400 bg-brand-500/10 text-brand-400 shadow-[0_0_15px_rgba(18,179,163,0.15)]",
+                iconBg: "bg-brand-500/15 text-brand-400 border-brand-500/30",
               },
               {
-                id: "classification",
+                id: "classification" as const,
                 title: "Classification",
-                desc: "Predict categories / labels",
-                icon: "📊",
+                desc: "Categories, labels & churn",
+                badge: "Precision / F1",
+                icon: Layers,
+                activeColor: "border-indigo-400 bg-indigo-500/10 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.15)]",
+                iconBg: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
               },
               {
-                id: "regression",
+                id: "regression" as const,
                 title: "Regression",
-                desc: "Predict numeric values",
-                icon: "📈",
+                desc: "Numeric value estimation",
+                badge: "R² / RMSE",
+                icon: TrendingUp,
+                activeColor: "border-emerald-400 bg-emerald-500/10 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+                iconBg: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
               },
             ].map((option) => {
               const selected = taskType === option.id;
+              const Icon = option.icon;
+
               return (
                 <button
                   key={option.id}
                   type="button"
-                  onClick={() => setTaskType(option.id as any)}
+                  onClick={() => setTaskType(option.id)}
                   disabled={status === "uploading" || status === "starting"}
                   className={`
-                    p-3 rounded-lg border text-left transition-all duration-200 flex flex-col justify-between
+                    relative p-4 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between cursor-pointer select-none
                     ${
                       selected
-                        ? "bg-brand-500/10 border-brand-400 text-brand-400 ring-1 ring-brand-400/50"
-                        : "bg-surface-2 hover:bg-surface-3 border-border text-text-muted hover:text-text"
+                        ? `${option.activeColor} ring-1 ring-current`
+                        : "bg-surface-2 hover:bg-surface-3 border-border text-text-muted hover:text-text hover:border-border-subtle"
                     }
-                    disabled:opacity-50
+                    disabled:opacity-50 disabled:cursor-not-allowed
                   `}
                 >
-                  <div className="flex items-center justify-between w-full mb-1">
-                    <span className="text-base">{option.icon}</span>
-                    <span
-                      className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ${
+                  {/* Top Row: Icon + Custom Checkbox */}
+                  <div className="flex items-center justify-between w-full mb-2.5">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${option.iconBg}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+
+                    {/* Checkbox indicator */}
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
                         selected
-                          ? "border-brand-400 bg-brand-400"
-                          : "border-border bg-surface-3"
+                          ? "bg-brand-500 border-brand-400 text-[#052620] shadow-sm"
+                          : "border-border bg-surface-3 text-transparent"
                       }`}
                     >
-                      {selected && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-background" />
-                      )}
-                    </span>
+                      <CheckCircle2 className={`w-3.5 h-3.5 ${selected ? "opacity-100" : "opacity-0"}`} />
+                    </div>
                   </div>
+
+                  {/* Text Details */}
                   <div>
-                    <p className={`text-xs font-semibold ${selected ? "text-brand-400" : "text-text"}`}>
-                      {option.title}
-                    </p>
-                    <p className="text-[10px] text-text-muted mt-0.5 leading-tight">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <p className={`text-xs font-bold ${selected ? "text-text" : "text-text"}`}>
+                        {option.title}
+                      </p>
+                    </div>
+                    <p className="text-[11px] text-text-muted leading-tight mb-2">
                       {option.desc}
                     </p>
+                    <span className="inline-block text-[9px] font-mono font-semibold uppercase px-1.5 py-0.5 rounded bg-surface-4 text-text-secondary border border-border-subtle">
+                      {option.badge}
+                    </span>
                   </div>
                 </button>
               );

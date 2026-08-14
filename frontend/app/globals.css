@@ -320,14 +320,17 @@ hr, .divider {
   box-shadow: var(--shadow-lg);
 }
 
-/* ── Accessibility: Reduced Motion ───────────────── */
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+/* ── Hide Next.js Dev Indicator & Overlay Badge ───────────────── */
+nextjs-portal,
+#__next-build-watcher,
+[data-nextjs-toast-wrapper],
+[data-nextjs-dialog-overlay],
+[data-nextjs-route-announcer],
+div[style*="position: fixed; z-index: 9999; bottom:"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 
