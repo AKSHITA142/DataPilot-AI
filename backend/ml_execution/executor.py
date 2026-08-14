@@ -171,8 +171,13 @@ class MLExecutionEngine:
                 except Exception:
                     pass
 
-            # Compute actual training score for honest train_test_gap
-            train_score = float(fitted_pipeline.score(X_train, y_train))
+            # Compute actual training score matching task type for honest train_test_gap
+            if task_type == "classification":
+                train_score = float(fitted_pipeline.score(X_train, y_train))
+            else:
+                from sklearn.metrics import mean_squared_error
+                y_pred_train = fitted_pipeline.predict(X_train)
+                train_score = abs(float(np.sqrt(mean_squared_error(y_train, y_pred_train))))
 
             # 5. Compute Metrics on held-out test split with CV scores
             metrics_result = MetricEngine.compute_metrics(

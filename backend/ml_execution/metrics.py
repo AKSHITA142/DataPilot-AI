@@ -47,13 +47,16 @@ class MetricEngine:
             metrics["f1_score"] = round(f1, 4)
             metrics["balanced_accuracy"] = round(bal_acc, 4)
 
-            # ROC-AUC if proba available or binary
+            # ROC-AUC if proba available
             if y_proba is not None:
                 try:
-                    if len(np.unique(y_true)) == 2:
-                        auc = float(roc_auc_score(y_true, y_proba[:, 1]))
-                    else:
-                        auc = float(roc_auc_score(y_true, y_proba, multi_class="ovr", average="weighted"))
+                    unique_classes = np.unique(y_true)
+                    if len(unique_classes) == 2:
+                        pos_idx = 1 if (y_proba.ndim > 1 and y_proba.shape[1] > 1) else 0
+                        auc = float(roc_auc_score(y_true, y_proba[:, pos_idx]))
+                    elif len(unique_classes) > 2:
+                        all_labels = np.arange(y_proba.shape[1])
+                        auc = float(roc_auc_score(y_true, y_proba, multi_class="ovr", average="weighted", labels=all_labels))
                     metrics["roc_auc"] = round(auc, 4)
                 except Exception:
                     pass
