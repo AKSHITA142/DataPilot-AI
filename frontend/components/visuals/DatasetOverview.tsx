@@ -4,7 +4,7 @@ import React from "react";
 import { Badge } from "@/components/badges/Badge";
 import { GlassCard } from "@/components/cards/GlassCard";
 import { FileText, Database, Target, AlertTriangle, Layers, BarChart2 } from "lucide-react";
-import type { Dataset } from "@/types/api";
+import type { Dataset, ColumnProfile, QualityWarning } from "@/types/api";
 import { formatBytes } from "@/utils/formatters";
 
 interface DatasetOverviewProps {
@@ -12,19 +12,47 @@ interface DatasetOverviewProps {
   className?: string;
 }
 
+interface ColumnData extends Partial<ColumnProfile> {
+  name: string;
+  type?: string;
+  dtype?: string;
+  missing_pct?: number;
+  missing_percent?: number;
+  missing_count?: number;
+  distinct_count?: number | string;
+  unique_count?: number;
+  sample_values?: (string | number | null)[];
+  mean?: number;
+  std?: number;
+  min?: number;
+  max?: number;
+  skewness?: number | null;
+  encoding_recommendation?: string;
+  scaling_recommendation?: string;
+}
+
+interface QualityIssueItem extends Partial<QualityWarning> {
+  problem?: string;
+  warning_type?: string;
+  severity?: "low" | "medium" | "high";
+  message?: string;
+  description?: string;
+  affected_columns?: string[];
+}
+
 export function DatasetOverview({ dataset, className = "" }: DatasetOverviewProps) {
-  const profile: any = dataset.profile || {};
-  const datasetSummary = profile.dataset_summary || {};
-  const columnProfiles = profile.column_profiles || [];
-  const qualityIssues = profile.quality_issues || profile.quality_warnings || [];
+  const profile = (dataset.profile || {}) as Record<string, unknown>;
+  const datasetSummary = (profile.dataset_summary || {}) as Record<string, unknown>;
+  const columnProfiles: ColumnData[] = (profile.column_profiles || []) as ColumnData[];
+  const qualityIssues: QualityIssueItem[] = (profile.quality_issues || profile.quality_warnings || []) as QualityIssueItem[];
 
-  const targetInfo = datasetSummary.target || {};
-  const targetCol = targetInfo.target_column || profile.detected_target_column || "N/A";
-  const taskType = targetInfo.task_type || profile.detected_task_type || "N/A";
+  const targetInfo = (datasetSummary.target || {}) as Record<string, unknown>;
+  const targetCol = String(targetInfo.target_column || profile.detected_target_column || "N/A");
+  const taskType = String(targetInfo.task_type || profile.detected_task_type || "N/A");
 
-  const rows = dataset.row_count || datasetSummary.rows || 0;
-  const cols = dataset.column_count || datasetSummary.columns || 0;
-  const fileSize = dataset.file_size_bytes || datasetSummary.file_size_bytes || 0;
+  const rows = dataset.row_count || (datasetSummary.rows as number) || (profile.row_count as number) || 0;
+  const cols = dataset.column_count || (datasetSummary.columns as number) || (profile.column_count as number) || 0;
+  const fileSize = dataset.file_size_bytes || (datasetSummary.file_size_bytes as number) || (profile.file_size_bytes as number) || 0;
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -126,7 +154,7 @@ export function DatasetOverview({ dataset, className = "" }: DatasetOverviewProp
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50 text-gray-300">
-                {columnProfiles.map((col: any) => {
+                {columnProfiles.map((col: ColumnData) => {
                   const missingPct = col.missing_pct ?? col.missing_percent ?? 0;
                   const missingCount = col.missing_count ?? 0;
                   const distinctCount = col.distinct_count ?? col.unique_count ?? "N/A";
@@ -208,7 +236,7 @@ export function DatasetOverview({ dataset, className = "" }: DatasetOverviewProp
             Detected Data Quality Issues ({qualityIssues.length})
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {qualityIssues.map((issue: any, idx: number) => (
+            {qualityIssues.map((issue: QualityIssueItem, idx: number) => (
               <div key={idx} className="p-3 bg-gray-900/60 rounded-lg border border-amber-500/20 text-xs">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-semibold text-gray-200">
