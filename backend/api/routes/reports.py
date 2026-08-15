@@ -32,12 +32,14 @@ def compute_composite_and_confidence(inner_metrics: dict) -> tuple[float, float,
 
     if clf_scores:
         if not primary_name:
-            if "f1_score" in inner_metrics or "f1" in inner_metrics:
-                primary_name = "F1-Score"
-            elif "precision" in inner_metrics:
-                primary_name = "Precision"
+            if "primary_metric_name" in inner_metrics:
+                primary_name = str(inner_metrics["primary_metric_name"])
             elif "recall" in inner_metrics:
                 primary_name = "Recall"
+            elif "precision" in inner_metrics:
+                primary_name = "Precision"
+            elif "f1_score" in inner_metrics or "f1" in inner_metrics:
+                primary_name = "F1-Score"
             elif "accuracy" in inner_metrics:
                 primary_name = "Accuracy"
             else:

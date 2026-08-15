@@ -5,20 +5,30 @@ class DomainMetricResolver:
     """
     Senior Data Scientist Metric Resolver:
     Dynamically determines the optimal evaluation metric based on problem domain,
-    Type I (False Positive) vs Type II (False Negative) risk costs, and class imbalance.
+    Type I (False Positive) vs Type II (False Negative) risk costs, class imbalance, and target statistics.
     """
 
-    HIGH_PRECISION_KEYWORDS = {
-        "loan", "credit", "fraud", "default", "approval", "spam",
-        "financial", "transaction", "bank", "risk_approval", "underwriting",
-        "precision", "type1", "false_positive"
+    # Type II Error Penalty: False Negatives carry high cost (Missing a risk/default/disease)
+    HIGH_TYPE2_KEYWORDS = {
+        "loan", "credit", "default", "approval", "underwriting", "borrower",
+        "fraud", "medical", "disease", "patient", "cancer", "diagnosis", "outcome",
+        "health", "healthcare", "hospital", "clinical", "tumor", "blood", "heart",
+        "stroke", "diabetes", "glucose", "insulin", "bmi", "biopsy", "radiology",
+        "lesion", "icu", "survival", "survived", "survive", "mortality", "death",
+        "illness", "symptom", "virus", "infection", "cardiac", "churn", "attrition",
+        "hazard", "danger", "safety", "alert", "recall", "type2", "false_negative", "f2"
     }
 
-    HIGH_RECALL_KEYWORDS = {
-        "health", "healthcare", "medical", "disease", "patient", "cancer",
-        "diagnosis", "air", "air_quality", "aqi", "pollution", "hazard",
-        "danger", "churn", "attrition", "safety", "inspection", "alert", "warning",
-        "recall", "type2", "false_negative"
+    # Type I Error Penalty: False Positives carry high cost (False Alarm / Wrong Accusation)
+    HIGH_TYPE1_KEYWORDS = {
+        "spam", "moderation", "ban", "penalty", "accusation",
+        "precision", "type1", "false_positive", "f0.5"
+    }
+
+    # Outlier-sensitive regression domains (financial, real estate, pricing)
+    OUTLIER_REGRESSION_KEYWORDS = {
+        "price", "cost", "salary", "income", "valuation", "house", "home",
+        "real_estate", "property", "mae"
     }
 
     @classmethod
@@ -26,50 +36,72 @@ class DomainMetricResolver:
         cls,
         task_type: str,
         user_goal: str = "",
+        target_column: str = "",
         domain: str = "",
+        column_names: Optional[list] = None,
         is_imbalanced: bool = False,
+        has_proba: bool = True,
     ) -> Tuple[str, str, str]:
         """
         Returns (metric_key, metric_display_name, rationale_explanation).
-
-        - High Type I Error Cost (False Positives) -> Precision
-        - High Type II Error Cost (False Negatives) -> Recall
-        - Imbalanced Dataset (<25% minority) -> F1-Score / Balanced Accuracy
-        - General Classification -> F1-Score
-        - Regression -> RMSE
         """
+        cols_text = " ".join(column_names) if column_names else ""
+        text = f"{user_goal} {target_column} {domain} {cols_text}".lower()
+
+        # ---------------- REGRESSION TASKS ----------------
         if task_type == "regression":
-            return "rmse", "RMSE", "Root Mean Squared Error measures prediction variance on continuous targets."
-
-        text = f"{user_goal} {domain}".lower()
-
-        # 1. Check High Type I Error Penalty (False Positives -> Precision)
-        if any(kw in text for kw in cls.HIGH_PRECISION_KEYWORDS):
+            if any(kw in text for kw in cls.OUTLIER_REGRESSION_KEYWORDS):
+                return (
+                    "mae",
+                    "MAE",
+                    "Outlier-sensitive financial/pricing domain detected. Mean Absolute Error (MAE) evaluates average prediction error robustly against extreme outliers."
+                )
+            if "r2" in text or "variance" in text:
+                return (
+                    "r2",
+                    "R² Score",
+                    "Explained variance (R²) selected to evaluate goodness of fit and proportion of variance explained by the model."
+                )
             return (
-                "precision",
-                "Precision",
-                "High Type I error cost (False Positives). Precision optimizes against false approvals."
+                "rmse",
+                "RMSE",
+                "Root Mean Squared Error (RMSE) measures prediction error variance on continuous numeric targets."
             )
 
-        # 2. Check High Type II Error Penalty (False Negatives -> Recall)
-        if any(kw in text for kw in cls.HIGH_RECALL_KEYWORDS):
+        # ---------------- CLASSIFICATION TASKS ----------------
+        # 1. Type II Risk (False Negatives: Loan Default, Medical, Fraud, Churn)
+        if any(kw in text for kw in cls.HIGH_TYPE2_KEYWORDS):
             return (
                 "recall",
                 "Recall",
-                "High Type II error cost (False Negatives). Recall optimizes against missed critical alerts."
+                "High Type II Error Risk (False Negatives): In loan underwriting, risk assessment, and medical screening, approving a defaulting borrower or missing a critical risk carries a severe financial/safety penalty. Recall is selected as the primary metric to minimize missed risk cases."
             )
 
-        # 3. Check Imbalanced Datasets (F1-Score / Balanced Accuracy)
-        if is_imbalanced:
+        # 2. Type I Risk (False Positives: Spam, Moderation, False Alarms)
+        if any(kw in text for kw in cls.HIGH_TYPE1_KEYWORDS):
             return (
-                "f1_score",
-                "F1-Score",
-                "Imbalanced class distribution detected. F1-Score balances Precision and Recall."
+                "precision",
+                "Precision",
+                "High Type I Error Risk (False Positives): Incorrectly flagging legitimate items causes severe user friction. Precision is selected as the primary metric to ensure high confidence in positive alerts."
             )
 
-        # 4. Standard Classification Default -> F1-Score
+        # 3. Imbalanced Class Distribution (<20% minority class)
+        if is_imbalanced:
+            if has_proba:
+                return (
+                    "roc_auc",
+                    "ROC-AUC",
+                    "Imbalanced class distribution detected (<20% minority). ROC-AUC is selected to evaluate discriminative ranking capability across all decision thresholds without majority-class bias."
+                )
+            return (
+                "balanced_accuracy",
+                "Balanced Accuracy",
+                "Imbalanced class distribution detected. Balanced Accuracy evaluates mean recall across all classes."
+            )
+
+        # 4. Standard Balanced Classification Default -> F1-Score
         return (
             "f1_score",
             "F1-Score",
-            "Harmonic mean of Precision and Recall for balanced classification performance."
+            "Harmonic mean of Precision and Recall for balanced multi-class classification performance."
         )

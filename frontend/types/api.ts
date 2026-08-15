@@ -106,6 +106,7 @@ export interface ExperimentResult {
   status: "pending" | "running" | "completed" | "failed";
   primary_metric_name?: string;
   primary_metric_value?: number;
+  primary_metric_rationale?: string;
   composite_score?: number;
   accuracy?: number;
   precision?: number;

@@ -58,6 +58,7 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
         "status": exp.status or "completed",
         "primary_metric_name": primary_metric_name,
         "primary_metric_value": primary_metric_value,
+        "primary_metric_rationale": inner_metrics.get("primary_metric_rationale") if isinstance(inner_metrics, dict) else None,
         "composite_score": composite_score,
         # Flatten individual metrics to top-level
         "accuracy": inner_metrics.get("accuracy") if isinstance(inner_metrics, dict) else None,

@@ -180,6 +180,7 @@ class MLExecutionEngine:
                 train_score = abs(float(np.sqrt(mean_squared_error(y_train, y_pred_train))))
 
             # 5. Compute Metrics on held-out test split with CV scores
+            user_goal_text = mission_brief.user_goal if (mission_brief and hasattr(mission_brief, "user_goal")) else ""
             metrics_result = MetricEngine.compute_metrics(
                 y_true=y_test,
                 y_pred=y_pred_test,
@@ -187,6 +188,9 @@ class MLExecutionEngine:
                 task_type=task_type,
                 cv_scores=cv_scores,
                 train_score=train_score,
+                user_goal=user_goal_text,
+                target_column=target_column,
+                column_names=list(X.columns) if hasattr(X, "columns") else None,
             )
 
             # 6. Extract Feature Importances with real column names
