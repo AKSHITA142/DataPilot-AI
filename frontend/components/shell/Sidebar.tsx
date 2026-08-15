@@ -209,7 +209,7 @@ export function Sidebar() {
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
             <Image
               src="/icon.svg"
-              alt="DataPilot-AI"
+              alt="Evidra"
               width={28}
               height={28}
               priority
@@ -224,7 +224,7 @@ export function Sidebar() {
                   transition={{ duration: 0.18 }}
                   className="font-bold text-sm tracking-tight text-text whitespace-nowrap overflow-hidden"
                 >
-                  DataPilot<span className="text-brand-400 font-extrabold">-AI</span>
+                  Evidra
                 </motion.span>
               )}
             </AnimatePresence>
@@ -424,13 +424,13 @@ export function MobileDrawer({
               <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
                 <Image
                   src="/icon.svg"
-                  alt="DataPilot-AI"
+                  alt="Evidra"
                   width={28}
                   height={28}
                   className="w-7 h-7 rounded-lg shrink-0 shadow-sm"
                 />
                 <span className="font-bold text-sm text-text">
-                  DataPilot<span className="text-brand-400">-AI</span>
+                  Evidra
                 </span>
               </Link>
               <button

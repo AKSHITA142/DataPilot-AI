@@ -130,7 +130,7 @@ export default function UploadPage() {
             Upload Dataset & Launch Mission
           </h1>
           <p className="text-text-muted text-sm leading-relaxed max-w-md mx-auto">
-            Provide your raw CSV and research objective. DataPilot-AI handles profiling, preprocessing, pipeline execution, and model optimization.
+            Provide your raw CSV and research objective. Evidra handles profiling, preprocessing, pipeline execution, and model optimization.
           </p>
         </motion.div>
 
