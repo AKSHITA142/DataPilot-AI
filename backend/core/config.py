@@ -62,14 +62,15 @@ class Settings(BaseSettings):
             raw_list = [str(origin).strip() for origin in self.cors_origins if str(origin).strip()]
 
         is_dev = str(self.environment).strip().lower() in ("development", "dev", "local")
-        if is_dev:
-            return raw_list if raw_list else ["*"]
+        
+        # When CORS origins contains wildcard '*', replace with explicit localhost URLs so allow_credentials=True does not violate CORS spec
+        if "*" in raw_list:
+            explicit_defaults = [self.frontend_url, "http://localhost:3000", "http://127.0.0.1:3000"]
+            non_wildcard = [o for o in raw_list if o != "*"]
+            combined = list(dict.fromkeys(explicit_defaults + non_wildcard))
+            return combined
 
-        # Non-development environment: Filter out wildcard "*" and enforce explicit allow-list
-        filtered = [origin for origin in raw_list if origin != "*"]
-        if not filtered:
-            return [self.frontend_url]
-        return filtered
+        return raw_list if raw_list else [self.frontend_url, "http://localhost:3000", "http://127.0.0.1:3000"]
 
 
 @lru_cache()
