@@ -352,9 +352,11 @@ def get_report_html(job_id: str, db: Session = Depends(get_db)):
 
     fallback_html = f"""<!DOCTYPE html>
 <html>
-<body style="background:#0f172a;color:#f8fafc;font-family:sans-serif;padding:20px;">
-    <h2>DataPilot-AI Report</h2>
-    <p>Report is being generated or finalized for job <code>{job_id}</code>...</p>
+<body style="background:#111827;color:#F9FAFB;font-family:sans-serif;padding:32px;text-align:center;">
+    <div style="background:#172554;border:1px solid #3B82F6;border-radius:12px;padding:24px;max-width:600px;margin:40px auto;">
+        <h2 style="color:#93C5FD;margin-top:0;">DataPilot-AI Report</h2>
+        <p style="color:#9CA3AF;">Report is being generated or finalized for job <code style="color:#60A5FA;">{job_id}</code>...</p>
+    </div>
 </body>
 </html>"""
     return PlainTextResponse(content=fallback_html, media_type="text/html")

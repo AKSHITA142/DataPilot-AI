@@ -125,14 +125,18 @@ class HTMLReportGenerator:
     <title>DataPilot-AI Research & Audit Report - {winning_id}</title>
     <style>
         :root {{
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
-            --success-color: #34d399;
-            --warning-color: #fbbf24;
+            --bg-color: #111827;
+            --hero-bg: #172554;
+            --card-bg: rgba(23, 37, 84, 0.55);
+            --border-color: rgba(59, 130, 246, 0.25);
+            --accent-line: #3B82F6;
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --main-title: #93C5FD;
+            --section-heading: #60A5FA;
+            --metric-value: #60A5FA;
+            --positive-result: #34D399;
+            --warning-color: #FBBF24;
         }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -149,13 +153,23 @@ class HTMLReportGenerator:
         .header {{
             text-align: center;
             margin-bottom: 32px;
+            background: var(--hero-bg);
+            border: 1px solid var(--accent-line);
+            border-radius: 14px;
+            padding: 32px 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }}
         .header h1 {{
             font-size: 2.2rem;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin: 0 0 8px 0;
+            color: var(--main-title);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }}
+        .header p {{
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }}
         .card {{
             background: var(--card-bg);
@@ -164,22 +178,24 @@ class HTMLReportGenerator:
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }}
         h2 {{
-            color: var(--accent-color);
+            color: var(--section-heading);
             margin-top: 0;
             font-size: 1.25rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--accent-line);
             padding-bottom: 8px;
+            font-weight: 700;
         }}
         .mission-box {{
-            background: rgba(56, 189, 248, 0.08);
-            border-left: 4px solid var(--accent-color);
-            padding: 12px 16px;
-            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent-line);
+            padding: 14px 18px;
+            border-radius: 6px;
             margin-bottom: 16px;
             font-size: 0.95rem;
+            color: #E0E7FF;
         }}
         .metrics-grid {{
             display: grid;
@@ -188,7 +204,7 @@ class HTMLReportGenerator:
             margin-top: 16px;
         }}
         .metric-card {{
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(17, 24, 39, 0.85);
             border-radius: 8px;
             padding: 16px;
             text-align: center;
@@ -196,13 +212,15 @@ class HTMLReportGenerator:
         }}
         .metric-value {{
             font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--success-color);
+            font-weight: 800;
+            color: var(--metric-value);
         }}
         .metric-label {{
             font-size: 0.75rem;
             color: var(--text-secondary);
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
         }}
         table {{
             width: 100%;
@@ -216,23 +234,27 @@ class HTMLReportGenerator:
             border-bottom: 1px solid var(--border-color);
         }}
         th {{
-            color: var(--text-secondary);
+            color: var(--section-heading);
             text-transform: uppercase;
             font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(17, 24, 39, 0.4);
         }}
         .winner-row {{
             background: rgba(52, 211, 153, 0.12);
         }}
         .badge {{
-            background: rgba(56, 189, 248, 0.2);
-            color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--main-title);
+            border: 1px solid rgba(59, 130, 246, 0.4);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 0.75rem;
         }}
         .badge-success {{
             background: rgba(52, 211, 153, 0.2);
-            color: var(--success-color);
+            color: var(--positive-result);
+            border: 1px solid rgba(52, 211, 153, 0.4);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -247,6 +269,14 @@ class HTMLReportGenerator:
         }}
         li {{
             margin-bottom: 8px;
+        }}
+        code {{
+            background: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--main-title);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.85em;
         }}
     </style>
 </head>
