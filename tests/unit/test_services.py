@@ -15,14 +15,20 @@ from backend.schemas.enums import JobStatus
 from backend.core.exceptions import NotFoundException, ValidationException
 
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from backend.database.base import Base
+
+_test_engine = create_engine("sqlite:///:memory:", echo=False)
+
 @pytest.fixture(scope="module", autouse=True)
 def setup_database():
-    init_db()
-
+    Base.metadata.create_all(bind=_test_engine)
 
 @pytest.fixture
 def db_session():
-    session = SessionLocal()
+    Session = sessionmaker(bind=_test_engine)
+    session = Session()
     try:
         yield session
     finally:
