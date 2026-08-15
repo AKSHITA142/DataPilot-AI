@@ -91,8 +91,46 @@ class DomainMetricResolver:
             )
 
         # ---------------- CLASSIFICATION TASKS ----------------
-        # Priority 1: Email / Spam & Phishing Domain -> Precision (High Type I Error Risk)
-        # Check if email/spam features exist in columns or user goal
+        user_goal_lower = user_goal.lower()
+
+        # Priority 0: Explicit User Intent in Goal / Prompt
+        # 1. Both Precision and Recall important -> F1-Score
+        if ("precision" in user_goal_lower and "recall" in user_goal_lower) or "f1" in user_goal_lower or "harmonic" in user_goal_lower:
+            return (
+                "f1_score",
+                "F1-Score",
+                "User objective explicitly prioritizes balancing Precision and Recall. F1-Score is selected as the primary optimization metric."
+            )
+        # 2. False Positives more costly -> Precision
+        if any(w in user_goal_lower for w in ["false positive", "precision", "type 1", "type i error"]):
+            return (
+                "precision",
+                "Precision",
+                "User objective explicitly prioritizes minimizing False Positives (Type I Error). Precision is selected as the primary optimization metric."
+            )
+        # 3. False Negatives more costly -> Recall
+        if any(w in user_goal_lower for w in ["false negative", "recall", "sensitivity", "type 2", "type ii error"]):
+            return (
+                "recall",
+                "Recall",
+                "User objective explicitly prioritizes minimizing False Negatives (Type II Error). Recall is selected as the primary optimization metric."
+            )
+        # 4. ROC-AUC / AUC
+        if "roc" in user_goal_lower or "auc" in user_goal_lower:
+            return (
+                "roc_auc",
+                "ROC-AUC",
+                "User objective explicitly requested ROC-AUC ranking metric across all classification thresholds."
+            )
+        # 5. Accuracy on balanced data
+        if "accuracy" in user_goal_lower and not is_imbalanced:
+            return (
+                "accuracy",
+                "Accuracy",
+                "User objective explicitly requested overall classification Accuracy on a balanced dataset."
+            )
+
+        # Priority 1: High False Positive Cost Domains -> Precision
         spam_matches = [kw for kw in cls.SPAM_DOMAIN_KEYWORDS if kw in text or any(kw in c for c in cols_list)]
         if spam_matches and not any(kw in text for kw in cls.MEDICAL_DOMAIN_KEYWORDS):
             return (
@@ -101,7 +139,8 @@ class DomainMetricResolver:
                 f"Email Spam & Communication Domain detected from dataset features ({', '.join(spam_matches[:3])}). High Type I Error Risk (False Positives): Incorrectly moving legitimate emails to spam causes severe user harm. Precision is selected as the primary metric."
             )
 
-        # Priority 2: Medical & Healthcare Diagnosis Domain -> Recall (High Type II Error Risk)
+        # Priority 2: High False Negative Cost Domains -> Recall
+        # (Medical, Healthcare, Credit Default, Fraud, Churn)
         med_matches = [kw for kw in cls.MEDICAL_DOMAIN_KEYWORDS if kw in text or any(kw in c for c in cols_list)]
         if med_matches:
             return (
@@ -110,7 +149,6 @@ class DomainMetricResolver:
                 f"Healthcare & Medical Diagnosis Domain detected from dataset features ({', '.join(med_matches[:3])}). High Type II Error Risk (False Negatives): Missing a medical condition or disease carries a critical health penalty. Recall is selected as the primary metric."
             )
 
-        # Priority 3: Credit / Loan Underwriting Domain -> Recall
         credit_matches = [kw for kw in cls.CREDIT_LOAN_KEYWORDS if kw in text or any(kw in c for c in cols_list)]
         if credit_matches:
             return (
@@ -119,7 +157,6 @@ class DomainMetricResolver:
                 f"Financial Credit & Loan Underwriting Domain detected from dataset features ({', '.join(credit_matches[:3])}). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults."
             )
 
-        # Priority 4: Fraud & Cyber-Security Domain -> Recall
         fraud_matches = [kw for kw in cls.FRAUD_KEYWORDS if kw in text or any(kw in c for c in cols_list)]
         if fraud_matches:
             return (
@@ -128,7 +165,6 @@ class DomainMetricResolver:
                 f"Fraud & Security Domain detected from dataset features ({', '.join(fraud_matches[:3])}). High Type II Error Risk (False Negatives): Missing a fraudulent transaction results in direct financial liability. Recall is selected to maximize fraud detection."
             )
 
-        # Priority 5: Customer Churn Domain -> Recall
         churn_matches = [kw for kw in cls.CHURN_KEYWORDS if kw in text or any(kw in c for c in cols_list)]
         if churn_matches:
             return (
@@ -137,21 +173,21 @@ class DomainMetricResolver:
                 f"Customer Churn & Retention Domain detected from dataset features ({', '.join(churn_matches[:3])}). High Type II Error Risk (False Negatives): Missing an at-risk customer leads to revenue loss. Recall is selected to capture all potential churners."
             )
 
-        # Priority 6: Imbalanced Class Distribution (<20% minority class) with generic feature names
+        # Priority 3: Highly Imbalanced Class Distribution (<20% minority class) -> ROC-AUC / Balanced Accuracy (Not Accuracy Alone)
         if is_imbalanced:
             if has_proba:
                 return (
                     "roc_auc",
                     "ROC-AUC",
-                    "Imbalanced class distribution detected (<20% minority) on generic features. ROC-AUC is selected to evaluate discriminative ranking capability across all decision thresholds without majority-class bias."
+                    "Imbalanced class distribution detected (<20% minority) on generic features. ROC-AUC is selected to evaluate discriminative ranking capability across all decision thresholds without majority-class bias (rejecting naive accuracy)."
                 )
             return (
                 "balanced_accuracy",
                 "Balanced Accuracy",
-                "Imbalanced class distribution detected on generic features. Balanced Accuracy evaluates mean recall across all classes."
+                "Imbalanced class distribution detected on generic features. Balanced Accuracy evaluates mean recall across all classes to prevent majority-class bias."
             )
 
-        # Priority 7: Standard Balanced Classification Default -> F1-Score
+        # Priority 4: Balanced Classes + Both Errors Equally Important -> F1-Score / Accuracy
         return (
             "f1_score",
             "F1-Score",
