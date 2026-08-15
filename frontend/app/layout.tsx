@@ -18,29 +18,16 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "DataPilot-AI — Autonomous Data Science Research Engine",
-    template: "%s | DataPilot-AI",
+    default: "Evindra — Autonomous ML Research",
+    template: "%s | Evindra",
   },
   description:
-    "DataPilot-AI autonomously profiles your dataset, runs multi-model experiments, and delivers a final recommendation — all in real time. Upload a CSV and watch your AI data scientist work.",
-  keywords: [
-    "data science",
-    "machine learning",
-    "AutoML",
-    "AI research",
-    "automated ML",
-    "data analysis",
-  ],
-  authors: [{ name: "DataPilot-AI Team" }],
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
-  },
+    "Evindra autonomously profiles datasets, plans and runs ML experiments, evaluates evidence, and delivers research recommendations in real time.",
+  keywords: ["machine learning", "AI research", "AutoML", "data science", "LangGraph"],
+  authors: [{ name: "Evindra" }],
   openGraph: {
-    title: "DataPilot-AI — Autonomous Data Science Research Engine",
-    description:
-      "Upload a CSV and let AI run your entire data science pipeline automatically.",
+    title: "Evindra — Autonomous ML Research",
+    description: "Your AI research team, running in a loop.",
     type: "website",
   },
 };
@@ -55,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`dark ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`dark bg-bg ${inter.variable} ${jetbrainsMono.variable}`}>
       <body className={`${inter.className} antialiased bg-bg text-text min-h-screen`}>
         <Providers>
           <ShellLayout>{children}</ShellLayout>

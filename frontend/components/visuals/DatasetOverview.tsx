@@ -12,7 +12,7 @@ interface DatasetOverviewProps {
   className?: string;
 }
 
-interface ColumnData extends Partial<ColumnProfile> {
+interface ColumnData extends Omit<Partial<ColumnProfile>, "distinct_count"> {
   name: string;
   type?: string;
   dtype?: string;
