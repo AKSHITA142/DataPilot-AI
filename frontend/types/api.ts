@@ -214,6 +214,7 @@ export interface StartJobResponse {
 export interface DashboardData {
   total_jobs: number;
   completed_jobs: number;
-  recent_jobs: Job[];
   total_experiments: number;
+  status_counts?: Record<string, number>;
+  recent_jobs: Job[];
 }

@@ -2153,3 +2153,68 @@ exported_artifacts.metadata
 2026-08-15 10:47:11,605 - datapilot.services.dataset_service - INFO - Dataset 'test_dataset.csv' saved (51 bytes, SHA256=b5c8ca3bccf9...)
 2026-08-15 10:47:11,618 - datapilot.services.dataset_service - INFO - Dataset 'sample_job_ds.csv' saved (23 bytes, SHA256=8fac3c1a9cdf...)
 2026-08-15 10:47:11,632 - datapilot.profiling.loader - INFO - Large dataset detected (100 rows). Sampling first 20 rows for memory safety.
+2026-08-15 11:45:08,403 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 11:45:36,737 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 11:45:36,740 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 11:45:36,763 - datapilot.api - INFO - [5eb9697e-7fe9-45e8-99c8-ea95e99f9de9] OPTIONS /api/v1/dashboard - Status: 200 (1.18ms)
+2026-08-15 11:45:39,054 - datapilot.api - INFO - [d3eb48e9-359b-4bd8-896d-e774d5212fae] GET /api/v1/dashboard - Status: 200 (2283.24ms)
+2026-08-15 11:47:00,879 - datapilot.api - INFO - [3ff6639c-e35b-4867-af9a-4346b12acef4] OPTIONS /api/v1/datasets - Status: 200 (3.40ms)
+2026-08-15 11:47:11,438 - datapilot.api - INFO - [5b61d6b2-a04c-43e7-ac4a-ae518ce28877] GET /api/v1/dashboard - Status: 200 (10563.37ms)
+2026-08-15 11:47:12,537 - datapilot.api - INFO - [8ddb7e78-049c-48c6-a539-3560a8a534e5] GET /api/v1/datasets - Status: 200 (11653.41ms)
+2026-08-15 11:48:37,676 - datapilot.api - INFO - [5b667722-b326-4811-bd78-cc6d4d291de4] GET /api/v1/datasets - Status: 200 (4231.29ms)
+2026-08-15 11:48:41,857 - datapilot.api - INFO - [0df4b2f2-4dfb-4220-a75c-97ba908e2175] GET /api/v1/dashboard - Status: 200 (8413.33ms)
+2026-08-15 11:52:19,951 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 11:52:22,727 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 11:52:37,282 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 11:52:37,284 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 11:52:48,300 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 11:52:50,404 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 11:53:17,105 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 11:53:17,105 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 11:54:55,044 - datapilot.api - INFO - [10d09fe3-5283-4659-8095-63e5a326037b] GET /api/v1/dashboard - Status: 200 (13145.88ms)
+2026-08-15 11:57:13,870 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 11:57:16,675 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 11:57:41,530 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 11:57:41,531 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 12:01:26,815 - datapilot.api - INFO - [a3cddd19-f265-4b32-b46a-1298bdde8881] OPTIONS /api/v1/dashboard - Status: 200 (10.48ms)
+2026-08-15 12:01:26,818 - datapilot.api - INFO - [0fbcd164-d621-4ca7-a77d-8cafa27c04ab] OPTIONS /api/v1/datasets - Status: 200 (15.15ms)
+2026-08-15 12:01:29,125 - datapilot.api - INFO - [b712a236-3076-4a44-9ac8-3f649bf43dc9] GET /api/v1/dashboard - Status: 200 (2304.48ms)
+2026-08-15 12:01:30,027 - datapilot.api - INFO - [a3ed6cb2-84f4-4a1c-b341-9e290215bedf] GET /api/v1/datasets - Status: 200 (2884.88ms)
+2026-08-15 12:01:31,710 - datapilot.api - INFO - [a0019598-a503-443c-8011-da46e24b9f2a] GET /api/v1/datasets - Status: 200 (4889.90ms)
+2026-08-15 12:01:33,566 - datapilot.api - INFO - [26c701fe-66b2-46f1-b053-02186ca35795] GET /api/v1/dashboard - Status: 200 (6424.28ms)
+2026-08-15 12:03:19,201 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 12:03:21,615 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 12:03:41,950 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:03:42,034 - datapilot.api - INFO - [91a0e2df-9204-4c68-966b-d1846f887819] GET / - Status: 200 (6.66ms)
+2026-08-15 12:03:42,034 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:03:42,037 - datapilot.api - INFO - [579e9641-a03b-42bc-916f-ecd34702a101] GET /api/v1/health - Status: 200 (1.35ms)
+2026-08-15 12:03:42,037 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:03:42,038 - datapilot.api - INFO - [30d6e2bc-82bb-4288-b922-f533a4c58a68] GET /api/v1/health - Status: 200 (0.63ms)
+2026-08-15 12:03:42,039 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:03:42,040 - datapilot.api - INFO - [1f922721-674f-498e-9e43-07d416f7b5bb] GET / - Status: 200 (0.35ms)
+2026-08-15 12:03:42,040 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:03:42,041 - datapilot.api - INFO - [ad701f2c-d37e-4110-8d84-66b468c3c6cd] GET /api/v1/health - Status: 200 (0.64ms)
+2026-08-15 12:03:42,042 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:03:42,043 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-15 12:03:42,043 - datapilot.api - INFO - [e1b659e3-73e7-4adb-a774-3a176ea90c16] GET /api/v1/health/error-test - Status: 404 (0.42ms)
+2026-08-15 12:03:42,043 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-15 12:03:53,212 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:03:53,212 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 12:04:37,185 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 12:04:39,339 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 12:05:01,364 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:05:01,366 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 12:05:06,354 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:05:06,395 - datapilot.api - INFO - [f04fc90a-f71c-4109-8341-ddcfb526c381] GET / - Status: 200 (5.77ms)
+2026-08-15 12:05:06,395 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:05:06,398 - datapilot.api - INFO - [3e2b2214-a344-4085-beb4-be6b806cbb79] GET /api/v1/health - Status: 200 (1.41ms)
+2026-08-15 12:05:06,398 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:05:06,400 - datapilot.api - INFO - [4c6970af-5195-4e03-9931-68020d6c9b5b] GET /api/v1/health - Status: 200 (0.63ms)
+2026-08-15 12:05:06,400 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:05:06,401 - datapilot.api - INFO - [f210c9d5-7af5-4993-8a20-610bd72dc63f] GET / - Status: 200 (0.36ms)
+2026-08-15 12:05:06,401 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:05:06,403 - datapilot.api - INFO - [a96bd53d-213d-401d-9114-2770e98fb3ca] GET /api/v1/health - Status: 200 (0.66ms)
+2026-08-15 12:05:06,403 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:05:06,405 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-15 12:05:06,405 - datapilot.api - INFO - [dc6a36dc-cc27-4c3c-b39d-51a8c2e5624c] GET /api/v1/health/error-test - Status: 404 (0.53ms)
+2026-08-15 12:05:06,405 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health/error-test "HTTP/1.1 404 Not Found"

@@ -27,11 +27,21 @@ def get_dashboard(db: Session = Depends(get_db)):
     )
     total_experiments = db.query(func.count(ExperimentModel.id)).scalar() or 0
 
-    # Fetch the 10 most recent jobs (ordered by creation time)
+    # Aggregate status counts across all jobs in the database
+    status_counts_raw = (
+        db.query(JobModel.status, func.count(JobModel.id))
+        .group_by(JobModel.status)
+        .all()
+    )
+    status_counts = {
+        (s.value if hasattr(s, "value") else str(s)): count
+        for s, count in status_counts_raw
+    }
+
+    # Fetch all research jobs (ordered by creation time descending)
     recent_job_rows = (
         db.query(JobModel)
         .order_by(JobModel.created_at.desc())
-        .limit(10)
         .all()
     )
 
@@ -61,6 +71,7 @@ def get_dashboard(db: Session = Depends(get_db)):
         data={
             "total_jobs": total_jobs,
             "completed_jobs": completed_jobs,
+            "status_counts": status_counts,
             "recent_jobs": recent_jobs,
             "total_experiments": total_experiments,
         },

@@ -186,22 +186,23 @@ export default function DashboardPage() {
   const [jobsPage, setJobsPage] = useState(1);
   const [datasetsPage, setDatasetsPage] = useState(1);
 
-  const ITEMS_PER_PAGE = 5;
+  const JOBS_PER_PAGE = 15;
+  const DATASETS_PER_PAGE = 15;
 
   const recentJobs = dash?.recent_jobs ?? [];
-  const totalJobsPages = Math.max(1, Math.ceil(recentJobs.length / ITEMS_PER_PAGE));
+  const totalJobsPages = Math.max(1, Math.ceil(recentJobs.length / JOBS_PER_PAGE));
   const safeJobsPage = Math.min(jobsPage, totalJobsPages);
   const paginatedJobs = recentJobs.slice(
-    (safeJobsPage - 1) * ITEMS_PER_PAGE,
-    safeJobsPage * ITEMS_PER_PAGE
+    (safeJobsPage - 1) * JOBS_PER_PAGE,
+    safeJobsPage * JOBS_PER_PAGE
   );
 
   const datasetList = datasets ?? [];
-  const totalDatasetsPages = Math.max(1, Math.ceil(datasetList.length / ITEMS_PER_PAGE));
+  const totalDatasetsPages = Math.max(1, Math.ceil(datasetList.length / DATASETS_PER_PAGE));
   const safeDatasetsPage = Math.min(datasetsPage, totalDatasetsPages);
   const paginatedDatasets = datasetList.slice(
-    (safeDatasetsPage - 1) * ITEMS_PER_PAGE,
-    safeDatasetsPage * ITEMS_PER_PAGE
+    (safeDatasetsPage - 1) * DATASETS_PER_PAGE,
+    safeDatasetsPage * DATASETS_PER_PAGE
   );
 
   /* Derived: success rate */
@@ -213,10 +214,14 @@ export default function DashboardPage() {
   const runningJobs =
     dash?.recent_jobs.filter((j) => j.status === "running").length ?? 0;
 
-  /* Pie chart data from recent_jobs status distribution */
-  const jobStatusCounts: Record<string, number> = {};
-  for (const job of dash?.recent_jobs ?? []) {
-    jobStatusCounts[job.status] = (jobStatusCounts[job.status] ?? 0) + 1;
+  /* Pie chart data from global database status distribution with fallback to recent_jobs */
+  const jobStatusCounts: Record<string, number> = dash?.status_counts
+    ? { ...dash.status_counts }
+    : {};
+  if (Object.keys(jobStatusCounts).length === 0) {
+    for (const job of dash?.recent_jobs ?? []) {
+      jobStatusCounts[job.status] = (jobStatusCounts[job.status] ?? 0) + 1;
+    }
   }
   const pieData = Object.entries(jobStatusCounts).map(([name, value]) => ({
     name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -384,7 +389,7 @@ export default function DashboardPage() {
                     <RecentJobRow
                       key={job.job_id}
                       job={job}
-                      index={(safeJobsPage - 1) * ITEMS_PER_PAGE + i}
+                      index={(safeJobsPage - 1) * JOBS_PER_PAGE + i}
                     />
                   ))}
                 </motion.div>
@@ -392,7 +397,7 @@ export default function DashboardPage() {
                   currentPage={safeJobsPage}
                   totalPages={totalJobsPages}
                   totalItems={recentJobs.length}
-                  pageSize={ITEMS_PER_PAGE}
+                  pageSize={JOBS_PER_PAGE}
                   onPageChange={(page) => setJobsPage(page)}
                 />
               </>
@@ -600,7 +605,7 @@ export default function DashboardPage() {
                 currentPage={safeDatasetsPage}
                 totalPages={totalDatasetsPages}
                 totalItems={datasetList.length}
-                pageSize={ITEMS_PER_PAGE}
+                pageSize={DATASETS_PER_PAGE}
                 onPageChange={(page) => setDatasetsPage(page)}
               />
             </>
