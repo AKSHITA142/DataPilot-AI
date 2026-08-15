@@ -20,7 +20,7 @@ try {
 const nextConfig: NextConfig = {
   devIndicators: false,
   experimental: {
-    middlewareClientMaxBodySize: "500mb",
+    proxyClientMaxBodySize: "500mb",
     serverActions: {
       bodySizeLimit: "500mb",
     },
