@@ -122,15 +122,15 @@ class HTMLReportGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataPilot-AI Research & Audit Report - {winning_id}</title>
+    <title>Evidra Research & Audit Report - {winning_id}</title>
     <style>
         :root {{
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-color: #0a0a0b;
+            --card-bg: rgba(20, 20, 24, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
+            --accent-color: #33c7b6;
             --success-color: #34d399;
             --warning-color: #fbbf24;
         }}
@@ -153,7 +153,7 @@ class HTMLReportGenerator:
         .header h1 {{
             font-size: 2.2rem;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            background: linear-gradient(135deg, #12b3a3, #33c7b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }}
@@ -174,7 +174,7 @@ class HTMLReportGenerator:
             padding-bottom: 8px;
         }}
         .mission-box {{
-            background: rgba(56, 189, 248, 0.08);
+            background: rgba(18, 179, 163, 0.08);
             border-left: 4px solid var(--accent-color);
             padding: 12px 16px;
             border-radius: 4px;
@@ -224,7 +224,7 @@ class HTMLReportGenerator:
             background: rgba(52, 211, 153, 0.12);
         }}
         .badge {{
-            background: rgba(56, 189, 248, 0.2);
+            background: rgba(18, 179, 163, 0.2);
             color: var(--accent-color);
             padding: 2px 6px;
             border-radius: 4px;
@@ -253,7 +253,7 @@ class HTMLReportGenerator:
 <body>
     <div class="container">
         <div class="header">
-            <h1>DataPilot-AI Research & Audit Report</h1>
+            <h1>Evidra Research &amp; Technical Audit Report</h1>
             <p>Winning Experiment: <code>{winning_id}</code> | Model: <strong>{model_name}</strong></p>
         </div>
 
