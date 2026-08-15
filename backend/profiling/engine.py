@@ -41,6 +41,26 @@ class ProfilingEngine:
         )
 
     @classmethod
+    def profile_bytes(
+        cls,
+        file_bytes: bytes,
+        filename: str = "dataset.csv",
+        target_column: Optional[str] = None,
+        user_mission: str = "",
+        user_task_type: str = "general",
+    ) -> Tuple[SemanticProfile, ExecutionHints]:
+        """
+        Profiles in-memory dataset bytes (CSV/Parquet) directly without disk writes.
+        """
+        df, file_meta, is_sampled = DataLoader.load_lazy_sample_from_bytes(file_bytes, filename=filename)
+        return cls.profile_dataframe(
+            df, file_meta,
+            target_column=target_column,
+            user_mission=user_mission,
+            user_task_type=user_task_type,
+        )
+
+    @classmethod
     def profile_dataframe(
         cls,
         df: pd.DataFrame,

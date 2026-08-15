@@ -66,100 +66,100 @@ class SupabaseStorageService:
             logger.warning(f"Bucket check failed: {e}")
             return False
 
-    def upload_file(self, local_path: str, remote_path: str) -> Dict[str, Any]:
+    def upload_bytes(
+        self,
+        file_bytes: bytes,
+        remote_path: str,
+        content_type: str = "text/csv",
+    ) -> Dict[str, Any]:
         """
-        Uploads a local file to the Supabase Storage bucket.
+        Uploads in-memory bytes directly to Supabase Storage with auto-compression for large CSVs.
         """
         if not self.is_configured:
             raise RuntimeError("Supabase Storage is not configured. Set SUPABASE_URL and SUPABASE_KEY.")
 
+        try:
+            target_bytes = file_bytes
+            target_content_type = content_type
+            file_size = len(file_bytes)
+
+            # If CSV and file size > 40MB, compress to snappy-parquet in-memory before uploading to satisfy cloud storage quotas
+            if file_size > 40 * 1024 * 1024 and remote_path.lower().endswith((".csv", ".txt")):
+                try:
+                    import io
+                    import pandas as pd
+                    df = pd.read_csv(io.BytesIO(file_bytes), low_memory=False)
+                    buf = io.BytesIO()
+                    df.to_parquet(buf, compression="snappy", index=False)
+                    buf.seek(0)
+                    compressed_bytes = buf.getvalue()
+                    if len(compressed_bytes) < file_size:
+                        target_bytes = compressed_bytes
+                        target_content_type = "application/octet-stream"
+                        logger.info(
+                            f"Compressed in-memory CSV ({file_size / (1024*1024):.1f}MB) to Parquet "
+                            f"({len(compressed_bytes) / (1024*1024):.1f}MB) for cloud upload."
+                        )
+                except Exception as ce:
+                    logger.warning(f"Could not pre-compress in-memory CSV to parquet: {ce}")
+
+            file_options = {"content-type": target_content_type, "upsert": "true"}
+            response = self._client.storage.from_(self.bucket_name).upload(
+                path=remote_path,
+                file=target_bytes,
+                file_options=file_options,
+            )
+            logger.info(f"Uploaded {len(target_bytes)} bytes to Supabase: {self.bucket_name}/{remote_path}")
+            return {"status": "success", "remote_path": remote_path, "response": response}
+        except Exception as e:
+            logger.error(f"Failed to upload bytes to Supabase {remote_path}: {e}")
+            raise
+
+    def upload_file(self, local_path: str, remote_path: str) -> Dict[str, Any]:
+        """
+        Uploads a local file to the Supabase Storage bucket by streaming into upload_bytes.
+        """
         if not os.path.exists(local_path):
             raise FileNotFoundError(f"Local file not found: {local_path}")
 
-        try:
-            upload_path = local_path
-            temp_compressed_file = None
-            file_size = os.path.getsize(local_path)
+        content_type = "application/octet-stream" if local_path.endswith((".parquet", ".pq")) else "text/csv"
+        with open(local_path, "rb") as f:
+            data = f.read()
+        return self.upload_bytes(data, remote_path, content_type=content_type)
 
-            # If CSV and file size > 40MB, compress to snappy-parquet before uploading to satisfy cloud storage quotas
-            if file_size > 40 * 1024 * 1024 and local_path.lower().endswith((".csv", ".txt")):
-                try:
-                    import pandas as pd
-                    parquet_local = local_path + ".parquet"
-                    df = pd.read_csv(local_path, low_memory=False)
-                    df.to_parquet(parquet_local, compression="snappy", index=False)
-                    if os.path.exists(parquet_local) and os.path.getsize(parquet_local) < file_size:
-                        upload_path = parquet_local
-                        temp_compressed_file = parquet_local
-                        logger.info(f"Compressed large CSV ({file_size / (1024*1024):.1f}MB) to Parquet ({os.path.getsize(parquet_local) / (1024*1024):.1f}MB) for cloud upload.")
-                except Exception as ce:
-                    logger.warning(f"Could not pre-compress CSV to parquet: {ce}")
-
-            with open(upload_path, "rb") as f:
-                file_bytes = f.read()
-
-            file_options = {"content-type": "text/csv", "upsert": "true"}
-            if upload_path.endswith((".parquet", ".pq")):
-                file_options["content-type"] = "application/octet-stream"
-
-            response = self._client.storage.from_(self.bucket_name).upload(
-                path=remote_path,
-                file=file_bytes,
-                file_options=file_options,
-            )
-
-            if temp_compressed_file and os.path.exists(temp_compressed_file):
-                try:
-                    os.remove(temp_compressed_file)
-                except Exception:
-                    pass
-
-            logger.info(f"Uploaded {upload_path} to Supabase: {self.bucket_name}/{remote_path}")
-            return {"status": "success", "remote_path": remote_path, "response": response}
-        except Exception as e:
-            if temp_compressed_file and os.path.exists(temp_compressed_file):
-                try:
-                    os.remove(temp_compressed_file)
-                except Exception:
-                    pass
-            logger.error(f"Failed to upload {local_path} to Supabase: {e}")
-            raise
-
-    def upload_bytes(self, file_bytes: bytes, remote_path: str, content_type: str = "text/csv") -> Dict[str, Any]:
+    def download_bytes(self, remote_path: str) -> bytes:
         """
-        Uploads in-memory bytes directly to Supabase Storage.
+        Downloads a remote file from Supabase Storage directly into an in-memory bytes object.
         """
         if not self.is_configured:
             raise RuntimeError("Supabase Storage is not configured.")
 
         try:
-            response = self._client.storage.from_(self.bucket_name).upload(
-                path=remote_path,
-                file=file_bytes,
-                file_options={"content-type": content_type, "upsert": "true"},
-            )
-            return {"status": "success", "remote_path": remote_path, "response": response}
+            data = self._client.storage.from_(self.bucket_name).download(remote_path)
+            logger.info(f"Downloaded Supabase file {self.bucket_name}/{remote_path} ({len(data)} bytes) to memory.")
+            return data
         except Exception as e:
-            logger.error(f"Failed to upload bytes to Supabase: {e}")
+            logger.error(f"Failed to download {remote_path} from Supabase: {e}")
             raise
+
+    def download_stream(self, remote_path: str):
+        """
+        Downloads a remote file from Supabase Storage and returns an io.BytesIO stream.
+        """
+        import io
+        data = self.download_bytes(remote_path)
+        return io.BytesIO(data)
 
     def download_file(self, remote_path: str, local_dest_path: str) -> str:
         """
         Downloads a remote file from Supabase Storage and saves it to local_dest_path.
         """
-        if not self.is_configured:
-            raise RuntimeError("Supabase Storage is not configured.")
-
+        data = self.download_bytes(remote_path)
         os.makedirs(os.path.dirname(local_dest_path), exist_ok=True)
-        try:
-            data = self._client.storage.from_(self.bucket_name).download(remote_path)
-            with open(local_dest_path, "wb") as f:
-                f.write(data)
-            logger.info(f"Downloaded Supabase file {self.bucket_name}/{remote_path} to {local_dest_path}")
-            return local_dest_path
-        except Exception as e:
-            logger.error(f"Failed to download {remote_path} from Supabase: {e}")
-            raise
+        with open(local_dest_path, "wb") as f:
+            f.write(data)
+        logger.info(f"Saved Supabase file {self.bucket_name}/{remote_path} to {local_dest_path}")
+        return local_dest_path
 
     def get_public_url(self, remote_path: str) -> str:
         """Returns public URL for a file in a public bucket."""

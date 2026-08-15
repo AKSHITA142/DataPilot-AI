@@ -152,3 +152,94 @@ class DataLoader:
             metadata["is_sampled"] = False
 
         return df, metadata, is_sampled
+
+    @staticmethod
+    def count_bytes_lines(file_bytes: bytes) -> int:
+        """Counts total lines in in-memory bytes without full parsing."""
+        count = file_bytes.count(b"\n")
+        return max(0, count - 1) if count > 0 else 0
+
+    @classmethod
+    def load_from_bytes(
+        cls,
+        file_bytes: bytes,
+        filename: str = "dataset.csv",
+        max_rows: Optional[int] = None,
+        optimize_memory: bool = True,
+    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        """
+        Loads in-memory CSV or Parquet bytes into a pandas DataFrame with dtype optimization.
+        Returns (DataFrame, metadata_dict).
+        """
+        import io
+
+        file_size_bytes = len(file_bytes)
+        ext = os.path.splitext(filename)[1].lower() if filename else ".csv"
+
+        is_parquet = ext in [".parquet", ".pq"] or file_bytes.startswith(b"PAR1")
+
+        if is_parquet:
+            df = pd.read_parquet(io.BytesIO(file_bytes))
+            if max_rows and len(df) > max_rows:
+                df = df.iloc[:max_rows]
+            format_name = "parquet"
+        else:
+            sample = file_bytes[:8192].decode("utf-8", errors="ignore")
+            try:
+                sniffer = csv.Sniffer()
+                dialect = sniffer.sniff(sample, delimiters=[",", "\t", ";", "|"])
+                delimiter = dialect.delimiter
+            except Exception:
+                delimiter = ","
+            df = pd.read_csv(io.BytesIO(file_bytes), delimiter=delimiter, nrows=max_rows, low_memory=False)
+            format_name = "csv"
+
+        if optimize_memory:
+            df = cls.optimize_dtypes(df)
+
+        metadata = {
+            "filename": os.path.basename(filename),
+            "file_size_bytes": file_size_bytes,
+            "row_count": len(df),
+            "column_count": len(df.columns),
+            "format": format_name,
+            "memory_usage_bytes": int(df.memory_usage(deep=True).sum()),
+        }
+        return df, metadata
+
+    @classmethod
+    def load_lazy_sample_from_bytes(
+        cls,
+        file_bytes: bytes,
+        filename: str = "dataset.csv",
+        max_sample_rows: int = 50000,
+    ) -> Tuple[pd.DataFrame, Dict[str, Any], bool]:
+        """
+        Loads an in-memory sample from bytes if dataset exceeds max_sample_rows.
+        Returns (DataFrame, metadata, is_sampled).
+        """
+        is_parquet = filename.lower().endswith((".parquet", ".pq")) or file_bytes.startswith(b"PAR1")
+        if is_parquet:
+            total_lines = 0  # read parquet directly
+            df, metadata = cls.load_from_bytes(file_bytes, filename=filename, max_rows=max_sample_rows, optimize_memory=True)
+            is_sampled = len(df) >= max_sample_rows
+            metadata["total_raw_rows"] = len(df)
+            metadata["is_sampled"] = is_sampled
+            metadata["sample_size"] = len(df)
+            return df, metadata, is_sampled
+
+        total_lines = cls.count_bytes_lines(file_bytes)
+        is_sampled = total_lines > max_sample_rows
+
+        if is_sampled:
+            logger.info(f"Large dataset detected ({total_lines:,} rows in memory). Sampling first {max_sample_rows:,} rows for memory safety.")
+            df, metadata = cls.load_from_bytes(file_bytes, filename=filename, max_rows=max_sample_rows, optimize_memory=True)
+            metadata["total_raw_rows"] = total_lines
+            metadata["is_sampled"] = True
+            metadata["sample_size"] = len(df)
+        else:
+            df, metadata = cls.load_from_bytes(file_bytes, filename=filename, max_rows=None, optimize_memory=True)
+            metadata["total_raw_rows"] = len(df)
+            metadata["is_sampled"] = False
+
+        return df, metadata, is_sampled

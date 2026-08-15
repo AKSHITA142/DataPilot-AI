@@ -28,38 +28,49 @@ from backend.graph.state import WorkflowStateDict
 logger = logging.getLogger("datapilot.graph.nodes")
 
 
-def profiling_node(state: WorkflowStateDict) -> WorkflowStateDict:
-    """Executes Phase 6 ProfilingEngine on dataset file."""
+def _load_state_dataset_bytes(state: WorkflowStateDict) -> bytes:
+    """Helper to fetch dataset bytes from local disk or Supabase Cloud Storage."""
     file_path = state.get("file_path")
+    dataset_id = state.get("dataset_id") or ""
 
-    # Auto-recovery: If file missing locally, attempt download from Supabase Cloud Storage
-    if not file_path or not os.path.exists(file_path):
-        if file_path:
-            try:
-                from backend.services.storage.supabase_storage import SupabaseStorageService
-                storage_svc = SupabaseStorageService()
-                if storage_svc.is_configured:
-                    dataset_id = state.get("dataset_id") or ""
-                    filename = os.path.basename(file_path)
-                    remote_path = f"{dataset_id}/{filename}"
-                    storage_svc.download_file(remote_path, file_path)
-                    logger.info(f"Auto-downloaded dataset from Supabase: {remote_path} -> {file_path}")
-            except Exception as se:
-                logger.warning(f"Could not auto-download missing dataset from Supabase: {se}")
+    # 1. Check local disk if available
+    if file_path and os.path.exists(file_path):
+        with open(file_path, "rb") as f:
+            return f.read()
 
-    if not file_path or not os.path.exists(file_path):
+    # 2. Fetch directly from Supabase Cloud Storage
+    try:
+        from backend.services.storage.supabase_storage import SupabaseStorageService
+        storage_svc = SupabaseStorageService()
+        if storage_svc.is_configured:
+            filename = os.path.basename(file_path) if file_path else "dataset.csv"
+            remote_path = file_path if (file_path and "/" in file_path and not os.path.isabs(file_path)) else f"{dataset_id}/{filename}"
+            return storage_svc.download_bytes(remote_path)
+    except Exception as se:
+        logger.warning(f"Failed to fetch dataset bytes from Supabase Storage: {se}")
+
+    raise FileNotFoundError(f"Dataset '{dataset_id}' could not be loaded from cloud storage or local path: {file_path}")
+
+
+def profiling_node(state: WorkflowStateDict) -> WorkflowStateDict:
+    """Executes Phase 6 ProfilingEngine on dataset bytes in memory."""
+    try:
+        file_bytes = _load_state_dataset_bytes(state)
+    except Exception as e:
         return {
             **state,
             "job_status": JobStatus.FAILED.value,
-            "error_message": f"Dataset file not found at path: {file_path}",
+            "error_message": f"Dataset file not found: {str(e)}",
         }
 
     try:
         user_task_type = state.get("user_task_type") or "general"
         user_goal = state.get("user_goal") or ""
+        filename = os.path.basename(state.get("file_path") or "dataset.csv")
 
-        profile, hints = ProfilingEngine.profile_file(
-            file_path,
+        profile, hints = ProfilingEngine.profile_bytes(
+            file_bytes,
+            filename=filename,
             user_mission=user_goal,
             user_task_type=user_task_type,
         )
@@ -199,16 +210,22 @@ def execution_node(state: WorkflowStateDict) -> WorkflowStateDict:
     if user_task_type in ("classification", "regression"):
         task_type = user_task_type
 
-    if not plan_dict or not file_path or not os.path.exists(file_path):
+    if not plan_dict:
         return {
             **state,
             "job_status": JobStatus.FAILED.value,
-            "error_message": "Execution failed: Missing experiment plan or dataset file.",
+            "error_message": "Execution failed: Missing experiment plan.",
         }
 
     try:
         settings = get_settings()
-        df, _, is_sampled = DataLoader.load_lazy_sample(file_path, max_sample_rows=settings.max_ml_sample_rows)
+        file_bytes = _load_state_dataset_bytes(state)
+        filename = os.path.basename(file_path or "dataset.csv")
+        df, _, is_sampled = DataLoader.load_lazy_sample_from_bytes(
+            file_bytes,
+            filename=filename,
+            max_sample_rows=settings.max_ml_sample_rows,
+        )
         plan = ExperimentPlan(**plan_dict)
 
         job_id = state.get("job_id") or "job"
