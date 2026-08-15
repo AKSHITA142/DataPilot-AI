@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, GitBranch, Play, Sparkles } from "lucide-react";
+import { ArrowRight, Play, Sparkles } from "lucide-react";
 
 const particles = Array.from({ length: 28 }, (_, index) => ({
   id: index,
@@ -34,19 +35,23 @@ function AmbientParticles() {
 export function LandingNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-border-subtle bg-bg/80 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6" aria-label="Primary navigation">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight text-text">
-          <span className="flex size-8 items-center justify-center rounded-md border border-brand-500/40 bg-brand-500/10 text-brand-300">
-            <GitBranch className="size-4" aria-hidden="true" />
-          </span>
-          Evindra
+      <nav className="mx-auto flex h-22 max-w-7xl items-center justify-between px-4 sm:px-6" aria-label="Primary navigation">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/evidra-second-logo.png"
+            alt="Evidra"
+            width={947}
+            height={380}
+            priority
+            className="h-14 sm:h-16 md:h-18 w-auto object-contain drop-shadow-sm"
+          />
         </Link>
         <div className="hidden items-center gap-7 text-sm text-text-secondary md:flex">
           <a href="#workflow" className="transition-colors hover:text-text">Workflow</a>
           <a href="#capabilities" className="transition-colors hover:text-text">Capabilities</a>
           <a href="#stack" className="transition-colors hover:text-text">Stack</a>
         </div>
-        <Link href="/overview" className="inline-flex h-9 items-center gap-2 rounded-md bg-text px-4 text-sm font-semibold text-bg transition-opacity hover:opacity-90">
+        <Link href="/overview" className="inline-flex h-11 items-center gap-2 rounded-md bg-text px-5 text-sm font-semibold text-bg transition-opacity hover:opacity-90">
           Open workspace <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </nav>
@@ -63,14 +68,14 @@ export function Hero() {
         <motion.div initial={reducedMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="flex flex-col items-start gap-7">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-2/70 px-3 py-1.5 font-mono text-xs text-text-secondary">
             <Sparkles className="size-3.5 text-brand-300" aria-hidden="true" />
-            Autonomous ML research, end to end
+            Evidence-Driven Autonomous AI Data Scientist
           </div>
           <div className="flex flex-col gap-5">
             <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.045em] text-text sm:text-6xl lg:text-7xl">
-              Your AI research team, running in a loop.
+              Your Autonomous AI Data Scientist, Running on Evidence.
             </h1>
             <p className="max-w-2xl text-pretty text-lg leading-relaxed text-text-secondary sm:text-xl">
-              Evindra profiles your data, plans experiments, trains models, evaluates evidence, and decides what to try next—until the research is ready to ship.
+              Evidra autonomously profiles raw datasets, formulates hypotheses, executes multi-model ML pipelines with strict leakage prevention, and delivers auditable, production-ready recommendations.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">

@@ -28,7 +28,7 @@ export function FeatureGrid() {
         <div className="flex max-w-3xl flex-col gap-4">
           <p className="font-mono text-xs uppercase tracking-[0.24em] text-brand-300">Capabilities</p>
           <h2 className="text-balance text-4xl font-semibold tracking-tight text-text sm:text-5xl">Everything a diligent data scientist does—automated.</h2>
-          <p className="text-pretty text-lg leading-relaxed text-text-secondary">Each capability maps to a real stage of the Evindra engine, from first profile to final report.</p>
+          <p className="text-pretty text-lg leading-relaxed text-text-secondary">Each capability maps to a real stage of the Evidra engine, from first profile to final report.</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

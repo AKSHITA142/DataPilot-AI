@@ -244,10 +244,10 @@ export default function DashboardPage() {
 
         <div className="relative z-10">
           <h1 className="text-xl font-bold text-text tracking-tight">
-            Research Overview
+            Research Workspace Overview
           </h1>
           <p className="text-sm text-text-muted mt-0.5">
-            All your ML research runs, datasets, and experiment history.
+            Monitor autonomous research runs, explore profiled datasets, and track experiment performance.
           </p>
         </div>
 

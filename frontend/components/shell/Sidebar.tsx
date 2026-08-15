@@ -195,7 +195,7 @@ export function Sidebar() {
   return (
     <>
       <motion.aside
-        animate={{ width: collapsed ? 68 : 230 }}
+        animate={{ width: collapsed ? 68 : 255 }}
         transition={{ duration: 0.22, ease: "easeInOut" }}
         className="
           hidden md:flex flex-col shrink-0
@@ -204,25 +204,25 @@ export function Sidebar() {
         "
       >
         {/* Logo & Expand Toggle Header */}
-        <div className="flex items-center justify-between pl-2 pr-3 py-4 border-b border-border-subtle h-14 shrink-0">
-          <Link href="/overview" className="flex items-center justify-start min-w-0 -ml-0.5">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle h-18 shrink-0">
+          <Link href="/overview" className="flex items-center justify-start min-w-0">
             {collapsed ? (
               <Image
                 src="/evidra-first-logo.png"
                 alt="Evidra"
-                width={28}
-                height={28}
+                width={200}
+                height={200}
                 priority
-                className="w-7 h-7 rounded-lg shrink-0 shadow-md shadow-brand-500/20"
+                className="w-9 h-9 rounded-lg shrink-0 object-contain shadow-md shadow-brand-500/20"
               />
             ) : (
               <Image
                 src="/evidra-second-logo.png"
                 alt="Evidra"
-                width={175}
-                height={38}
+                width={947}
+                height={380}
                 priority
-                className="h-8.5 max-w-[185px] object-contain object-left shrink-0"
+                className="h-13 w-auto max-w-[190px] object-contain object-left shrink-0 drop-shadow-sm"
               />
             )}
           </Link>
@@ -231,7 +231,7 @@ export function Sidebar() {
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
-              className="p-1 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
+              className="p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
               title="Collapse sidebar"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -417,19 +417,19 @@ export function MobileDrawer({
             "
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-4 border-b border-border-subtle h-14 shrink-0">
-              <Link href="/overview" onClick={onClose} className="flex items-center gap-2.5">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle h-18 shrink-0">
+              <Link href="/overview" onClick={onClose} className="flex items-center">
                 <Image
                   src="/evidra-second-logo.png"
                   alt="Evidra"
-                  width={140}
-                  height={32}
-                  className="h-7 w-auto object-contain shrink-0"
+                  width={947}
+                  height={380}
+                  className="h-12 w-auto max-w-[190px] object-contain shrink-0 drop-shadow-sm"
                 />
               </Link>
               <button
                 onClick={onClose}
-                className="p-1 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
+                className="p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-3 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

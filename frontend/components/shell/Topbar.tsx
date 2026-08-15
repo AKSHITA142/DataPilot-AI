@@ -9,12 +9,12 @@ import { HamburgerButton, MobileDrawer } from "./Sidebar";
 /* ── Route → human title map ─────────────────────── */
 const ROUTE_TITLES: Record<string, string> = {
   "/": "Overview",
-  "/overview": "Overview",
-  "/upload": "New Run",
+  "/overview": "Research Workspace",
+  "/upload": "New Research Run",
   "/timeline": "Research Timeline",
-  "/experiments": "Experiments",
-  "/knowledge": "Knowledge Base",
-  "/recommendation": "Recommendation",
+  "/experiments": "Experiment Matrix",
+  "/knowledge": "Hypotheses & Knowledge Base",
+  "/recommendation": "Executive Report & Recommendations",
 };
 
 
@@ -58,9 +58,9 @@ export function Topbar() {
             <Image
               src="/evidra-first-logo.png"
               alt="Evidra"
-              width={24}
-              height={24}
-              className="w-6 h-6 rounded-md shrink-0 shadow-sm"
+              width={200}
+              height={200}
+              className="w-8 h-8 rounded-lg shrink-0 object-contain shadow-sm"
             />
           </Link>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Code2, Database, GitBranch, Server, Workflow } from "lucide-react";
 import { FeatureGrid } from "@/components/landing/FeatureGrid";
 import { Hero, LandingNav } from "@/components/landing/Hero";
@@ -39,7 +40,7 @@ export default function LandingPage() {
           <div className="flex flex-col items-center gap-7 rounded-2xl border border-brand-500/25 bg-brand-500/[0.06] px-6 py-16 sm:px-12">
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-brand-300">From CSV to recommendation</p>
             <h2 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight text-text sm:text-6xl">Stop babysitting experiments. Start directing research.</h2>
-            <p className="max-w-2xl text-pretty text-lg leading-relaxed text-text-secondary">Give Evindra a dataset and a mission. It will build the profile, run the loop, and return the evidence.</p>
+            <p className="max-w-2xl text-pretty text-lg leading-relaxed text-text-secondary">Give Evidra a dataset and a mission. It will build the profile, run the loop, and return the evidence.</p>
             <Link href="/overview" className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-brand-500 px-6 font-semibold text-bg transition-colors hover:bg-brand-400">Open the workspace <ArrowRight className="size-4" aria-hidden="true" /></Link>
           </div>
         </div>
@@ -47,7 +48,16 @@ export default function LandingPage() {
 
       <footer className="border-t border-border-subtle py-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 text-sm text-text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div className="flex items-center gap-2"><GitBranch className="size-4 text-brand-300" aria-hidden="true" /><span className="font-semibold text-text">Evindra</span><span>Autonomous ML research.</span></div>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/evidra-second-logo.png"
+              alt="Evidra"
+              width={947}
+              height={380}
+              className="h-12 w-auto object-contain"
+            />
+            <span className="text-text-muted text-xs">Autonomous ML research.</span>
+          </div>
           <div className="flex items-center gap-5"><a className="transition-colors hover:text-text" href="https://github.com/AKSHITA142/Evindra" target="_blank" rel="noreferrer">GitHub</a><span>MIT License</span></div>
         </div>
       </footer>
