@@ -2881,3 +2881,424 @@ exported_artifacts.metadata
 2026-08-15 13:59:09,178 - datapilot.database - INFO - Database schema initialized successfully.
 2026-08-15 13:59:09,178 - datapilot.main - INFO - Database initialized successfully.
 2026-08-15 13:59:09,197 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_7d616e33
+2026-08-15 14:05:59,617 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 14:06:02,116 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 14:06:02,117 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 14:06:16,456 - datapilot.api - INFO - [43da402a-7320-4784-ab71-dbe707073c42] GET /api/v1/dashboard - Status: 200 (1144.79ms)
+2026-08-15 14:06:20,013 - datapilot.api - INFO - [e393e141-e874-4f4c-836f-9e941017458c] GET /api/v1/datasets - Status: 200 (4700.97ms)
+2026-08-15 14:07:17,249 - datapilot.api - INFO - [c97a6109-836e-4f9d-ac0d-9787f061ef2c] GET /api/v1/dashboard - Status: 200 (780.05ms)
+2026-08-15 14:08:18,057 - datapilot.api - INFO - [4d26294e-d28b-4e00-b585-40ef69e42558] GET /api/v1/dashboard - Status: 200 (802.00ms)
+2026-08-15 14:09:18,974 - datapilot.api - INFO - [e2e48595-7d17-42b5-89e4-d249e4e963a2] GET /api/v1/dashboard - Status: 200 (931.25ms)
+2026-08-15 14:10:18,991 - datapilot.api - INFO - [f0fbbb00-e721-40f3-b864-0efb326509d1] OPTIONS /api/v1/dashboard - Status: 200 (1.37ms)
+2026-08-15 14:10:19,835 - datapilot.api - INFO - [89a758a0-a23c-4894-9800-6d282ca9153b] GET /api/v1/dashboard - Status: 200 (839.52ms)
+2026-08-15 14:11:21,495 - datapilot.api - INFO - [331e128e-2734-40a8-a63a-27081e5fceb3] GET /api/v1/dashboard - Status: 200 (1643.25ms)
+2026-08-15 14:12:23,370 - datapilot.api - INFO - [cdb388f0-62c4-418a-9409-7ba7cb5a6753] GET /api/v1/dashboard - Status: 200 (1864.28ms)
+2026-08-15 14:12:24,999 - datapilot.api - INFO - [c62bd61d-faf7-4c4b-b3d9-d2b195eabae1] OPTIONS /api/v1/upload - Status: 200 (0.64ms)
+2026-08-15 14:12:25,058 - datapilot.services.dataset_service - INFO - Dataset 'bank-additional-full.csv' received (5834924 bytes, SHA256=74adfc578bf7...)
+2026-08-15 14:12:25,130 - datapilot.services.supabase_storage - INFO - Supabase Storage initialized (https://keedragqsfqvshognlgg.supabase.co) for bucket: datasets
+2026-08-15 14:12:26,284 - httpx - INFO - HTTP Request: GET https://keedragqsfqvshognlgg.supabase.co/storage/v1/bucket "HTTP/2 200 OK"
+2026-08-15 14:12:31,691 - httpx - INFO - HTTP Request: POST https://keedragqsfqvshognlgg.supabase.co/storage/v1/object/datasets/ds_6bbbbd3e/bank-additional-full.csv "HTTP/2 200 OK"
+2026-08-15 14:12:31,692 - datapilot.services.supabase_storage - INFO - Uploaded 5834924 bytes to Supabase: datasets/ds_6bbbbd3e/bank-additional-full.csv
+2026-08-15 14:12:31,692 - datapilot.services.dataset_service - INFO - Dataset successfully uploaded to Supabase Storage: ds_6bbbbd3e/bank-additional-full.csv
+2026-08-15 14:12:32,313 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output TargetInspectionResult
+2026-08-15 14:12:32,314 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:12:33,002 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:12:35,508 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:12:36,568 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:12:39,074 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:12:39,688 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:12:39,689 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:12:39,689 - datapilot.agents.base - INFO - Using rule-based fallback response for TargetInspectionResult (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:12:40,349 - datapilot.services.dataset_service - INFO - Dataset 'bank-additional-full.csv' registered in database (ID=ds_6bbbbd3e)
+2026-08-15 14:12:40,350 - datapilot.api - INFO - [a54f3c99-3cdb-413a-9366-295329c8a334] POST /api/v1/upload - Status: 201 (15348.56ms)
+2026-08-15 14:12:40,357 - datapilot.api - INFO - [9df92f13-a170-4266-923c-6cb1bd1af9dd] OPTIONS /api/v1/jobs/start - Status: 200 (0.60ms)
+2026-08-15 14:12:41,806 - datapilot.api - INFO - [da3872dc-aa87-42c5-b374-b95a5bd86346] POST /api/v1/jobs/start - Status: 202 (1445.58ms)
+2026-08-15 14:12:41,807 - datapilot.services.job_service - WARNING - No running event loop found for job job_07a8f88c; creating new loop
+2026-08-15 14:12:42,607 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_07a8f88c
+2026-08-15 14:12:42,607 - datapilot.api - INFO - [60125d07-0efd-401c-89e0-95ea9a2942b2] OPTIONS /api/v1/jobs/job_07a8f88c - Status: 200 (4.80ms)
+2026-08-15 14:12:42,608 - datapilot.api - INFO - [4c613ed8-5ed8-4dcf-8ac2-49b35fe73a90] OPTIONS /api/v1/jobs/job_07a8f88c/logs - Status: 200 (4.93ms)
+2026-08-15 14:12:42,828 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output TargetInspectionResult
+2026-08-15 14:12:42,829 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:12:43,099 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:12:43,630 - datapilot.api - INFO - [21eb77b9-0dbd-4232-b6ba-3447801dba08] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1021.33ms)
+2026-08-15 14:12:44,436 - datapilot.api - INFO - [d4afabb7-da52-475d-b8f7-b10bcfabf1eb] GET /api/v1/jobs/job_07a8f88c/logs - Status: 200 (1827.78ms)
+2026-08-15 14:12:45,605 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:12:46,218 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:12:48,724 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:12:48,974 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:12:48,976 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:12:48,976 - datapilot.agents.base - INFO - Using rule-based fallback response for TargetInspectionResult (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:12:49,860 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-15 14:12:49,865 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:12:50,130 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:12:50,281 - datapilot.api - INFO - [023cf782-48be-4ef2-9db6-d222fdb2fac5] GET /api/v1/jobs/job_07a8f88c - Status: 200 (327.62ms)
+2026-08-15 14:12:52,636 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:12:52,933 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:12:55,439 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:12:55,657 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:12:55,657 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:12:55,657 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:12:56,287 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:12:56,289 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:12:56,606 - datapilot.api - INFO - [5d70bc10-2989-4153-9bf0-9d6edba8f6f0] GET /api/v1/jobs/job_07a8f88c - Status: 200 (294.24ms)
+2026-08-15 14:12:56,742 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:12:56,940 - datapilot.api - INFO - [93d5957e-b15c-472d-bc93-b024ceb33ecf] GET /api/v1/jobs/job_07a8f88c - Status: 200 (331.73ms)
+2026-08-15 14:12:59,247 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:12:59,474 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:13:01,977 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:13:02,169 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:13:02,174 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:13:02,174 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:13:02,961 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_001
+2026-08-15 14:13:02,961 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_002
+2026-08-15 14:13:02,962 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_003
+2026-08-15 14:13:02,962 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_004
+2026-08-15 14:13:02,962 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_005
+2026-08-15 14:13:02,962 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_006
+2026-08-15 14:13:03,900 - datapilot.api - INFO - [e52e3082-4dd0-4c7e-a670-9ed60d2c9a1d] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1015.83ms)
+2026-08-15 14:13:05,459 - datapilot.api - INFO - [4ca7e519-7eb6-486d-9a45-0257649a7022] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1000.63ms)
+2026-08-15 14:13:16,065 - datapilot.api - INFO - [dc083b05-0614-4a25-b85a-8e5d3f657721] GET /api/v1/jobs/job_07a8f88c - Status: 200 (418.80ms)
+2026-08-15 14:13:20,501 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_005 | Status: completed | Runtime: 17.5383s | Metrics: {'accuracy': 0.9063, 'precision': 0.8919, 'recall': 0.9063, 'f1': 0.8913, 'f1_score': 0.8913, 'f2_score': 0.9034, 'f05_score': 0.8948, 'balanced_accuracy': 0.6523, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9066, 'cv_std': 0.001, 'test_score': 0.9063, 'train_score': 0.9067, 'train_test_gap': 0.0004}
+2026-08-15 14:13:24,247 - datapilot.api - INFO - [72425cf3-2805-431f-bba3-0eef11c3606f] GET /api/v1/dashboard - Status: 200 (854.42ms)
+2026-08-15 14:13:26,800 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_006 | Status: completed | Runtime: 23.8375s | Metrics: {'accuracy': 0.9116, 'precision': 0.9066, 'recall': 0.9116, 'f1': 0.9087, 'f1_score': 0.9087, 'f2_score': 0.9106, 'f05_score': 0.9076, 'balanced_accuracy': 0.7484, 'roc_auc': 0.9473, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9141, 'cv_std': 0.0015, 'test_score': 0.9116, 'train_score': 0.9595, 'train_test_gap': 0.0479}
+2026-08-15 14:13:27,038 - datapilot.api - INFO - [f3bb1d1b-6138-4b29-8a64-ea6872edcd59] GET /api/v1/jobs/job_07a8f88c - Status: 200 (965.64ms)
+2026-08-15 14:13:37,374 - datapilot.api - INFO - [1c0e4d71-c875-467c-a831-9388a4ecb540] GET /api/v1/jobs/job_07a8f88c - Status: 200 (330.44ms)
+2026-08-15 14:13:47,770 - datapilot.api - INFO - [4c823135-9a1b-48d7-b5fd-2c58cf8bcc8d] GET /api/v1/jobs/job_07a8f88c - Status: 200 (347.74ms)
+2026-08-15 14:13:48,751 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_004 | Status: completed | Runtime: 45.7895s | Metrics: {'accuracy': 0.9043, 'precision': 0.8913, 'recall': 0.9043, 'f1': 0.8942, 'f1_score': 0.8942, 'f2_score': 0.9017, 'f05_score': 0.8939, 'balanced_accuracy': 0.6775, 'roc_auc': 0.9222, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.901, 'cv_std': 0.0016, 'test_score': 0.9043, 'train_score': 1.0, 'train_test_gap': 0.0957}
+2026-08-15 14:13:49,927 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_001 | Status: completed | Runtime: 46.9655s | Metrics: {'accuracy': 0.912, 'precision': 0.9039, 'recall': 0.912, 'f1': 0.9065, 'f1_score': 0.9065, 'f2_score': 0.9103, 'f05_score': 0.9055, 'balanced_accuracy': 0.726, 'roc_auc': 0.943, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9124, 'cv_std': 0.0012, 'test_score': 0.912, 'train_score': 1.0, 'train_test_gap': 0.088}
+2026-08-15 14:13:58,228 - datapilot.api - INFO - [f223d077-f7d2-42fb-8491-d5af342ee1c1] GET /api/v1/jobs/job_07a8f88c - Status: 200 (451.73ms)
+2026-08-15 14:14:05,812 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_002 | Status: completed | Runtime: 62.8509s | Metrics: {'accuracy': 0.9089, 'precision': 0.8978, 'recall': 0.9089, 'f1': 0.9002, 'f1_score': 0.9002, 'f2_score': 0.9067, 'f05_score': 0.9, 'balanced_accuracy': 0.6956, 'roc_auc': 0.9384, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9104, 'cv_std': 0.0022, 'test_score': 0.9089, 'train_score': 0.9118, 'train_test_gap': 0.0029}
+2026-08-15 14:14:06,871 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_003 | Status: completed | Runtime: 63.9089s | Metrics: {'accuracy': 0.9183, 'precision': 0.9144, 'recall': 0.9183, 'f1': 0.916, 'f1_score': 0.916, 'f2_score': 0.9175, 'f05_score': 0.9152, 'balanced_accuracy': 0.77, 'roc_auc': 0.9509, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9157, 'cv_std': 0.0022, 'test_score': 0.9183, 'train_score': 0.9338, 'train_test_gap': 0.0155}
+2026-08-15 14:14:07,479 - datapilot.evaluation.evaluator - INFO - Evaluating 6 experiments for job job_07a8f88c
+2026-08-15 14:14:07,852 - datapilot.api - INFO - [dab2404b-1902-48e5-ac42-e0cff576c5e0] GET /api/v1/jobs/job_07a8f88c - Status: 200 (283.47ms)
+2026-08-15 14:14:08,061 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:14:08,064 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:14:08,171 - datapilot.api - INFO - [b886f97a-437b-4046-be44-78b724a2efd1] GET /api/v1/jobs/job_07a8f88c - Status: 200 (316.21ms)
+2026-08-15 14:14:08,486 - datapilot.api - INFO - [b36fba4f-6522-450b-86f4-ee70d9cd776b] GET /api/v1/jobs/job_07a8f88c - Status: 200 (313.27ms)
+2026-08-15 14:14:08,530 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:14:11,032 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:14:11,180 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:14:13,687 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:14:14,162 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:14:14,164 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:14:14,165 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:14:14,784 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:14:14,786 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:14:15,181 - datapilot.api - INFO - [fc4dc35d-465a-4cc5-8b02-a875c5a2a474] GET /api/v1/jobs/job_07a8f88c - Status: 200 (332.33ms)
+2026-08-15 14:14:15,288 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:14:17,794 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:14:17,992 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:14:20,497 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:14:20,977 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:14:20,978 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:14:20,978 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:14:21,841 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_001
+2026-08-15 14:14:21,841 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_002
+2026-08-15 14:14:21,841 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_003
+2026-08-15 14:14:21,841 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_004
+2026-08-15 14:14:21,842 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_005
+2026-08-15 14:14:21,842 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_006
+2026-08-15 14:14:22,531 - datapilot.api - INFO - [e81a8555-c4c1-478d-b625-4c292365aeb6] GET /api/v1/jobs/job_07a8f88c - Status: 200 (806.94ms)
+2026-08-15 14:14:24,215 - datapilot.api - INFO - [a073331f-2b92-429d-8ff1-9a28c19da1d4] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1682.03ms)
+2026-08-15 14:14:38,027 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_005 | Status: completed | Runtime: 16.1726s | Metrics: {'accuracy': 0.9063, 'precision': 0.8919, 'recall': 0.9063, 'f1': 0.8913, 'f1_score': 0.8913, 'f2_score': 0.9034, 'f05_score': 0.8948, 'balanced_accuracy': 0.6523, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9066, 'cv_std': 0.001, 'test_score': 0.9063, 'train_score': 0.9067, 'train_test_gap': 0.0004}
+2026-08-15 14:14:44,693 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_006 | Status: completed | Runtime: 22.8509s | Metrics: {'accuracy': 0.9116, 'precision': 0.9066, 'recall': 0.9116, 'f1': 0.9087, 'f1_score': 0.9087, 'f2_score': 0.9106, 'f05_score': 0.9076, 'balanced_accuracy': 0.7484, 'roc_auc': 0.9473, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9141, 'cv_std': 0.0015, 'test_score': 0.9116, 'train_score': 0.9595, 'train_test_gap': 0.0479}
+2026-08-15 14:15:06,967 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_001 | Status: completed | Runtime: 45.1264s | Metrics: {'accuracy': 0.912, 'precision': 0.9039, 'recall': 0.912, 'f1': 0.9065, 'f1_score': 0.9065, 'f2_score': 0.9103, 'f05_score': 0.9055, 'balanced_accuracy': 0.726, 'roc_auc': 0.943, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9124, 'cv_std': 0.0012, 'test_score': 0.912, 'train_score': 1.0, 'train_test_gap': 0.088}
+2026-08-15 14:15:11,007 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_004 | Status: completed | Runtime: 49.1653s | Metrics: {'accuracy': 0.9043, 'precision': 0.8913, 'recall': 0.9043, 'f1': 0.8942, 'f1_score': 0.8942, 'f2_score': 0.9017, 'f05_score': 0.8939, 'balanced_accuracy': 0.6775, 'roc_auc': 0.9222, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.901, 'cv_std': 0.0016, 'test_score': 0.9043, 'train_score': 1.0, 'train_test_gap': 0.0957}
+2026-08-15 14:15:24,733 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_003 | Status: completed | Runtime: 62.8919s | Metrics: {'accuracy': 0.9183, 'precision': 0.9144, 'recall': 0.9183, 'f1': 0.916, 'f1_score': 0.916, 'f2_score': 0.9175, 'f05_score': 0.9152, 'balanced_accuracy': 0.77, 'roc_auc': 0.9509, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9157, 'cv_std': 0.0022, 'test_score': 0.9183, 'train_score': 0.9338, 'train_test_gap': 0.0155}
+2026-08-15 14:15:30,030 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_002 | Status: completed | Runtime: 68.189s | Metrics: {'accuracy': 0.9089, 'precision': 0.8978, 'recall': 0.9089, 'f1': 0.9002, 'f1_score': 0.9002, 'f2_score': 0.9067, 'f05_score': 0.9, 'balanced_accuracy': 0.6956, 'roc_auc': 0.9384, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9104, 'cv_std': 0.0022, 'test_score': 0.9089, 'train_score': 0.9118, 'train_test_gap': 0.0029}
+2026-08-15 14:15:30,661 - datapilot.evaluation.evaluator - INFO - Evaluating 12 experiments for job job_07a8f88c
+2026-08-15 14:15:31,007 - datapilot.api - INFO - [81f06d08-f0ad-4153-8500-9aa65e758472] GET /api/v1/jobs/job_07a8f88c - Status: 200 (325.50ms)
+2026-08-15 14:15:31,283 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:15:31,293 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:15:31,297 - datapilot.api - INFO - [049a0254-1fac-4cdc-ae2b-46e23c6fa281] GET /api/v1/jobs/job_07a8f88c - Status: 200 (287.59ms)
+2026-08-15 14:15:31,594 - datapilot.api - INFO - [21e3dca2-272a-457e-b944-9ee1886b1c52] GET /api/v1/jobs/job_07a8f88c - Status: 200 (292.57ms)
+2026-08-15 14:15:31,775 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:15:34,277 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:15:34,717 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:15:37,223 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:15:37,688 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:15:37,690 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:15:37,691 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:15:38,274 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:15:38,276 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:15:38,614 - datapilot.api - INFO - [0f9635a4-88e7-438c-92bc-98d6b6620376] GET /api/v1/jobs/job_07a8f88c - Status: 200 (255.88ms)
+2026-08-15 14:15:38,706 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:15:41,210 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:15:41,924 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:15:44,428 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:15:44,650 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:15:44,651 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:15:44,651 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:15:45,578 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_001
+2026-08-15 14:15:45,579 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_002
+2026-08-15 14:15:45,579 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_003
+2026-08-15 14:15:45,581 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_004
+2026-08-15 14:15:45,581 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_005
+2026-08-15 14:15:45,588 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_07a8f88c_EXP_006
+2026-08-15 14:15:45,705 - datapilot.api - INFO - [7eb62d3a-0183-4e68-8c4e-f218190ba50a] GET /api/v1/jobs/job_07a8f88c - Status: 200 (341.55ms)
+2026-08-15 14:15:47,495 - datapilot.api - INFO - [6e2745ca-42e0-46df-9ae2-821d8d087857] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1786.49ms)
+2026-08-15 14:16:02,406 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_005 | Status: completed | Runtime: 16.8253s | Metrics: {'accuracy': 0.9063, 'precision': 0.8919, 'recall': 0.9063, 'f1': 0.8913, 'f1_score': 0.8913, 'f2_score': 0.9034, 'f05_score': 0.8948, 'balanced_accuracy': 0.6523, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9066, 'cv_std': 0.001, 'test_score': 0.9063, 'train_score': 0.9067, 'train_test_gap': 0.0004}
+2026-08-15 14:16:09,177 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_006 | Status: completed | Runtime: 23.589s | Metrics: {'accuracy': 0.9116, 'precision': 0.9066, 'recall': 0.9116, 'f1': 0.9087, 'f1_score': 0.9087, 'f2_score': 0.9106, 'f05_score': 0.9076, 'balanced_accuracy': 0.7484, 'roc_auc': 0.9473, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9141, 'cv_std': 0.0015, 'test_score': 0.9116, 'train_score': 0.9595, 'train_test_gap': 0.0479}
+2026-08-15 14:16:18,594 - datapilot.api - INFO - [f96feeb0-eeca-4dfe-8ec3-919893ffdac0] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1053.22ms)
+2026-08-15 14:16:30,083 - datapilot.api - INFO - [b9b5d255-d5aa-47c0-a5b5-e697f151139c] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1466.59ms)
+2026-08-15 14:16:33,996 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_004 | Status: completed | Runtime: 48.4156s | Metrics: {'accuracy': 0.9043, 'precision': 0.8913, 'recall': 0.9043, 'f1': 0.8942, 'f1_score': 0.8942, 'f2_score': 0.9017, 'f05_score': 0.8939, 'balanced_accuracy': 0.6775, 'roc_auc': 0.9222, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.901, 'cv_std': 0.0016, 'test_score': 0.9043, 'train_score': 1.0, 'train_test_gap': 0.0957}
+2026-08-15 14:16:34,058 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_001 | Status: completed | Runtime: 48.4802s | Metrics: {'accuracy': 0.912, 'precision': 0.9039, 'recall': 0.912, 'f1': 0.9065, 'f1_score': 0.9065, 'f2_score': 0.9103, 'f05_score': 0.9055, 'balanced_accuracy': 0.726, 'roc_auc': 0.943, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9124, 'cv_std': 0.0012, 'test_score': 0.912, 'train_score': 1.0, 'train_test_gap': 0.088}
+2026-08-15 14:16:50,872 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_003 | Status: completed | Runtime: 65.2933s | Metrics: {'accuracy': 0.9183, 'precision': 0.9144, 'recall': 0.9183, 'f1': 0.916, 'f1_score': 0.916, 'f2_score': 0.9175, 'f05_score': 0.9152, 'balanced_accuracy': 0.77, 'roc_auc': 0.9509, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9157, 'cv_std': 0.0022, 'test_score': 0.9183, 'train_score': 0.9338, 'train_test_gap': 0.0155}
+2026-08-15 14:16:54,824 - datapilot.ml_execution - INFO - Finished Experiment ID: job_07a8f88c_EXP_002 | Status: completed | Runtime: 69.2453s | Metrics: {'accuracy': 0.9089, 'precision': 0.8978, 'recall': 0.9089, 'f1': 0.9002, 'f1_score': 0.9002, 'f2_score': 0.9067, 'f05_score': 0.9, 'balanced_accuracy': 0.6956, 'roc_auc': 0.9384, 'primary_metric_name': 'Recall', 'primary_metric_rationale': 'Financial Credit & Loan Underwriting Domain detected from dataset features (loan, default). High Type II Error Risk (False Negatives): Approving a defaulting borrower carries a severe financial loss. Recall is selected to minimize missed defaults.', 'cv_mean': 0.9104, 'cv_std': 0.0022, 'test_score': 0.9089, 'train_score': 0.9118, 'train_test_gap': 0.0029}
+2026-08-15 14:16:55,663 - datapilot.evaluation.evaluator - INFO - Evaluating 18 experiments for job job_07a8f88c
+2026-08-15 14:16:56,295 - datapilot.api - INFO - [2edfc37a-7df7-4444-a514-ec60bbe22381] GET /api/v1/jobs/job_07a8f88c - Status: 200 (633.93ms)
+2026-08-15 14:16:56,386 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:16:56,391 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:16:56,619 - datapilot.api - INFO - [cd0f51eb-ceb8-4424-94f5-c7bf49c44240] GET /api/v1/jobs/job_07a8f88c - Status: 200 (321.24ms)
+2026-08-15 14:16:57,033 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:16:57,959 - datapilot.api - INFO - [0c90cb42-a683-43c5-807f-3cb59a589354] GET /api/v1/jobs/job_07a8f88c - Status: 200 (1337.17ms)
+2026-08-15 14:16:59,535 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:16:59,989 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:17:02,493 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:17:03,006 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:17:03,007 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:17:03,008 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:17:03,586 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-15 14:17:03,588 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:17:04,045 - datapilot.api - INFO - [09f94823-1f1b-4ec6-9de5-a5c58d40d0fe] GET /api/v1/jobs/job_07a8f88c - Status: 200 (453.04ms)
+2026-08-15 14:17:04,115 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:17:06,622 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:17:07,080 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:17:09,603 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:17:09,863 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:17:09,864 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:17:09,864 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:17:10,824 - datapilot.api - INFO - [1edf76d3-28d4-4436-b6e2-e3710d4d9703] GET /api/v1/jobs/job_07a8f88c - Status: 200 (324.13ms)
+2026-08-15 14:17:12,849 - datapilot.api - INFO - [799476b8-e752-4138-b4ce-f7a57a8f72cf] OPTIONS /api/v1/experiments/job_07a8f88c - Status: 200 (1.03ms)
+2026-08-15 14:17:13,291 - datapilot.api - INFO - [0e3fc31a-ba68-45bd-abcc-69b74b37dfda] GET /api/v1/experiments/job_07a8f88c - Status: 200 (431.70ms)
+2026-08-15 14:17:20,068 - datapilot.services.supabase_storage - INFO - Supabase Storage initialized (https://keedragqsfqvshognlgg.supabase.co) for bucket: datasets
+2026-08-15 14:17:20,489 - httpx - INFO - HTTP Request: GET https://keedragqsfqvshognlgg.supabase.co/storage/v1/bucket "HTTP/2 200 OK"
+2026-08-15 14:17:20,909 - httpx - INFO - HTTP Request: POST https://keedragqsfqvshognlgg.supabase.co/storage/v1/object/datasets/reports/job_07a8f88c/report.html "HTTP/2 200 OK"
+2026-08-15 14:17:20,911 - datapilot.services.supabase_storage - INFO - Uploaded 26598 bytes to Supabase: datasets/reports/job_07a8f88c/report.html
+2026-08-15 14:17:20,911 - datapilot.services.job_manager - INFO - Report uploaded to Supabase Storage: reports/job_07a8f88c/report.html
+2026-08-15 14:17:21,495 - datapilot.services.job_manager - INFO - Research job job_07a8f88c completed successfully!
+2026-08-15 14:17:24,987 - datapilot.api - INFO - [86b54760-cc3c-4c98-9cfc-52f92c140d29] GET /api/v1/dashboard - Status: 200 (732.05ms)
+2026-08-15 14:17:25,865 - datapilot.api - INFO - [36ff7736-115b-42dc-847e-378e8c6590c8] OPTIONS /api/v1/reports/job_07a8f88c - Status: 200 (0.40ms)
+2026-08-15 14:17:27,484 - datapilot.api - INFO - [08bfdbf1-ad77-4aa2-9962-d4dc1e377c75] GET /api/v1/reports/job_07a8f88c - Status: 200 (1618.08ms)
+2026-08-15 14:17:28,762 - datapilot.api - INFO - [7b776993-2699-467f-9fd3-31ebb1042716] OPTIONS /api/v1/datasets/ds_6bbbbd3e - Status: 200 (1.42ms)
+2026-08-15 14:17:29,047 - datapilot.api - INFO - [031b089c-5f2e-4b85-8acb-cacffe5bd26d] GET /api/v1/reports/job_07a8f88c/html - Status: 200 (288.48ms)
+2026-08-15 14:17:29,234 - datapilot.api - INFO - [7ae32842-f37a-42cd-9da1-ecbda29c0727] GET /api/v1/experiments/job_07a8f88c - Status: 200 (473.13ms)
+2026-08-15 14:17:29,605 - datapilot.api - INFO - [9390881e-f8c0-49cc-9f09-427d52ed589c] GET /api/v1/datasets/ds_6bbbbd3e - Status: 200 (840.04ms)
+2026-08-15 14:18:25,014 - datapilot.api - INFO - [3f24341b-9379-4e98-8a64-a82298f93595] OPTIONS /api/v1/dashboard - Status: 200 (3.76ms)
+2026-08-15 14:18:26,956 - datapilot.api - INFO - [c366b6b0-3f7f-4651-be60-fa918c305fa6] GET /api/v1/dashboard - Status: 200 (1938.57ms)
+2026-08-15 14:20:28,218 - datapilot.api - INFO - [d0d1ed74-eb1b-4ce8-b3fc-8301bc311e0a] GET /api/v1/dashboard - Status: 200 (1250.81ms)
+2026-08-15 14:21:29,513 - datapilot.api - INFO - [f3b0d4d8-f6c2-46a7-a3df-4ddf71069c72] GET /api/v1/dashboard - Status: 200 (1286.85ms)
+2026-08-15 14:22:19,499 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_07a8f88c
+2026-08-15 14:22:19,600 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 14:22:22,379 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 14:22:26,141 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 14:22:26,141 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 14:22:26,147 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_07a8f88c
+2026-08-15 14:22:30,869 - datapilot.api - INFO - [fba19166-c058-41c6-8576-2d7cb789de0b] GET /api/v1/dashboard - Status: 200 (1343.14ms)
+2026-08-15 14:23:32,039 - datapilot.api - INFO - [ff3e1c59-c4c9-439a-adce-c6b85c36a455] GET /api/v1/dashboard - Status: 200 (1161.41ms)
+2026-08-15 14:23:48,029 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_07a8f88c
+2026-08-15 14:23:48,127 - datapilot.api - INFO - [f155ad5c-a7e2-4fa8-a994-3b765e8a8a54] OPTIONS /api/v1/experiments/job_07a8f88c - Status: 200 (4.37ms)
+2026-08-15 14:23:49,250 - datapilot.api - INFO - [743dba2b-da28-4af7-af92-d6f8c8cc1c92] GET /api/v1/dashboard - Status: 200 (1129.15ms)
+2026-08-15 14:23:49,430 - datapilot.api - INFO - [c27a8ac0-09fa-4bf9-a670-99e1fa244552] GET /api/v1/reports/job_07a8f88c - Status: 200 (1308.14ms)
+2026-08-15 14:23:49,467 - datapilot.api - INFO - [2d88aff4-6327-4049-b60c-a45f85174bfe] OPTIONS /api/v1/datasets/ds_6bbbbd3e - Status: 200 (0.36ms)
+2026-08-15 14:23:49,596 - datapilot.api - INFO - [1d6e3d53-6f94-4d29-af46-647b1d3bd89c] GET /api/v1/experiments/job_07a8f88c - Status: 200 (1465.35ms)
+2026-08-15 14:23:49,933 - datapilot.api - INFO - [ed87a888-8c62-4a14-81de-9c205bc77191] GET /api/v1/reports/job_07a8f88c/html - Status: 200 (480.10ms)
+2026-08-15 14:23:50,376 - datapilot.api - INFO - [10962413-44da-49dd-89da-79e13033657e] GET /api/v1/datasets/ds_6bbbbd3e - Status: 200 (908.05ms)
+2026-08-15 14:23:54,040 - datapilot.api - INFO - [8e21be9b-16b4-424c-bf1f-a77c4c2f11e0] GET /api/v1/dashboard - Status: 200 (1264.00ms)
+2026-08-15 14:23:54,239 - datapilot.api - INFO - [10f6a7f8-0b66-4c1f-8842-a5435c99e2c4] GET /api/v1/reports/job_07a8f88c - Status: 200 (1462.80ms)
+2026-08-15 14:23:54,345 - datapilot.api - INFO - [3162ada4-18b3-4840-b8f2-bc87407ae0c4] GET /api/v1/experiments/job_07a8f88c - Status: 200 (1568.57ms)
+2026-08-15 14:23:54,674 - datapilot.api - INFO - [d577d222-1cd1-430c-a8f9-ced3f75a1863] GET /api/v1/reports/job_07a8f88c/html - Status: 200 (412.72ms)
+2026-08-15 14:23:56,648 - datapilot.api - INFO - [a973085c-7b14-4dc7-a317-cf7331e26252] GET /api/v1/datasets/ds_6bbbbd3e - Status: 200 (2374.14ms)
+2026-08-15 14:23:59,742 - datapilot.api - INFO - [19ad89f0-949c-4089-b865-3d9fc93d75ab] GET /api/v1/reports/job_07a8f88c/html - Status: 200 (482.40ms)
+2026-08-15 14:24:05,234 - datapilot.api - INFO - [6591e238-422f-4842-8ae2-b0fb33ff70fa] GET /api/v1/reports/job_07a8f88c/html - Status: 200 (282.49ms)
+2026-08-15 14:24:05,356 - datapilot.api - INFO - [0dea3701-b76d-4524-ae6a-ea1d8cc97ca6] GET /api/v1/experiments/job_07a8f88c - Status: 200 (400.85ms)
+2026-08-15 14:24:38,191 - datapilot.api - INFO - [cb55393d-dd2d-4184-b0ea-2ae530ac13f0] OPTIONS /api/v1/upload - Status: 200 (1.39ms)
+2026-08-15 14:24:38,203 - datapilot.services.dataset_service - INFO - Dataset 'raw_data.csv' received (371 bytes, SHA256=1e789febbf70...)
+2026-08-15 14:24:38,280 - datapilot.services.supabase_storage - INFO - Supabase Storage initialized (https://keedragqsfqvshognlgg.supabase.co) for bucket: datasets
+2026-08-15 14:24:38,787 - httpx - INFO - HTTP Request: GET https://keedragqsfqvshognlgg.supabase.co/storage/v1/bucket "HTTP/2 200 OK"
+2026-08-15 14:24:39,062 - httpx - INFO - HTTP Request: POST https://keedragqsfqvshognlgg.supabase.co/storage/v1/object/datasets/ds_8b264176/raw_data.csv "HTTP/2 200 OK"
+2026-08-15 14:24:39,067 - datapilot.services.supabase_storage - INFO - Uploaded 371 bytes to Supabase: datasets/ds_8b264176/raw_data.csv
+2026-08-15 14:24:39,068 - datapilot.services.dataset_service - INFO - Dataset successfully uploaded to Supabase Storage: ds_8b264176/raw_data.csv
+2026-08-15 14:24:39,589 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output TargetInspectionResult
+2026-08-15 14:24:39,592 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:24:40,229 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:24:42,734 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:24:42,887 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:24:45,394 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:24:45,570 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:24:45,578 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:24:45,578 - datapilot.agents.base - INFO - Using rule-based fallback response for TargetInspectionResult (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:24:46,373 - datapilot.services.dataset_service - INFO - Dataset 'raw_data.csv' registered in database (ID=ds_8b264176)
+2026-08-15 14:24:46,375 - datapilot.api - INFO - [d973e12b-dfe5-4bd2-9c7b-df5cc09da61f] POST /api/v1/upload - Status: 201 (8180.98ms)
+2026-08-15 14:24:46,382 - datapilot.api - INFO - [9fa433a7-7221-43bf-a596-f2eac2106836] OPTIONS /api/v1/jobs/start - Status: 200 (0.54ms)
+2026-08-15 14:24:47,284 - datapilot.api - INFO - [fa8d7b0d-bf9e-4124-a56d-b3c4ee044d2d] POST /api/v1/jobs/start - Status: 202 (900.36ms)
+2026-08-15 14:24:47,285 - datapilot.services.job_service - WARNING - No running event loop found for job job_46626318; creating new loop
+2026-08-15 14:24:47,992 - datapilot.api - INFO - [955f25ca-92f9-4075-9a8d-7eff763aadcc] OPTIONS /api/v1/jobs/job_46626318 - Status: 200 (0.86ms)
+2026-08-15 14:24:47,993 - datapilot.api - INFO - [34062ea1-ec0e-4ed9-83b4-49938bb20c3f] OPTIONS /api/v1/jobs/job_46626318/logs - Status: 200 (1.47ms)
+2026-08-15 14:24:48,011 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_46626318
+2026-08-15 14:24:48,503 - datapilot.api - INFO - [6f10708d-9546-4ba8-87a1-c34592b41a6c] GET /api/v1/jobs/job_46626318 - Status: 200 (504.82ms)
+2026-08-15 14:24:48,590 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output TargetInspectionResult
+2026-08-15 14:24:48,591 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:24:48,721 - datapilot.api - INFO - [23aae17c-e51e-44f1-a723-064da0ca591d] GET /api/v1/jobs/job_46626318/logs - Status: 200 (722.58ms)
+2026-08-15 14:24:48,751 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:24:49,897 - datapilot.api - INFO - [4f6c1ea4-26ea-452c-96fc-f21bc2d9ee3f] GET /api/v1/jobs/job_46626318 - Status: 200 (1295.65ms)
+2026-08-15 14:24:51,257 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:24:51,812 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:24:54,314 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:24:54,799 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:24:54,800 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:24:54,801 - datapilot.agents.base - INFO - Using rule-based fallback response for TargetInspectionResult (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:24:55,247 - datapilot.api - INFO - [b76acd02-c3ea-4c65-8f2d-f6434cbb2988] GET /api/v1/dashboard - Status: 200 (1144.98ms)
+2026-08-15 14:24:55,612 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output MissionBrief
+2026-08-15 14:24:55,614 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:24:56,066 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:24:56,144 - datapilot.api - INFO - [89ba1eb3-81bb-4ec4-bcd4-10c6f0108fcf] GET /api/v1/jobs/job_46626318 - Status: 200 (464.13ms)
+2026-08-15 14:24:58,570 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:24:58,719 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:01,223 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:01,695 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:01,696 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:01,696 - datapilot.agents.base - INFO - Using rule-based fallback response for MissionBrief (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:02,473 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:25:02,475 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:02,771 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:03,044 - datapilot.api - INFO - [fc66437a-6072-40ce-a269-9f3eb788bdd2] GET /api/v1/jobs/job_46626318 - Status: 200 (496.06ms)
+2026-08-15 14:25:03,535 - datapilot.api - INFO - [0cd186d6-b62e-4a9f-8044-f93ddd1c5742] GET /api/v1/jobs/job_46626318 - Status: 200 (488.75ms)
+2026-08-15 14:25:05,278 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:05,513 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:08,020 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:08,477 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:08,479 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:08,479 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:09,308 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_001
+2026-08-15 14:25:09,308 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_002
+2026-08-15 14:25:09,308 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_003
+2026-08-15 14:25:09,316 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_004
+2026-08-15 14:25:09,333 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_005
+2026-08-15 14:25:09,363 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_006
+2026-08-15 14:25:09,489 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_005 | Status: completed | Runtime: 0.1562s | Metrics: {'mae': 5837.8427, 'rmse': 6736.7948, 'r2': 0.3718, 'explained_variance': 0.5283, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5837.8427, 'train_score': 2747.5929, 'train_test_gap': 3090.2498}
+2026-08-15 14:25:09,490 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_002 | Status: completed | Runtime: 0.1816s | Metrics: {'mae': 5000.0, 'rmse': 6518.9329, 'r2': 0.4118, 'explained_variance': 0.654, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5000.0, 'train_score': 0.0, 'train_test_gap': 5000.0}
+2026-08-15 14:25:09,799 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_004 | Status: completed | Runtime: 0.483s | Metrics: {'mae': 6465.0, 'rmse': 6507.7838, 'r2': 0.4138, 'explained_variance': 0.4215, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6465.0, 'train_score': 0.0, 'train_test_gap': 6465.0}
+2026-08-15 14:25:09,871 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_001 | Status: completed | Runtime: 0.5625s | Metrics: {'mae': 6085.0, 'rmse': 7129.4074, 'r2': 0.2965, 'explained_variance': 0.4875, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6085.0, 'train_score': 3007.6023, 'train_test_gap': 3077.3977}
+2026-08-15 14:25:09,912 - datapilot.api - INFO - [78e0b8a6-7a13-402c-affe-5e1b4dfe8023] GET /api/v1/jobs/job_46626318 - Status: 200 (557.18ms)
+2026-08-15 14:25:10,249 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_003 | Status: completed | Runtime: 0.9404s | Metrics: {'mae': 8500.0, 'rmse': 10202.5407, 'r2': -0.4407, 'explained_variance': 0.0, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 8500.0, 'train_score': 8542.8094, 'train_test_gap': 42.8094}
+2026-08-15 14:25:10,352 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_006 | Status: completed | Runtime: 0.9887s | Metrics: {'mae': 2152.4551, 'rmse': 2157.8466, 'r2': 0.9356, 'explained_variance': 0.9997, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 2152.4551, 'train_score': 0.0118, 'train_test_gap': 2152.4433}
+2026-08-15 14:25:10,456 - datapilot.api - INFO - [92d8e5a0-7fa0-4ec9-9f82-45f4096d91be] GET /api/v1/jobs/job_46626318 - Status: 200 (543.57ms)
+2026-08-15 14:25:11,225 - datapilot.evaluation.evaluator - INFO - Evaluating 6 experiments for job job_46626318
+2026-08-15 14:25:11,759 - datapilot.api - INFO - [cae8f7c5-7449-44ec-90a6-1652077eec76] GET /api/v1/jobs/job_46626318 - Status: 200 (506.48ms)
+2026-08-15 14:25:12,055 - datapilot.api - INFO - [8d51652e-0a85-4f5e-b80f-05288532c631] GET /api/v1/jobs/job_46626318 - Status: 200 (294.49ms)
+2026-08-15 14:25:12,307 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:25:12,311 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:12,599 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:12,895 - datapilot.api - INFO - [c8db33bc-c60e-4f0c-8c53-a8f9d1f578dc] GET /api/v1/jobs/job_46626318 - Status: 200 (524.39ms)
+2026-08-15 14:25:15,105 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:15,245 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:17,752 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:17,954 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:17,954 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:17,955 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:18,876 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:25:18,878 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:19,049 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:19,245 - datapilot.api - INFO - [cd29b340-2a0d-4077-9cba-4b5d5df4e3e3] GET /api/v1/jobs/job_46626318 - Status: 200 (304.79ms)
+2026-08-15 14:25:21,554 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:21,723 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:24,229 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:24,381 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:24,382 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:24,382 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:25,329 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_001
+2026-08-15 14:25:25,329 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_002
+2026-08-15 14:25:25,334 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_003
+2026-08-15 14:25:25,335 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_004
+2026-08-15 14:25:25,341 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_005
+2026-08-15 14:25:25,347 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_006
+2026-08-15 14:25:25,490 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_002 | Status: completed | Runtime: 0.1616s | Metrics: {'mae': 5000.0, 'rmse': 6518.9329, 'r2': 0.4118, 'explained_variance': 0.654, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5000.0, 'train_score': 0.0, 'train_test_gap': 5000.0}
+2026-08-15 14:25:25,491 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_005 | Status: completed | Runtime: 0.1501s | Metrics: {'mae': 5837.8427, 'rmse': 6736.7948, 'r2': 0.3718, 'explained_variance': 0.5283, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5837.8427, 'train_score': 2747.5929, 'train_test_gap': 3090.2498}
+2026-08-15 14:25:25,862 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_004 | Status: completed | Runtime: 0.527s | Metrics: {'mae': 6465.0, 'rmse': 6507.7838, 'r2': 0.4138, 'explained_variance': 0.4215, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6465.0, 'train_score': 0.0, 'train_test_gap': 6465.0}
+2026-08-15 14:25:25,883 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_001 | Status: completed | Runtime: 0.5543s | Metrics: {'mae': 6085.0, 'rmse': 7129.4074, 'r2': 0.2965, 'explained_variance': 0.4875, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6085.0, 'train_score': 3007.6023, 'train_test_gap': 3077.3977}
+2026-08-15 14:25:25,962 - datapilot.api - INFO - [24f98d43-3966-49c5-88d7-5e6e7241936d] GET /api/v1/jobs/job_46626318 - Status: 200 (501.40ms)
+2026-08-15 14:25:26,229 - datapilot.api - INFO - [f4898327-d426-46ae-a42b-b5c9ab2a80eb] GET /api/v1/jobs/job_46626318 - Status: 200 (266.13ms)
+2026-08-15 14:25:26,259 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_003 | Status: completed | Runtime: 0.925s | Metrics: {'mae': 8500.0, 'rmse': 10202.5407, 'r2': -0.4407, 'explained_variance': 0.0, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 8500.0, 'train_score': 8542.8094, 'train_test_gap': 42.8094}
+2026-08-15 14:25:26,367 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_006 | Status: completed | Runtime: 1.02s | Metrics: {'mae': 2152.4551, 'rmse': 2157.8466, 'r2': 0.9356, 'explained_variance': 0.9997, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 2152.4551, 'train_score': 0.0118, 'train_test_gap': 2152.4433}
+2026-08-15 14:25:27,317 - datapilot.evaluation.evaluator - INFO - Evaluating 12 experiments for job job_46626318
+2026-08-15 14:25:27,808 - datapilot.api - INFO - [178812fb-9347-46a2-9ad2-3e1251941fbf] GET /api/v1/jobs/job_46626318 - Status: 200 (464.91ms)
+2026-08-15 14:25:28,059 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:25:28,061 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:28,290 - datapilot.api - INFO - [049c823a-7879-44aa-bad7-f642b5c61dea] GET /api/v1/jobs/job_46626318 - Status: 200 (479.74ms)
+2026-08-15 14:25:28,545 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:28,785 - datapilot.api - INFO - [e1e96e53-5697-4e50-8a3f-f1f2f4063e8c] GET /api/v1/jobs/job_46626318 - Status: 200 (491.51ms)
+2026-08-15 14:25:31,052 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:31,342 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:33,848 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:34,157 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:34,158 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:34,158 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:35,195 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ExperimentPlan
+2026-08-15 14:25:35,198 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:35,468 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:35,699 - datapilot.api - INFO - [9f6653e5-9b9e-4ab0-a2e8-8f89f775f711] GET /api/v1/jobs/job_46626318 - Status: 200 (472.14ms)
+2026-08-15 14:25:37,972 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:38,132 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:40,633 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:40,864 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:40,865 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:40,865 - datapilot.agents.base - INFO - Using rule-based fallback response for ExperimentPlan (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:41,855 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_001
+2026-08-15 14:25:41,864 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_002
+2026-08-15 14:25:41,864 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_003
+2026-08-15 14:25:41,867 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_004
+2026-08-15 14:25:41,896 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_005
+2026-08-15 14:25:41,896 - datapilot.ml_execution - INFO - Starting execution for Experiment ID: job_46626318_EXP_006
+2026-08-15 14:25:42,012 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_002 | Status: completed | Runtime: 0.1484s | Metrics: {'mae': 5000.0, 'rmse': 6518.9329, 'r2': 0.4118, 'explained_variance': 0.654, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5000.0, 'train_score': 0.0, 'train_test_gap': 5000.0}
+2026-08-15 14:25:42,014 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_005 | Status: completed | Runtime: 0.1176s | Metrics: {'mae': 5837.8427, 'rmse': 6736.7948, 'r2': 0.3718, 'explained_variance': 0.5283, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 5837.8427, 'train_score': 2747.5929, 'train_test_gap': 3090.2498}
+2026-08-15 14:25:42,290 - datapilot.api - INFO - [688a4ee9-4d25-41c5-bed1-2a7b9fc1c3f4] GET /api/v1/jobs/job_46626318 - Status: 200 (353.72ms)
+2026-08-15 14:25:42,337 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_004 | Status: completed | Runtime: 0.4707s | Metrics: {'mae': 6465.0, 'rmse': 6507.7838, 'r2': 0.4138, 'explained_variance': 0.4215, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6465.0, 'train_score': 0.0, 'train_test_gap': 6465.0}
+2026-08-15 14:25:42,391 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_001 | Status: completed | Runtime: 0.536s | Metrics: {'mae': 6085.0, 'rmse': 7129.4074, 'r2': 0.2965, 'explained_variance': 0.4875, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 6085.0, 'train_score': 3007.6023, 'train_test_gap': 3077.3977}
+2026-08-15 14:25:42,760 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_003 | Status: completed | Runtime: 0.8958s | Metrics: {'mae': 8500.0, 'rmse': 10202.5407, 'r2': -0.4407, 'explained_variance': 0.0, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 8500.0, 'train_score': 8542.8094, 'train_test_gap': 42.8094}
+2026-08-15 14:25:42,823 - datapilot.api - INFO - [b36b8659-e214-42ff-a835-6f2de89ce936] GET /api/v1/jobs/job_46626318 - Status: 200 (530.10ms)
+2026-08-15 14:25:42,871 - datapilot.ml_execution - INFO - Finished Experiment ID: job_46626318_EXP_006 | Status: completed | Runtime: 0.9751s | Metrics: {'mae': 2152.4551, 'rmse': 2157.8466, 'r2': 0.9356, 'explained_variance': 0.9997, 'primary_metric_name': 'MAE', 'primary_metric_rationale': 'Outlier-sensitive financial/pricing domain detected from column features. Mean Absolute Error (MAE) evaluates average dollar prediction error robustly against extreme outliers.', 'cv_mean': nan, 'cv_std': nan, 'test_score': 2152.4551, 'train_score': 0.0118, 'train_test_gap': 2152.4433}
+2026-08-15 14:25:43,968 - datapilot.evaluation.evaluator - INFO - Evaluating 18 experiments for job job_46626318
+2026-08-15 14:25:44,336 - datapilot.api - INFO - [57ea081d-4d52-4151-944f-1747fcdd307c] GET /api/v1/jobs/job_46626318 - Status: 200 (311.14ms)
+2026-08-15 14:25:44,807 - datapilot.api - INFO - [370e1059-39e1-486c-8a31-b7d0b2050237] GET /api/v1/jobs/job_46626318 - Status: 200 (469.56ms)
+2026-08-15 14:25:44,914 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output ResearchDirectorDecision
+2026-08-15 14:25:44,918 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:45,247 - datapilot.api - INFO - [c4475eb0-bed5-4bbc-ba85-cf975d31feab] GET /api/v1/jobs/job_46626318 - Status: 200 (312.55ms)
+2026-08-15 14:25:45,384 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:47,886 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:48,702 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:51,205 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:51,445 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:51,446 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:51,446 - datapilot.agents.base - INFO - Using rule-based fallback response for ResearchDirectorDecision (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:52,386 - datapilot.agents.base - INFO - Invoking LLM model 'nvidia/nemotron-3.5-lightning:free' for structured output FinalRecommendation
+2026-08-15 14:25:52,387 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 1/3)
+2026-08-15 14:25:52,573 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (1/2)...
+2026-08-15 14:25:52,875 - datapilot.api - INFO - [d697a233-bfa5-4c0a-9769-d8e554c32965] GET /api/v1/jobs/job_46626318 - Status: 200 (462.13ms)
+2026-08-15 14:25:55,078 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 2/3)
+2026-08-15 14:25:55,292 - datapilot.agents.base - INFO - OpenRouter 429 Rate Limit encountered. Pausing 2.5s before retry (2/2)...
+2026-08-15 14:25:57,796 - datapilot.agents.base - INFO - Calling OpenRouter model 'nvidia/nemotron-3.5-lightning:free' (attempt 3/3)
+2026-08-15 14:25:57,948 - datapilot.agents.base - WARNING - OpenRouter call failed (HTTP Error 429: Too Many Requests); trying secondary providers
+2026-08-15 14:25:57,949 - datapilot.agents.base - WARNING - Google GenAI SDK call failed (ModuleNotFoundError: No module named 'google.genai'); using fallback response
+2026-08-15 14:25:57,949 - datapilot.agents.base - INFO - Using rule-based fallback response for FinalRecommendation (Model: nvidia/nemotron-3.5-lightning:free)
+2026-08-15 14:25:58,859 - datapilot.api - INFO - [96c19dea-80f0-4cc2-85c3-dc872e23dfe9] OPTIONS /api/v1/reports/job_46626318 - Status: 200 (0.59ms)
+2026-08-15 14:25:58,864 - datapilot.api - INFO - [f55ec1a6-eb56-475f-a77e-0443fda620d7] OPTIONS /api/v1/experiments/job_46626318 - Status: 200 (4.95ms)
+2026-08-15 14:25:59,340 - datapilot.api - INFO - [d2fced74-7e47-4353-8034-dfc23d1f773f] GET /api/v1/experiments/job_46626318 - Status: 200 (473.18ms)
+2026-08-15 14:25:59,504 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Final report for job 'job_46626318' not found or not yet completed.
+2026-08-15 14:25:59,505 - datapilot.api - INFO - [ba5455bb-86a6-42ae-ae60-1232610bfbfe] GET /api/v1/reports/job_46626318 - Status: 404 (639.24ms)
+2026-08-15 14:26:01,108 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Final report for job 'job_46626318' not found or not yet completed.
+2026-08-15 14:26:01,110 - datapilot.api - INFO - [ac8fc876-4bf7-415b-863d-2939172fed01] GET /api/v1/reports/job_46626318 - Status: 404 (599.53ms)
+2026-08-15 14:26:02,323 - datapilot.api - INFO - [52750a4e-2730-44e7-9e06-cdd6f79b6d6d] GET /api/v1/jobs/job_46626318/logs - Status: 200 (1093.65ms)
+2026-08-15 14:26:10,762 - datapilot.services.supabase_storage - INFO - Supabase Storage initialized (https://keedragqsfqvshognlgg.supabase.co) for bucket: datasets
+2026-08-15 14:26:11,278 - httpx - INFO - HTTP Request: GET https://keedragqsfqvshognlgg.supabase.co/storage/v1/bucket "HTTP/2 200 OK"
+2026-08-15 14:26:11,542 - httpx - INFO - HTTP Request: POST https://keedragqsfqvshognlgg.supabase.co/storage/v1/object/datasets/reports/job_46626318/report.html "HTTP/2 200 OK"
+2026-08-15 14:26:11,543 - datapilot.services.supabase_storage - INFO - Uploaded 18302 bytes to Supabase: datasets/reports/job_46626318/report.html
+2026-08-15 14:26:11,543 - datapilot.services.job_manager - INFO - Report uploaded to Supabase Storage: reports/job_46626318/report.html
+2026-08-15 14:26:11,684 - datapilot.api - INFO - [920b062b-169c-44ea-be98-9fc569041adc] GET /api/v1/jobs/job_46626318 - Status: 200 (452.14ms)
+2026-08-15 14:26:12,262 - datapilot.services.job_manager - INFO - Research job job_46626318 completed successfully!
+2026-08-15 14:26:12,807 - datapilot.api - INFO - [c7273245-d0ce-4ce7-9f65-6d5bb9d62042] GET /api/v1/jobs/job_46626318 - Status: 200 (479.44ms)
+2026-08-15 14:26:14,335 - datapilot.api - INFO - [3aeb8ca5-c060-420f-8cd1-15bf25227faa] GET /api/v1/experiments/job_46626318 - Status: 200 (604.54ms)
+2026-08-15 14:26:15,085 - datapilot.api - INFO - [c5992751-bbe1-45e6-8693-ecf32d7eacb1] GET /api/v1/reports/job_46626318 - Status: 200 (1354.40ms)
+2026-08-15 14:26:15,116 - datapilot.api - INFO - [9d1c6df2-bd7d-4875-8a33-dc77d6496182] OPTIONS /api/v1/datasets/ds_8b264176 - Status: 200 (0.29ms)
+2026-08-15 14:26:15,410 - datapilot.api - INFO - [bf1d6ae7-5783-444f-99ed-d27468b7b73a] GET /api/v1/reports/job_46626318/html - Status: 200 (301.13ms)
+2026-08-15 14:26:15,417 - datapilot.api - INFO - [1e062226-228c-498b-8adb-c918a81acadb] GET /api/v1/datasets/ds_8b264176 - Status: 200 (300.20ms)
