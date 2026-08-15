@@ -320,6 +320,21 @@ hr, .divider {
   box-shadow: var(--shadow-lg);
 }
 
+/* ── Evindra landing atmosphere ─────────────────────────────── */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(107, 219, 205, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(107, 219, 205, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 15%, transparent 92%);
+}
+
+.hero-vignette {
+  background:
+    radial-gradient(circle at 72% 42%, rgba(18, 179, 163, 0.12), transparent 28%),
+    linear-gradient(to bottom, transparent 55%, var(--bg));
+}
+
 /* ── Hide Next.js Dev Indicator & Overlay Badge ───────────────── */
 nextjs-portal,
 #__next-build-watcher,
