@@ -40,7 +40,16 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
     if p_name:
         primary_metric_name = p_name
 
-    primary_metric_value = (metrics.get("primary_metric") if isinstance(metrics, dict) else None) or inner_metrics.get("rmse") or inner_metrics.get("f1") or 0.0
+    raw_primary = (metrics.get("primary_metric") if isinstance(metrics, dict) else None)
+    if raw_primary is None and isinstance(inner_metrics, dict):
+        raw_primary = inner_metrics.get("primary_metric")
+    if raw_primary is None and isinstance(inner_metrics, dict):
+        raw_primary = inner_metrics.get("rmse") if "rmse" in inner_metrics else (inner_metrics.get("f1_score") if "f1_score" in inner_metrics else inner_metrics.get("f1"))
+
+    if raw_primary is not None and isinstance(raw_primary, (int, float)) and not math.isnan(raw_primary) and not math.isinf(raw_primary):
+        primary_metric_value = float(raw_primary)
+    else:
+        primary_metric_value = 0.0
 
     # Build pipeline name from operations or model name
     pipeline_ops = exp.pipeline or {}

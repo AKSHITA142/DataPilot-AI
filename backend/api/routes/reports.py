@@ -17,61 +17,63 @@ router = APIRouter(prefix="/reports", tags=["Final Reports"])
 def compute_composite_and_confidence(inner_metrics: dict) -> tuple[float, float, str]:
     """
     Computes (composite_score, confidence_score, primary_metric_name) for both Classification and Regression.
+    Uses the domain-resolved primary metric directly as the composite score basis.
     """
     if not inner_metrics or not isinstance(inner_metrics, dict):
         return 0.75, 0.85, "Composite"
 
     primary_name = inner_metrics.get("primary_metric_name")
-
-    # 1. Classification Metrics
-    clf_scores = []
-    for k in ("f1_score", "f1", "precision", "recall", "balanced_accuracy", "accuracy", "roc_auc"):
-        val = inner_metrics.get(k)
-        if isinstance(val, (int, float)) and not math.isnan(val) and not math.isinf(val):
-            clf_scores.append(val)
-
-    if clf_scores:
-        if not primary_name:
-            if "primary_metric_name" in inner_metrics:
-                primary_name = str(inner_metrics["primary_metric_name"])
-            elif "recall" in inner_metrics:
-                primary_name = "Recall"
-            elif "precision" in inner_metrics:
-                primary_name = "Precision"
-            elif "f1_score" in inner_metrics or "f1" in inner_metrics:
-                primary_name = "F1-Score"
-            elif "accuracy" in inner_metrics:
-                primary_name = "Accuracy"
-            else:
-                primary_name = "Primary Metric"
-
-        composite = round(sum(clf_scores) / len(clf_scores), 4)
-        cv_std = inner_metrics.get("cv_std", 0.05)
-        confidence = round(max(0.50, min(0.99, composite * (1.0 - (cv_std if isinstance(cv_std, (int, float)) else 0.05)))), 4)
-        return composite, confidence, primary_name
-
-    # 2. Regression Metrics (R2, EVS, MAE, RMSE)
     if not primary_name:
-        primary_name = "RMSE"
+        if "recall" in inner_metrics:
+            primary_name = "Recall"
+        elif "precision" in inner_metrics:
+            primary_name = "Precision"
+        elif "f1_score" in inner_metrics or "f1" in inner_metrics:
+            primary_name = "F1-Score"
+        elif "accuracy" in inner_metrics:
+            primary_name = "Accuracy"
+        elif "rmse" in inner_metrics:
+            primary_name = "RMSE"
+        elif "r2" in inner_metrics:
+            primary_name = "R2"
+        else:
+            primary_name = "Primary Metric"
 
-    r2 = inner_metrics.get("r2")
-    evs = inner_metrics.get("explained_variance")
+    # Map primary metric name to key
+    key_map = {
+        "recall": "recall",
+        "precision": "precision",
+        "f1": "f1_score",
+        "f1-score": "f1_score",
+        "f1_score": "f1_score",
+        "accuracy": "accuracy",
+        "balanced_accuracy": "balanced_accuracy",
+        "roc_auc": "roc_auc",
+        "rmse": "rmse",
+        "mae": "mae",
+        "r2": "r2",
+    }
+    target_key = key_map.get(primary_name.lower().replace(" ", "_"), primary_name.lower())
 
-    reg_scores = []
-    if isinstance(r2, (int, float)) and not math.isnan(r2) and not math.isinf(r2):
-        reg_scores.append(max(0.0, min(1.0, float(r2))))
-    if isinstance(evs, (int, float)) and not math.isnan(evs) and not math.isinf(evs):
-        reg_scores.append(max(0.0, min(1.0, float(evs))))
+    primary_val = inner_metrics.get(target_key)
+    if primary_val is None:
+        primary_val = inner_metrics.get("primary_metric")
 
-    if reg_scores:
-        composite = round(sum(reg_scores) / len(reg_scores), 4)
+    if isinstance(primary_val, (int, float)) and not math.isnan(primary_val) and not math.isinf(primary_val):
+        composite = round(float(primary_val), 4)
     else:
-        composite = 0.8250
+        # Fallback: compute average of unique metrics without double counting F1
+        scores = []
+        for k in ("f1_score", "precision", "recall", "balanced_accuracy", "accuracy", "roc_auc"):
+            val = inner_metrics.get(k)
+            if isinstance(val, (int, float)) and not math.isnan(val) and not math.isinf(val):
+                scores.append(val)
+        composite = round(sum(scores) / len(scores), 4) if scores else 0.75
 
     cv_std = inner_metrics.get("cv_std", 0.05)
     gap = inner_metrics.get("train_test_gap", 0.05)
     penalty = (cv_std if isinstance(cv_std, (int, float)) else 0.05) + (gap if isinstance(gap, (int, float)) else 0.05)
-    confidence = round(max(0.65, min(0.98, composite * (1.0 - min(0.3, penalty)))), 4)
+    confidence = round(max(0.50, min(0.99, abs(composite) * (1.0 - min(0.3, penalty)))), 4)
 
     return composite, confidence, primary_name
 
@@ -172,12 +174,16 @@ def _build_recommendation(report_record, db: Session) -> Optional[dict]:
 
     # Compute composite score and confidence score
     composite_score, confidence_score, primary_metric_name = compute_composite_and_confidence(inner_metrics)
-    primary_metric_value = (
-        (metrics.get("primary_metric") if isinstance(metrics, dict) else getattr(metrics, "primary_metric", None))
-        or inner_metrics.get("rmse")
-        or inner_metrics.get("f1")
-        or 0.0
-    )
+    raw_primary = (metrics.get("primary_metric") if isinstance(metrics, dict) else getattr(metrics, "primary_metric", None))
+    if raw_primary is None and isinstance(inner_metrics, dict):
+        raw_primary = inner_metrics.get("primary_metric")
+    if raw_primary is None and isinstance(inner_metrics, dict):
+        raw_primary = inner_metrics.get("rmse") if "rmse" in inner_metrics else (inner_metrics.get("f1_score") if "f1_score" in inner_metrics else inner_metrics.get("f1"))
+
+    if raw_primary is not None and isinstance(raw_primary, (int, float)) and not math.isnan(raw_primary) and not math.isinf(raw_primary):
+        primary_metric_value = float(raw_primary)
+    else:
+        primary_metric_value = 0.0
 
     # Extract hyperparameters from winning experiment with intelligent fallback
     raw_params = (
