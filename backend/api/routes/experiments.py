@@ -36,6 +36,10 @@ def _experiment_to_frontend(exp, job_id: str) -> dict:
 
     from backend.api.routes.reports import compute_composite_and_confidence
     composite_score, confidence_score, primary_metric_name = compute_composite_and_confidence(inner_metrics)
+    p_name = inner_metrics.get("primary_metric_name") or (metrics.get("primary_metric_name") if isinstance(metrics, dict) else None)
+    if p_name:
+        primary_metric_name = p_name
+
     primary_metric_value = (metrics.get("primary_metric") if isinstance(metrics, dict) else None) or inner_metrics.get("rmse") or inner_metrics.get("f1") or 0.0
 
     # Build pipeline name from operations or model name

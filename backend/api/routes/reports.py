@@ -32,18 +32,13 @@ def compute_composite_and_confidence(inner_metrics: dict) -> tuple[float, float,
 
     if clf_scores:
         if not primary_name:
-            if "primary_metric_name" in inner_metrics:
-                primary_name = str(inner_metrics["primary_metric_name"])
-            elif "recall" in inner_metrics:
-                primary_name = "Recall"
-            elif "precision" in inner_metrics:
-                primary_name = "Precision"
-            elif "f1_score" in inner_metrics or "f1" in inner_metrics:
-                primary_name = "F1-Score"
-            elif "accuracy" in inner_metrics:
-                primary_name = "Accuracy"
-            else:
-                primary_name = "Primary Metric"
+            primary_name = (
+                inner_metrics.get("primary_metric_name")
+                or inner_metrics.get("primary_name")
+                or ("Precision" if "precision" in inner_metrics and "spam" in str(inner_metrics).lower() else None)
+                or ("Recall" if "recall" in inner_metrics and any(k in str(inner_metrics).lower() for k in ("loan", "medical", "cancer")) else None)
+                or ("F1-Score" if "f1_score" in inner_metrics or "f1" in inner_metrics else "Primary Metric")
+            )
 
         composite = round(sum(clf_scores) / len(clf_scores), 4)
         cv_std = inner_metrics.get("cv_std", 0.05)
