@@ -24,7 +24,8 @@ import { ProgressBar } from "@/components/loading/Loading";
 import { uploadDataset, startJob } from "@/services/apiClient";
 import { formatBytes } from "@/utils/formatters";
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
+const MAX_UPLOAD_SIZE_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_SIZE_MB) || 300;
+const MAX_FILE_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
 const MISSION_MAX = 500;
 
 const PRESET_MISSIONS = [
@@ -46,7 +47,7 @@ export default function UploadPage() {
     const f = accepted[0];
     if (!f) return;
     if (f.size > MAX_FILE_SIZE) {
-      setErrorMsg("File size must be under 100 MB.");
+      setErrorMsg(`File size must be under ${MAX_UPLOAD_SIZE_MB} MB.`);
       return;
     }
     setFile(f);
@@ -245,7 +246,7 @@ export default function UploadPage() {
                         : "Click to browse or drag & drop CSV file"}
                     </p>
                     <p className="text-text-muted text-xs mt-1">
-                      Supports tabular CSV datasets up to 100 MB
+                      Supports tabular CSV datasets up to {MAX_UPLOAD_SIZE_MB} MB
                     </p>
                   </div>
                 </motion.div>

@@ -19,6 +19,12 @@ try {
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  experimental: {
+    middlewareClientMaxBodySize: "500mb",
+    serverActions: {
+      bodySizeLimit: "500mb",
+    },
+  },
   async rewrites() {
     return [
       {

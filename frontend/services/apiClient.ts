@@ -9,7 +9,14 @@ import type {
   DashboardData,
 } from "@/types/api";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_PREFIX || "/api/v1";
+const rawBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+const backendUrl = rawBackendUrl.replace("//localhost", "//127.0.0.1");
+const apiPrefix = process.env.NEXT_PUBLIC_API_PREFIX || "/api/v1";
+
+// In browser, communicate directly with FastAPI backend to avoid Next.js 10MB proxy buffer and socket hang-ups
+const BASE_URL = typeof window !== "undefined" && backendUrl
+  ? `${backendUrl}${apiPrefix}`
+  : apiPrefix;
 
 // ── Unique client ID for per-browser session isolation ────────────────
 function getClientId(): string {
