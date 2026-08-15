@@ -137,12 +137,6 @@ class MLExecutionEngine:
                     stratify=None,
                 )
 
-            if task_type == "classification":
-                from sklearn.preprocessing import LabelEncoder
-                le_train = LabelEncoder()
-                y_train = pd.Series(le_train.fit_transform(y_train), index=y_train.index)
-                known_classes = set(le_train.classes_)
-                y_test = pd.Series(y_test.map(lambda c: le_train.transform([c])[0] if c in known_classes else 0), index=y_test.index)
 
             # 2. Build Pipeline
             pipeline = self.pipeline_builder.build_pipeline(

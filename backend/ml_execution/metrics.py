@@ -21,7 +21,7 @@ class MetricEngine:
 
     @classmethod
     def compute_metrics(
-        self,
+        cls,
         y_true: Any,
         y_pred: Any,
         y_proba: Any = None,
@@ -47,9 +47,15 @@ class MetricEngine:
 
         if task_type == "classification":
             acc = float(accuracy_score(y_true, y_pred))
-            prec = float(precision_score(y_true, y_pred, average="weighted", zero_division=0))
-            rec = float(recall_score(y_true, y_pred, average="weighted", zero_division=0))
-            f1 = float(f1_score(y_true, y_pred, average="weighted", zero_division=0))
+
+            # Use 'binary' averaging for 2-class classification to accurately measure minority/positive class metrics
+            # without majority class frequency inflation from 'weighted'
+            unique_classes = np.unique(y_true)
+            avg_mode = "binary" if len(unique_classes) <= 2 else "macro"
+
+            prec = float(precision_score(y_true, y_pred, average=avg_mode, zero_division=0))
+            rec = float(recall_score(y_true, y_pred, average=avg_mode, zero_division=0))
+            f1 = float(f1_score(y_true, y_pred, average=avg_mode, zero_division=0))
             bal_acc = float(balanced_accuracy_score(y_true, y_pred))
 
             if (prec + rec) > 0:
