@@ -89,14 +89,24 @@ class DataLoader:
         file_size_bytes = os.path.getsize(file_path)
         ext = os.path.splitext(file_path)[1].lower()
 
-        if ext in [".csv", ".txt"]:
-            delimiter = cls.detect_delimiter(file_path)
-            # Use chunked/limited reading if max_rows specified
-            df = pd.read_csv(file_path, delimiter=delimiter, nrows=max_rows, low_memory=False)
-        elif ext in [".parquet", ".pq"]:
+        # Check magic bytes for parquet format detection
+        is_parquet = ext in [".parquet", ".pq"]
+        if not is_parquet:
+            try:
+                with open(file_path, "rb") as mf:
+                    if mf.read(4) == b"PAR1":
+                        is_parquet = True
+            except Exception:
+                pass
+
+        if is_parquet:
             df = pd.read_parquet(file_path)
             if max_rows and len(df) > max_rows:
                 df = df.iloc[:max_rows]
+        elif ext in [".csv", ".txt"]:
+            delimiter = cls.detect_delimiter(file_path)
+            # Use chunked/limited reading if max_rows specified
+            df = pd.read_csv(file_path, delimiter=delimiter, nrows=max_rows, low_memory=False)
         else:
             raise ValueError(f"Unsupported file format '{ext}'. Only .csv and .parquet are supported.")
 

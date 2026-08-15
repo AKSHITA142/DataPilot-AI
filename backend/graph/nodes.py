@@ -31,6 +31,22 @@ logger = logging.getLogger("datapilot.graph.nodes")
 def profiling_node(state: WorkflowStateDict) -> WorkflowStateDict:
     """Executes Phase 6 ProfilingEngine on dataset file."""
     file_path = state.get("file_path")
+
+    # Auto-recovery: If file missing locally, attempt download from Supabase Cloud Storage
+    if not file_path or not os.path.exists(file_path):
+        if file_path:
+            try:
+                from backend.services.storage.supabase_storage import SupabaseStorageService
+                storage_svc = SupabaseStorageService()
+                if storage_svc.is_configured:
+                    dataset_id = state.get("dataset_id") or ""
+                    filename = os.path.basename(file_path)
+                    remote_path = f"{dataset_id}/{filename}"
+                    storage_svc.download_file(remote_path, file_path)
+                    logger.info(f"Auto-downloaded dataset from Supabase: {remote_path} -> {file_path}")
+            except Exception as se:
+                logger.warning(f"Could not auto-download missing dataset from Supabase: {se}")
+
     if not file_path or not os.path.exists(file_path):
         return {
             **state,

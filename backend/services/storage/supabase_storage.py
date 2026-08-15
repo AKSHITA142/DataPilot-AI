@@ -77,11 +77,29 @@ class SupabaseStorageService:
             raise FileNotFoundError(f"Local file not found: {local_path}")
 
         try:
-            with open(local_path, "rb") as f:
+            upload_path = local_path
+            temp_compressed_file = None
+            file_size = os.path.getsize(local_path)
+
+            # If CSV and file size > 40MB, compress to snappy-parquet before uploading to satisfy cloud storage quotas
+            if file_size > 40 * 1024 * 1024 and local_path.lower().endswith((".csv", ".txt")):
+                try:
+                    import pandas as pd
+                    parquet_local = local_path + ".parquet"
+                    df = pd.read_csv(local_path, low_memory=False)
+                    df.to_parquet(parquet_local, compression="snappy", index=False)
+                    if os.path.exists(parquet_local) and os.path.getsize(parquet_local) < file_size:
+                        upload_path = parquet_local
+                        temp_compressed_file = parquet_local
+                        logger.info(f"Compressed large CSV ({file_size / (1024*1024):.1f}MB) to Parquet ({os.path.getsize(parquet_local) / (1024*1024):.1f}MB) for cloud upload.")
+                except Exception as ce:
+                    logger.warning(f"Could not pre-compress CSV to parquet: {ce}")
+
+            with open(upload_path, "rb") as f:
                 file_bytes = f.read()
 
             file_options = {"content-type": "text/csv", "upsert": "true"}
-            if remote_path.endswith(".parquet") or remote_path.endswith(".pq"):
+            if upload_path.endswith((".parquet", ".pq")):
                 file_options["content-type"] = "application/octet-stream"
 
             response = self._client.storage.from_(self.bucket_name).upload(
@@ -89,9 +107,21 @@ class SupabaseStorageService:
                 file=file_bytes,
                 file_options=file_options,
             )
-            logger.info(f"Uploaded {local_path} to Supabase: {self.bucket_name}/{remote_path}")
+
+            if temp_compressed_file and os.path.exists(temp_compressed_file):
+                try:
+                    os.remove(temp_compressed_file)
+                except Exception:
+                    pass
+
+            logger.info(f"Uploaded {upload_path} to Supabase: {self.bucket_name}/{remote_path}")
             return {"status": "success", "remote_path": remote_path, "response": response}
         except Exception as e:
+            if temp_compressed_file and os.path.exists(temp_compressed_file):
+                try:
+                    os.remove(temp_compressed_file)
+                except Exception:
+                    pass
             logger.error(f"Failed to upload {local_path} to Supabase: {e}")
             raise
 

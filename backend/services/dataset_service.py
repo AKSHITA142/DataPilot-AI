@@ -102,9 +102,20 @@ class DatasetService:
                 existing.mission_brief = mission_brief
                 self.db.commit()
 
+            # Ensure the existing dataset file exists on local disk
+            if not os.path.exists(existing.file_path):
+                os.makedirs(os.path.dirname(existing.file_path), exist_ok=True)
+                import shutil
+                shutil.copy2(file_path, existing.file_path)
+                logger.info(f"Restored missing dataset file for existing record: {existing.file_path}")
+
             # Clean up duplicate local file
-            os.remove(file_path)
-            os.rmdir(dest_dir)
+            if os.path.exists(file_path) and os.path.abspath(file_path) != os.path.abspath(existing.file_path):
+                os.remove(file_path)
+                try:
+                    os.rmdir(dest_dir)
+                except Exception:
+                    pass
             return existing
 
         # Execute ProfilingEngine to generate SemanticProfile
