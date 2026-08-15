@@ -18,16 +18,32 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Evindra — Autonomous ML Research",
-    template: "%s | Evindra",
+    default: "Evidra — Evidence-Driven AI for Data Science",
+    template: "%s | Evidra",
   },
   description:
-    "Evindra autonomously profiles datasets, plans and runs ML experiments, evaluates evidence, and delivers research recommendations in real time.",
-  keywords: ["machine learning", "AI research", "AutoML", "data science", "LangGraph"],
-  authors: [{ name: "Evindra" }],
+    "Evidra autonomously profiles your dataset, runs multi-model experiments, and delivers a final recommendation — all in real time. Upload a CSV and watch your AI data scientist work.",
+  keywords: [
+    "data science",
+    "machine learning",
+    "AutoML",
+    "AI research",
+    "automated ML",
+    "data analysis",
+  ],
+  authors: [{ name: "Evidra Team" }],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/evidra-icon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/evidra-icon.png",
+  },
   openGraph: {
-    title: "Evindra — Autonomous ML Research",
-    description: "Your AI research team, running in a loop.",
+    title: "Evidra — Evidence-Driven AI for Data Science",
+    description:
+      "Upload a CSV and let AI run your entire data science pipeline automatically.",
     type: "website",
   },
 };

@@ -56,7 +56,7 @@ export function Topbar() {
           {/* Mobile logo (visible only when sidebar is hidden) */}
           <Link href="/overview" className="md:hidden flex items-center gap-2">
             <Image
-              src="/icon.svg"
+              src="/evidra-first-logo.png"
               alt="Evidra"
               width={24}
               height={24}

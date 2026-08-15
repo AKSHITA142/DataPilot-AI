@@ -130,9 +130,8 @@ function NavButton({
         )}
 
         <Icon
-          className={`w-4 h-4 shrink-0 transition-colors ${
-            active ? "text-brand-400" : "text-text-muted group-hover:text-text-secondary"
-          }`}
+          className={`w-4 h-4 shrink-0 transition-colors ${active ? "text-brand-400" : "text-text-muted group-hover:text-text-secondary"
+            }`}
         />
 
         <AnimatePresence>
@@ -205,29 +204,27 @@ export function Sidebar() {
         "
       >
         {/* Logo & Expand Toggle Header */}
-        <div className="flex items-center justify-between px-3.5 py-4 border-b border-border-subtle h-14 shrink-0">
-          <Link href="/overview" className="flex items-center gap-2.5 min-w-0">
-            <Image
-              src="/icon.svg"
-              alt="Evidra"
-              width={28}
-              height={28}
-              priority
-              className="w-7 h-7 rounded-lg shrink-0 shadow-md shadow-brand-500/20"
-            />
-            <AnimatePresence>
-              {!collapsed && (
-                <motion.span
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: "auto" }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className="font-bold text-sm tracking-tight text-text whitespace-nowrap overflow-hidden"
-                >
-                  Evidra
-                </motion.span>
-              )}
-            </AnimatePresence>
+        <div className="flex items-center justify-between pl-2 pr-3 py-4 border-b border-border-subtle h-14 shrink-0">
+          <Link href="/overview" className="flex items-center justify-start min-w-0 -ml-0.5">
+            {collapsed ? (
+              <Image
+                src="/evidra-first-logo.png"
+                alt="Evidra"
+                width={28}
+                height={28}
+                priority
+                className="w-7 h-7 rounded-lg shrink-0 shadow-md shadow-brand-500/20"
+              />
+            ) : (
+              <Image
+                src="/evidra-second-logo.png"
+                alt="Evidra"
+                width={175}
+                height={38}
+                priority
+                className="h-8.5 max-w-[185px] object-contain object-left shrink-0"
+              />
+            )}
           </Link>
 
           {/* Quick collapse icon button */}
@@ -423,15 +420,12 @@ export function MobileDrawer({
             <div className="flex items-center justify-between px-4 py-4 border-b border-border-subtle h-14 shrink-0">
               <Link href="/overview" onClick={onClose} className="flex items-center gap-2.5">
                 <Image
-                  src="/icon.svg"
+                  src="/evidra-second-logo.png"
                   alt="Evidra"
-                  width={28}
-                  height={28}
-                  className="w-7 h-7 rounded-lg shrink-0 shadow-sm"
+                  width={140}
+                  height={32}
+                  className="h-7 w-auto object-contain shrink-0"
                 />
-                <span className="font-bold text-sm text-text">
-                  Evidra
-                </span>
               </Link>
               <button
                 onClick={onClose}
