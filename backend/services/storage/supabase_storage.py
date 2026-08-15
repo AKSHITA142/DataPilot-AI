@@ -83,21 +83,24 @@ class SupabaseStorageService:
             target_content_type = content_type
             file_size = len(file_bytes)
 
-            # If CSV and file size > 40MB, compress to snappy-parquet in-memory before uploading to satisfy cloud storage quotas
-            if file_size > 40 * 1024 * 1024 and remote_path.lower().endswith((".csv", ".txt")):
+            # If CSV and file size > 40MB, compress with dtype optimization + zstd parquet before uploading
+            if file_size > 40 * 1024 * 1024 and not file_bytes.startswith(b"PAR1"):
                 try:
                     import io
                     import pandas as pd
+                    from backend.profiling.loader import DataLoader
+
                     df = pd.read_csv(io.BytesIO(file_bytes), low_memory=False)
+                    df = DataLoader.optimize_dtypes(df)
                     buf = io.BytesIO()
-                    df.to_parquet(buf, compression="snappy", index=False)
+                    df.to_parquet(buf, compression="zstd", index=False)
                     buf.seek(0)
                     compressed_bytes = buf.getvalue()
                     if len(compressed_bytes) < file_size:
                         target_bytes = compressed_bytes
                         target_content_type = "application/octet-stream"
                         logger.info(
-                            f"Compressed in-memory CSV ({file_size / (1024*1024):.1f}MB) to Parquet "
+                            f"Compressed in-memory CSV ({file_size / (1024*1024):.1f}MB) to ZSTD Parquet "
                             f"({len(compressed_bytes) / (1024*1024):.1f}MB) for cloud upload."
                         )
                 except Exception as ce:
