@@ -160,10 +160,12 @@ class JobService:
         if job.dataset:
             ds = job.dataset
             prof = ds.semantic_profile if isinstance(ds.semantic_profile, dict) else {}
-            rows = prof.get("row_count") or ds.row_count or "N/A"
-            cols = prof.get("column_count") or ds.column_count or "N/A"
-            target = prof.get("detected_target_column") or "Auto-detected"
-            task = prof.get("detected_task_type") or "general"
+            summary = prof.get("dataset_summary", {}) if isinstance(prof.get("dataset_summary"), dict) else {}
+            rows = prof.get("row_count") or summary.get("rows") or ds.row_count or "N/A"
+            cols = prof.get("column_count") or summary.get("columns") or ds.column_count or "N/A"
+            target_info = summary.get("target", {}) if isinstance(summary.get("target"), dict) else {}
+            target = target_info.get("target_column") or prof.get("detected_target_column") or "Auto-detected"
+            task = target_info.get("task_type") or prof.get("detected_task_type") or prof.get("user_task_type") or "classification"
             logs.append({
                 "id": f"{job_id}-prof",
                 "timestamp": created_iso,

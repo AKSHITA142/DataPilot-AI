@@ -123,6 +123,11 @@ class DatasetService:
             summary = profile_dict.get("dataset_summary", {})
             rows = summary.get("rows", 0)
             cols = summary.get("columns", 0)
+            target_info = summary.get("target", {}) if isinstance(summary.get("target"), dict) else {}
+            profile_dict["detected_target_column"] = target_info.get("target_column")
+            profile_dict["detected_task_type"] = target_info.get("task_type") or task_type
+            profile_dict["row_count"] = rows
+            profile_dict["column_count"] = cols
         except Exception as e:
             logger.warning(f"Profiling failed for {filename}: {e}")
             profile_dict = {"error": f"Profiling failed: {str(e)}"}
