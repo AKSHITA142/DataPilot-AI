@@ -2218,3 +2218,51 @@ exported_artifacts.metadata
 2026-08-15 12:05:06,405 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
 2026-08-15 12:05:06,405 - datapilot.api - INFO - [dc6a36dc-cc27-4c3c-b39d-51a8c2e5624c] GET /api/v1/health/error-test - Status: 404 (0.53ms)
 2026-08-15 12:05:06,405 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-15 12:07:14,068 - datapilot.api - INFO - [bf68797b-3bb7-4d45-8d22-621823b4ed27] GET /api/v1/dashboard - Status: 200 (10318.65ms)
+2026-08-15 12:07:17,120 - datapilot.api - INFO - [986c17b8-c7d0-4c6d-945d-5698cb639ee7] GET /api/v1/datasets - Status: 200 (13370.55ms)
+2026-08-15 12:07:24,388 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_b5d905b1
+2026-08-15 12:07:24,389 - datapilot.api - INFO - [cf999db6-aaa9-408a-847d-de1cab27cd4b] OPTIONS /api/v1/jobs/job_b5d905b1 - Status: 200 (5.14ms)
+2026-08-15 12:07:24,389 - datapilot.api - INFO - [bdc60ab8-d47c-4968-802f-006071117654] OPTIONS /api/v1/jobs/job_b5d905b1/logs - Status: 200 (2.63ms)
+2026-08-15 12:07:26,204 - datapilot.api - INFO - [dc12af5b-8a6c-44b9-86bb-762e678de32b] OPTIONS /api/v1/experiments/job_b5d905b1 - Status: 200 (0.21ms)
+2026-08-15 12:07:28,810 - datapilot.api - INFO - [2bc55a9a-3c71-4602-b1b9-59df9b2f69eb] GET /api/v1/jobs/job_b5d905b1 - Status: 200 (4417.08ms)
+2026-08-15 12:07:30,800 - datapilot.api - INFO - [865f0698-321c-483f-8a2f-4a928b6f16e0] GET /api/v1/jobs/job_b5d905b1/logs - Status: 200 (6406.72ms)
+2026-08-15 12:07:31,315 - datapilot.api - INFO - [5e3d3751-0bfa-4626-8c82-ee2fbdf48782] GET /api/v1/experiments/job_b5d905b1 - Status: 200 (5110.58ms)
+2026-08-15 12:10:03,484 - datapilot.api - INFO - [ebb8a048-a856-4942-9f2b-ef5ad4b6af49] GET /api/v1/datasets - Status: 200 (1029.66ms)
+2026-08-15 12:10:04,347 - datapilot.api - INFO - [bccdab41-8d03-423f-a7e3-821c41197ec0] GET /api/v1/dashboard - Status: 200 (1894.47ms)
+2026-08-15 12:21:20,566 - datapilot.api - INFO - [8fc33433-fbf9-4cb3-a735-17df22af8896] OPTIONS /api/v1/dashboard - Status: 200 (11.19ms)
+2026-08-15 12:21:22,327 - datapilot.api.websocket_manager - INFO - WebSocket client disconnected from channel for job_id: job_b5d905b1
+2026-08-15 12:21:22,433 - datapilot.api - INFO - [45ab2786-812b-4e36-81c9-29793648503e] OPTIONS /api/v1/datasets - Status: 200 (0.36ms)
+2026-08-15 12:21:25,700 - datapilot.api - INFO - [378c7008-8d45-48a4-b91e-1a34d0b9f31a] GET /api/v1/dashboard - Status: 200 (5024.28ms)
+2026-08-15 12:21:25,701 - datapilot.api - INFO - [e1e9c4cb-228b-420e-8bdb-9097d4742fbe] GET /api/v1/dashboard - Status: 200 (3268.17ms)
+2026-08-15 12:21:25,948 - datapilot.api - INFO - [83db88ea-bed4-42b0-b1be-c95c43244586] GET /api/v1/datasets - Status: 200 (3512.94ms)
+2026-08-15 12:33:21,042 - datapilot.api - INFO - [0cd607ee-ae90-47ad-89b4-924fd9316d31] GET /api/v1/datasets - Status: 200 (1558.98ms)
+2026-08-15 12:33:21,271 - datapilot.api - INFO - [26b7ec60-cb51-43bf-8fbc-9ea0825de7fa] GET /api/v1/dashboard - Status: 200 (1844.51ms)
+2026-08-15 12:34:12,081 - datapilot.api - INFO - [5826b625-37b8-4bbd-a969-a27be802db38] GET /api/v1/datasets - Status: 200 (673192.36ms)
+2026-08-15 12:34:15,643 - datapilot.api - INFO - [88b7ff06-f7e2-400d-8dbd-68fe5975f323] GET /api/v1/dashboard - Status: 200 (676755.48ms)
+2026-08-15 12:34:23,317 - datapilot.api - INFO - [9e9bca7f-ead3-4dd4-970b-93a7125b2348] GET /api/v1/dashboard - Status: 200 (2036.63ms)
+2026-08-15 12:35:25,429 - datapilot.api - INFO - [e8a5fe40-061c-4a7a-9232-18b96d394aeb] GET /api/v1/dashboard - Status: 200 (2098.35ms)
+2026-08-15 12:36:26,127 - datapilot.api - INFO - [9b5b064e-fbfb-43e0-8c71-324cf847755f] GET /api/v1/dashboard - Status: 200 (683.77ms)
+2026-08-15 12:36:32,979 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 12:36:35,631 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 12:36:39,302 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:36:39,303 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 12:37:06,829 - datapilot.api - INFO - [1abcd060-4b5c-4109-a478-04c59b19b402] GET /api/v1/dashboard - Status: 200 (1210.61ms)
+2026-08-15 12:37:07,522 - datapilot.api - INFO - [0cb6bcd9-1eed-4333-90ec-a5e7b0bb6725] GET /api/v1/datasets - Status: 200 (1734.82ms)
+2026-08-15 12:37:07,537 - datapilot.api - INFO - [6817f840-d0b3-46f6-abad-d0b489ce53d1] GET /api/v1/datasets - Status: 200 (1916.57ms)
+2026-08-15 12:37:07,678 - datapilot.api - INFO - [f0b48d88-e57d-4be6-85e4-b828af4883f2] GET /api/v1/dashboard - Status: 200 (1891.25ms)
+2026-08-15 12:37:44,584 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 12:37:44,632 - datapilot.api - INFO - [68af6617-fc5f-4f5c-8c98-4cbb3f7221ad] GET / - Status: 200 (7.98ms)
+2026-08-15 12:37:44,633 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:37:44,636 - datapilot.api - INFO - [63abb6b4-b524-4bb3-9a2f-f75e34c3c365] GET /api/v1/health - Status: 200 (1.49ms)
+2026-08-15 12:37:44,636 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:37:44,638 - datapilot.api - INFO - [ebc9318b-7cef-43ba-a6ed-495120088cc2] GET /api/v1/health - Status: 200 (0.96ms)
+2026-08-15 12:37:44,639 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:37:44,640 - datapilot.api - INFO - [2707c3d1-01fb-4fc2-a7b8-946b2ba528cb] GET / - Status: 200 (0.40ms)
+2026-08-15 12:37:44,640 - httpx - INFO - HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-08-15 12:37:44,642 - datapilot.api - INFO - [19b962ea-ec07-41b3-91a0-d6a8bbfbaddc] GET /api/v1/health - Status: 200 (0.83ms)
+2026-08-15 12:37:44,642 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health "HTTP/1.1 200 OK"
+2026-08-15 12:37:44,644 - datapilot.exception - WARNING - AppException caught: [NOT_FOUND] Deliberately thrown test exception for Phase 3 gate verification
+2026-08-15 12:37:44,644 - datapilot.api - INFO - [c93b059a-7615-47d8-8686-ccddf3f143bb] GET /api/v1/health/error-test - Status: 404 (0.53ms)
+2026-08-15 12:37:44,644 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/health/error-test "HTTP/1.1 404 Not Found"
+2026-08-15 12:38:32,191 - datapilot.api - INFO - [3034f3d6-4229-4df8-8cd9-ba835110f3fa] GET /api/v1/datasets - Status: 200 (1088.74ms)
+2026-08-15 12:38:32,432 - datapilot.api - INFO - [60fcd490-e33e-4edb-a93f-7784d3840647] GET /api/v1/dashboard - Status: 200 (1330.71ms)

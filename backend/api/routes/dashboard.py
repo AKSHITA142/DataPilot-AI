@@ -38,10 +38,11 @@ def get_dashboard(db: Session = Depends(get_db)):
         for s, count in status_counts_raw
     }
 
-    # Fetch all research jobs (ordered by creation time descending)
+    # Fetch the latest 15 research jobs (ordered by creation time descending)
     recent_job_rows = (
         db.query(JobModel)
         .order_by(JobModel.created_at.desc())
+        .limit(15)
         .all()
     )
 

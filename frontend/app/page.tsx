@@ -143,7 +143,7 @@ function TablePagination({
   pageSize: number;
   onPageChange: (page: number) => void;
 }) {
-  if (totalItems <= pageSize) return null;
+  if (totalItems === 0) return null;
 
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -186,23 +186,25 @@ export default function DashboardPage() {
   const [jobsPage, setJobsPage] = useState(1);
   const [datasetsPage, setDatasetsPage] = useState(1);
 
-  const JOBS_PER_PAGE = 15;
-  const DATASETS_PER_PAGE = 15;
+  const JOBS_PAGE_SIZE = 5;
+  const DATASETS_PAGE_SIZE = 5;
 
-  const recentJobs = dash?.recent_jobs ?? [];
-  const totalJobsPages = Math.max(1, Math.ceil(recentJobs.length / JOBS_PER_PAGE));
+  // Latest 15 research jobs (paginated 5 rows per page -> 3 pages)
+  const recentJobs = (dash?.recent_jobs ?? []).slice(0, 15);
+  const totalJobsPages = Math.max(1, Math.ceil(recentJobs.length / JOBS_PAGE_SIZE));
   const safeJobsPage = Math.min(jobsPage, totalJobsPages);
   const paginatedJobs = recentJobs.slice(
-    (safeJobsPage - 1) * JOBS_PER_PAGE,
-    safeJobsPage * JOBS_PER_PAGE
+    (safeJobsPage - 1) * JOBS_PAGE_SIZE,
+    safeJobsPage * JOBS_PAGE_SIZE
   );
 
+  // All user datasets (paginated 5 rows per page)
   const datasetList = datasets ?? [];
-  const totalDatasetsPages = Math.max(1, Math.ceil(datasetList.length / DATASETS_PER_PAGE));
+  const totalDatasetsPages = Math.max(1, Math.ceil(datasetList.length / DATASETS_PAGE_SIZE));
   const safeDatasetsPage = Math.min(datasetsPage, totalDatasetsPages);
   const paginatedDatasets = datasetList.slice(
-    (safeDatasetsPage - 1) * DATASETS_PER_PAGE,
-    safeDatasetsPage * DATASETS_PER_PAGE
+    (safeDatasetsPage - 1) * DATASETS_PAGE_SIZE,
+    safeDatasetsPage * DATASETS_PAGE_SIZE
   );
 
   /* Derived: success rate */
@@ -389,7 +391,7 @@ export default function DashboardPage() {
                     <RecentJobRow
                       key={job.job_id}
                       job={job}
-                      index={(safeJobsPage - 1) * JOBS_PER_PAGE + i}
+                      index={(safeJobsPage - 1) * JOBS_PAGE_SIZE + i}
                     />
                   ))}
                 </motion.div>
@@ -397,7 +399,7 @@ export default function DashboardPage() {
                   currentPage={safeJobsPage}
                   totalPages={totalJobsPages}
                   totalItems={recentJobs.length}
-                  pageSize={JOBS_PER_PAGE}
+                  pageSize={JOBS_PAGE_SIZE}
                   onPageChange={(page) => setJobsPage(page)}
                 />
               </>
@@ -605,7 +607,7 @@ export default function DashboardPage() {
                 currentPage={safeDatasetsPage}
                 totalPages={totalDatasetsPages}
                 totalItems={datasetList.length}
-                pageSize={DATASETS_PER_PAGE}
+                pageSize={DATASETS_PAGE_SIZE}
                 onPageChange={(page) => setDatasetsPage(page)}
               />
             </>
