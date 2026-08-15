@@ -2851,3 +2851,15 @@ exported_artifacts.metadata
 2026-08-15 13:24:55,652 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/experiments/job_df64ab04 "HTTP/1.1 200 OK"
 2026-08-15 13:24:55,660 - datapilot.api - INFO - [076002fb-cada-45c7-a384-4d69a0fa0d1a] GET /api/v1/reports/job_df64ab04 - Status: 200 (7.18ms)
 2026-08-15 13:24:55,661 - httpx - INFO - HTTP Request: GET http://testserver/api/v1/reports/job_df64ab04 "HTTP/1.1 200 OK"
+2026-08-15 13:56:25,386 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 13:56:28,601 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 13:56:28,601 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 13:56:28,621 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_7d616e33
+2026-08-15 13:57:23,572 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 13:57:27,328 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 13:57:27,328 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 13:57:27,431 - datapilot.main - INFO - Shutting down DataPilot-AI
+2026-08-15 13:57:29,514 - datapilot.main - INFO - Starting DataPilot-AI v0.1.0 (development)
+2026-08-15 13:57:33,560 - datapilot.database - INFO - Database schema initialized successfully.
+2026-08-15 13:57:33,561 - datapilot.main - INFO - Database initialized successfully.
+2026-08-15 13:57:33,589 - datapilot.api.websocket_manager - INFO - WebSocket client connected to channel for job_id: job_7d616e33

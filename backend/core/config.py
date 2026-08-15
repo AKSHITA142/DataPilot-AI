@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     
     # File Storage
     storage_dir: str = Field(default="./storage", alias="STORAGE_DIR")
-    max_upload_size_mb: int = Field(default=500, alias="MAX_UPLOAD_SIZE_MB")
+    max_upload_size_mb: int = Field(default=150, alias="MAX_UPLOAD_SIZE_MB")
     storage_backend: str = Field(default="local", alias="STORAGE_BACKEND")  # 'supabase' or 'local'
     supabase_url: Optional[str] = Field(default=None, alias="SUPABASE_URL")
     supabase_key: Optional[str] = Field(default=None, alias="SUPABASE_KEY")

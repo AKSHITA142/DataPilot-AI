@@ -24,7 +24,7 @@ import { ProgressBar } from "@/components/loading/Loading";
 import { uploadDataset, startJob } from "@/services/apiClient";
 import { formatBytes } from "@/utils/formatters";
 
-const MAX_UPLOAD_SIZE_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_SIZE_MB) || 300;
+const MAX_UPLOAD_SIZE_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_SIZE_MB) || 150;
 const MAX_FILE_SIZE = MAX_UPLOAD_SIZE_MB * 1024 * 1024;
 const MISSION_MAX = 500;
 
