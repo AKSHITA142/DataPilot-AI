@@ -30,7 +30,7 @@ interface NavItemSpec {
 }
 
 const PRIMARY_ITEMS: NavItemSpec[] = [
-  { baseHref: "/", icon: LayoutDashboard, label: "Overview" },
+  { baseHref: "/overview", icon: LayoutDashboard, label: "Overview" },
   { baseHref: "/upload", icon: Upload, label: "New Run" },
 ];
 
@@ -182,7 +182,7 @@ export function Sidebar() {
   const activeJobId = urlJobId || latestJobId;
 
   const isActive = (spec: NavItemSpec) => {
-    if (spec.baseHref === "/") return pathname === "/";
+    if (spec.baseHref === "/overview") return pathname === "/overview";
     return pathname.startsWith(spec.baseHref);
   };
 
@@ -206,7 +206,7 @@ export function Sidebar() {
       >
         {/* Logo & Expand Toggle Header */}
         <div className="flex items-center justify-between px-3.5 py-4 border-b border-border-subtle h-14 shrink-0">
-          <Link href="/" className="flex items-center gap-2.5 min-w-0">
+          <Link href="/overview" className="flex items-center gap-2.5 min-w-0">
             <Image
               src="/icon.svg"
               alt="Evidra"
@@ -421,7 +421,7 @@ export function MobileDrawer({
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b border-border-subtle h-14 shrink-0">
-              <Link href="/" onClick={onClose} className="flex items-center gap-2.5">
+              <Link href="/overview" onClick={onClose} className="flex items-center gap-2.5">
                 <Image
                   src="/icon.svg"
                   alt="Evidra"
@@ -517,7 +517,7 @@ export function MobileBottomNav() {
   const activeJobId = urlJobId || latestJobId;
 
   const navItems = [
-    { baseHref: "/", icon: LayoutDashboard, label: "Overview" },
+    { baseHref: "/overview", icon: LayoutDashboard, label: "Overview" },
     { baseHref: "/upload", icon: Upload, label: "New Run" },
     { baseHref: "/timeline", icon: Activity, label: "Timeline", dynamic: true },
     { baseHref: "/experiments", icon: FlaskConical, label: "Experiments", dynamic: true },
@@ -531,7 +531,7 @@ export function MobileBottomNav() {
       flex items-center justify-around px-2 py-2 safe-area-bottom
     ">
       {navItems.map((item) => {
-        const isActive = item.baseHref === "/" ? pathname === "/" : pathname.startsWith(item.baseHref);
+        const isActive = item.baseHref === "/overview" ? pathname === "/overview" : pathname.startsWith(item.baseHref);
         const isDisabled = item.dynamic && !activeJobId;
         const href = item.dynamic && activeJobId ? `${item.baseHref}/${activeJobId}` : item.baseHref;
         const Icon = item.icon;

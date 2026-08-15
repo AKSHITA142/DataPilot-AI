@@ -9,6 +9,7 @@ import { HamburgerButton, MobileDrawer } from "./Sidebar";
 /* ── Route → human title map ─────────────────────── */
 const ROUTE_TITLES: Record<string, string> = {
   "/": "Overview",
+  "/overview": "Overview",
   "/upload": "New Run",
   "/timeline": "Research Timeline",
   "/experiments": "Experiments",
@@ -53,7 +54,7 @@ export function Topbar() {
           <HamburgerButton onClick={() => setDrawerOpen(true)} />
 
           {/* Mobile logo (visible only when sidebar is hidden) */}
-          <Link href="/" className="md:hidden flex items-center gap-2">
+          <Link href="/overview" className="md:hidden flex items-center gap-2">
             <Image
               src="/icon.svg"
               alt="Evidra"
