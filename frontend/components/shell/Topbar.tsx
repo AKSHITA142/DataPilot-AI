@@ -24,7 +24,7 @@ function getPageTitle(pathname: string): string {
   for (const [prefix, title] of Object.entries(ROUTE_TITLES)) {
     if (pathname.startsWith(prefix + "/")) return title;
   }
-  return "DataPilot-AI";
+  return "Evidra";
 }
 
 /* ── Topbar ──────────────────────────────────────── */
@@ -56,7 +56,7 @@ export function Topbar() {
           <Link href="/" className="md:hidden flex items-center gap-2">
             <Image
               src="/icon.svg"
-              alt="DataPilot-AI"
+              alt="Evidra"
               width={24}
               height={24}
               className="w-6 h-6 rounded-md shrink-0 shadow-sm"
