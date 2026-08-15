@@ -144,7 +144,12 @@ class SmartTargetDetector:
                     score -= 0.60
 
             # Penalty for ID & timestamp columns (-0.80)
-            if c_lower in ("id", "uuid", "name", "index", "row_id", "user_id", "timestamp", "time", "date", "datetime"):
+            if (
+                c_lower in ("id", "uuid", "name", "index", "row_id", "user_id", "timestamp", "time", "date", "datetime")
+                or c_lower.endswith("_id")
+                or c_lower.startswith("id_")
+                or c_lower == "id"
+            ):
                 score -= 0.80
 
             composite_scores[c] = round(score, 4)
@@ -176,26 +181,36 @@ class SmartTargetDetector:
         if not keywords:
             return None, 0.0
 
-        col_lower_list = list(col_lower_map.keys())
+        scores: Dict[str, float] = {}
+        for col in columns:
+            c_lower = col.lower().strip()
+            col_tokens = re.findall(r"[a-zA-Z_]+", c_lower)
+            col_score = 0.0
 
-        for kw in keywords:
-            if kw in col_lower_map:
-                return col_lower_map[kw], 1.0
-            for cl in col_lower_list:
-                if kw in cl or cl in kw:
-                    return col_lower_map[cl], 0.90
+            # Exact full match gets highest priority
+            if c_lower in keywords or c_lower == mission.lower().strip():
+                scores[col] = 2.0
+                continue
 
-        best_score = 0.0
-        best_col: Optional[str] = None
-        for kw in keywords:
-            matches = difflib.get_close_matches(kw, col_lower_list, n=1, cutoff=0.6)
-            if matches:
-                score = difflib.SequenceMatcher(None, kw, matches[0]).ratio()
-                if score > best_score:
-                    best_score = score
-                    best_col = col_lower_map[matches[0]]
+            for kw in keywords:
+                for ct in col_tokens:
+                    if kw == ct:
+                        col_score += 1.0
+                    elif kw in ct or ct in kw:
+                        col_score += 0.75
+                    else:
+                        ratio = difflib.SequenceMatcher(None, kw, ct).ratio()
+                        if ratio >= 0.70:
+                            col_score += ratio * 0.70
 
-        return best_col, round(best_score, 4)
+            scores[col] = round(col_score, 4)
+
+        best_col, max_score = max(scores.items(), key=lambda x: x[1])
+        if max_score > 0.0:
+            norm_score = min(1.0, round(max_score / float(len(keywords)), 4))
+            return best_col, norm_score
+
+        return None, 0.0
 
     @classmethod
     def _statistical_mi_match(cls, df: pd.DataFrame) -> Tuple[Optional[str], float]:
