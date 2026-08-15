@@ -7,6 +7,13 @@
 export type JobStatus =
   | "queued"
   | "running"
+  | "profiling"
+  | "understanding"
+  | "planning"
+  | "executing"
+  | "evaluating"
+  | "directing"
+  | "reporting"
   | "completed"
   | "failed"
   | "cancelled";
@@ -36,10 +43,13 @@ export interface Dataset {
 
 export interface ColumnProfile {
   name: string;
-  dtype: string;
-  missing_count: number;
-  missing_percent: number;
-  unique_count: number;
+  dtype?: string;
+  type?: string;
+  missing_count?: number;
+  missing_percent?: number;
+  missing_pct?: number;
+  unique_count?: number;
+  distinct_count?: number;
   sample_values?: (string | number | null)[];
   mean?: number;
   std?: number;
@@ -49,29 +59,49 @@ export interface ColumnProfile {
   is_target?: boolean;
 }
 
-export interface SemanticProfile {
-  dataset_id: string;
-  row_count: number;
-  column_count: number;
-  file_size_bytes: number;
-  missing_cells_total: number;
-  missing_percent_overall: number;
-  numeric_columns: number;
-  categorical_columns: number;
-  datetime_columns: number;
-  boolean_columns: number;
-  detected_target_column?: string;
-  detected_task_type?: "classification" | "regression" | "unknown";
-  column_profiles: ColumnProfile[];
-  quality_warnings: QualityWarning[];
-  memory_usage_mb: number;
+export interface QualityIssue {
+  problem?: string;
+  warning_type?: string;
+  severity: "low" | "medium" | "high";
+  description?: string;
+  message?: string;
+  affected_columns?: string[];
+  column?: string;
 }
 
-export interface QualityWarning {
-  column?: string;
-  warning_type: string;
-  severity: "low" | "medium" | "high";
-  message: string;
+export type QualityWarning = QualityIssue;
+
+export interface DatasetSummary {
+  rows?: number;
+  columns?: number;
+  memory_mb?: number;
+  filename?: string;
+  file_size_bytes?: number;
+  target?: {
+    target_column?: string;
+    task_type?: "classification" | "regression" | "general";
+  };
+}
+
+export interface SemanticProfile {
+  dataset_id?: string;
+  row_count?: number;
+  column_count?: number;
+  file_size_bytes?: number;
+  missing_cells_total?: number;
+  missing_percent_overall?: number;
+  numeric_columns?: number;
+  categorical_columns?: number;
+  datetime_columns?: number;
+  boolean_columns?: number;
+  detected_target_column?: string;
+  detected_task_type?: "classification" | "regression" | "unknown" | "general";
+  user_task_type?: string;
+  dataset_summary?: DatasetSummary;
+  column_profiles?: ColumnProfile[];
+  quality_issues?: QualityIssue[];
+  quality_warnings?: QualityWarning[];
+  memory_usage_mb?: number;
 }
 
 // ── Job ───────────────────────────────────────

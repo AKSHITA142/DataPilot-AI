@@ -158,9 +158,17 @@ class SmartTargetDetector:
         sorted_candidates = sorted(composite_scores.items(), key=lambda x: x[1], reverse=True)
         best_target, best_score = sorted_candidates[0]
 
-        # Fallback to last column if top score <= 0.0
+        # Fallback to last non-ID column if top score <= 0.0
         if best_score <= 0.0 and columns:
-            best_target = columns[-1]
+            non_id_cols = [
+                c for c in columns
+                if not (
+                    c.lower().strip() in ("id", "uuid", "name", "index", "row_id", "user_id", "timestamp", "time", "date", "datetime")
+                    or c.lower().strip().endswith(("_id", "_name", "_key"))
+                    or c.lower().strip().startswith(("id_", "row_"))
+                )
+            ]
+            best_target = non_id_cols[-1] if non_id_cols else columns[-1]
             best_score = 0.50
 
         return best_target, min(1.0, max(0.1, best_score))
@@ -214,42 +222,44 @@ class SmartTargetDetector:
 
     @classmethod
     def _statistical_mi_match(cls, df: pd.DataFrame) -> Tuple[Optional[str], float]:
-        """Calculates statistical mutual information proxy across 100% of dataset rows."""
+        """Calculates statistical target candidate score across dataset rows."""
         if df.empty or len(df.columns) < 2:
             return None, 0.0
 
         n_rows = len(df)
-        num_cols = list(df.select_dtypes(include=[np.number]).columns)
 
-        # Exclude ID columns with nunique == n_rows
-        valid_cols = [c for c in df.columns if df[c].nunique() < n_rows and df[c].nunique() > 1]
+        def is_id_col(col_name: str) -> bool:
+            c_low = col_name.lower().strip()
+            return (
+                c_low in ("id", "uuid", "name", "index", "row_id", "user_id", "timestamp", "time", "date", "datetime")
+                or c_low.endswith(("_id", "_name", "_key"))
+                or c_low.startswith(("id_", "row_"))
+            )
+
+        # Exclude ID/timestamp columns and columns with 1 unique value or equal to n_rows
+        valid_cols = [c for c in df.columns if not is_id_col(c) and 1 < df[c].nunique() < n_rows]
         if not valid_cols:
             return None, 0.0
 
-        # Check numeric target candidates by standard variance and non-zero correlation
-        best_col = None
-        max_total_corr = 0.0
+        # Prioritize discrete / classification target candidates (2..20 unique values)
+        discrete_candidates = [c for c in valid_cols if 2 <= df[c].nunique() <= 20]
+        if discrete_candidates:
+            # Pick the last discrete candidate column (standard convention for y in tabular data)
+            return discrete_candidates[-1], 0.85
 
-        if len(num_cols) >= 2:
-            corr_matrix = df[num_cols].corr().abs()
-            for col in num_cols:
-                if col not in valid_cols:
-                    continue
-                tot_corr = float(corr_matrix[col].sum() - 1.0)  # Exclude self-correlation
-                if tot_corr > max_total_corr:
-                    max_total_corr = tot_corr
+        # For continuous targets, pick column with moderate variance, avoiding max-collinear feature hubs
+        num_valid = [c for c in valid_cols if pd.api.types.is_numeric_dtype(df[c])]
+        if len(num_valid) >= 2:
+            corr_matrix = df[num_valid].corr().abs()
+            best_col = None
+            min_collinearity_hub = float("inf")
+            for col in num_valid:
+                tot_corr = float(corr_matrix[col].sum() - 1.0)
+                # Select target candidate that isn't a central collinear feature hub (lowest total collinearity)
+                if tot_corr < min_collinearity_hub:
+                    min_collinearity_hub = tot_corr
                     best_col = col
+            if best_col:
+                return best_col, 0.75
 
-        if best_col:
-            return best_col, 0.85
-
-        # Fallback to valid candidate with highest cardinality ratio below 0.9
-        best_cat = None
-        max_ratio = 0.0
-        for c in valid_cols:
-            ratio = df[c].nunique() / n_rows
-            if 0.05 < ratio < 0.9 and ratio > max_ratio:
-                max_ratio = ratio
-                best_cat = c
-
-        return best_cat or valid_cols[-1], 0.70
+        return valid_cols[-1], 0.70
